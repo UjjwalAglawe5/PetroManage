@@ -69,7 +69,7 @@ const handleAddWorkOrder = (newOrder) => {
     <div className="p-6 space-y-6"> {/* <--- This main wrapper MUST be here */}
     
     {/* 1. Header Area with Stylish Gradient Background */}
-    <div className="bg-gradient-to-r from-orange-400 to-orange-600 p-6 rounded-xl shadow-md flex justify-between items-center mb-8">
+    <div className="bg-gradient-to-r from-orange-700 to-orange-900 p-6 rounded-xl shadow-md flex justify-between items-center mb-8">
       <div className="space-y-1">
         <h1 className="text-3xl font-extrabold text-white tracking-tight">
           Maintenance Management
@@ -81,7 +81,7 @@ const handleAddWorkOrder = (newOrder) => {
       
       <button 
         onClick={() => setShowModal(true)}
-        className="bg-white text-orange-600 px-6 py-2.5 rounded-lg shadow-sm hover:bg-gray-50 transition-all font-bold flex items-center gap-2"
+        className="bg-gray-800 text-white px-6 py-2.5 rounded-lg shadow-sm hover:bg-gray-900 transition-all font-bold flex items-center gap-2"
       >
         <span>+</span> Create Work Order
       </button>
@@ -89,14 +89,44 @@ const handleAddWorkOrder = (newOrder) => {
          
       
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <SummaryCard title="Total Work Orders" value={totalCount} textColor="text-gray-500" onClick={() => setFilterStatus("All")} isActive={filterStatus === "All"} />
-        <SummaryCard title="Scheduled" value={scheduledCount} textColor="text-blue-500" onClick={() => setFilterStatus("Scheduled")} isActive={filterStatus === "Scheduled"} />
-        <SummaryCard title="In Progress" value={inProgressCount} textColor="text-yellow-500" onClick={() => setFilterStatus("In Progress")} isActive={filterStatus === "In Progress"} />
-        <SummaryCard title="Completed" value={completedCount} textColor="text-green-500" onClick={() => setFilterStatus("Completed")} isActive={filterStatus === "Completed"} />
-        <SummaryCard title="Overdue" value={overdueCount} textColor="text-red-500" onClick={() => setFilterStatus("Overdue")} isActive={filterStatus === "Overdue"} />
-      </div>
-
+      {/* The grid is now tight and compact */}
+<div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+  <SummaryCard 
+    title="All Work Orders" 
+    value={totalCount} 
+    type="all" 
+    onClick={() => setFilterStatus("All")} 
+    isActive={filterStatus === "All"} 
+  />
+  <SummaryCard 
+    title="Scheduled" 
+    value={scheduledCount} 
+    type="scheduled" 
+    onClick={() => setFilterStatus("Scheduled")} 
+    isActive={filterStatus === "Scheduled"} 
+  />
+  <SummaryCard 
+    title="In Progress" 
+    value={inProgressCount} 
+    type="progress" 
+    onClick={() => setFilterStatus("In Progress")} 
+    isActive={filterStatus === "In Progress"} 
+  />
+  <SummaryCard 
+    title="Completed" 
+    value={completedCount} 
+    type="completed" 
+    onClick={() => setFilterStatus("Completed")} 
+    isActive={filterStatus === "Completed"} 
+  />
+  <SummaryCard 
+    title="Overdue" 
+    value={overdueCount} 
+    type="overdue" 
+    onClick={() => setFilterStatus("Overdue")} 
+    isActive={filterStatus === "Overdue"} 
+  />
+</div>
       {/* Filter Bar Component */}
       <FilterBar onFilterChange={(data) => setSearchFilters(data)} />
       
@@ -138,9 +168,7 @@ const handleAddWorkOrder = (newOrder) => {
                 <TableCell>
                   <span className={`px-2 py-1 rounded text-xs font-bold ${statusColors[wo.status]}`}>{wo.status}</span>
                 </TableCell>
-                <TableCell>
-                  <button onClick={() => navigate("/maintenance/status",{state: {selectedOrder: wo}})} className="text-blue-600 hover:underline">View Details →</button>
-                </TableCell>
+                <TableCell> <button onClick={() => navigate("/maintenance/status", { state: { selectedOrder: wo } }) } className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer  " > View Details </button> </TableCell>
               </tr>
             ))}
           </tbody>
