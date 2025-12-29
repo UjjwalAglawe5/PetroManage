@@ -87,7 +87,7 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
             Cancel
           </button>
           <button type="submit"
-            className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-lg transition-all font-medium active:scale-95"
+            className="px-5 py-2 bg-orange-800 hover:bg-orange-900 text-white rounded-lg shadow-lg transition-all font-medium active:scale-95"
           >
             Save Work Order
           </button>
