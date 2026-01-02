@@ -54,7 +54,7 @@ export function Login({
   };
 
   return (
-    <div className="min-h-screen flex items-center bg-[#d6d7d8] px-6 lg:px-20 py-10 text-black justify-center lg:justify-around font-sans overflow-hidden">
+    <div className="min-h-screen flex items-center bg-[#ffffff] px-6 lg:px-20 py-10 text-black justify-center lg:justify-around font-sans overflow-hidden">
       
       {/* Floating Animation Styles */}
       <style>

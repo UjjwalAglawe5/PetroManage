@@ -62,11 +62,11 @@ export function Home() {
         <div className="p-8 md:p-16 flex-1 flex flex-col justify-center border-b md:border-b-0 md:border-r border-zinc-800">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold uppercase tracking-widest mb-6 w-fit">
             <Zap size={14} />
-            <span>Upstream Operations v1.0</span>
+            <span> Operations v1.0</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white leading-tight mb-6">
-            Intelligent <br />
+            PetroManage <br />
             <span className="text-zinc-500">Asset Control.</span>
           </h1>
 

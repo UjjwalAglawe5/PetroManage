@@ -67,7 +67,7 @@ export function Registration({
 
   return (
     // Matching light background
-    <div className="min-h-screen grid place-items-center  bg-[#d6d7d8] px-6 py-10 text-black font-sans">
+    <div className="min-h-screen grid place-items-center  bg-[#ffffff] px-6 py-10 text-black font-sans">
       <div
         className="w-full max-w-lg rounded-3xl border border-gray-200 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-8 lg:p-10"
         role="region"
