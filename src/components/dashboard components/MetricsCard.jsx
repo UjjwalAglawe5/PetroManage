@@ -40,7 +40,7 @@ export default function MetricsCard({
           </div>
         )}
       </div>
-      <h3 className="text-slate-600 text-sm font-medium mb-1">{title}</h3>
+      <h3 className="text-slate-700 text-md font-medium mb-1">{title}</h3>
       <p className="text-3xl font-bold text-slate-900">{value}</p>
     </div>
   );

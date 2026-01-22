@@ -1,9 +1,8 @@
-
 import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import React from 'react';
-
+ 
 type Priority = 'high' | 'medium' | 'low';
-
+ 
 const priorityConfig = {
   high: {
     color: 'bg-red-50 border-red-200 text-red-700',
@@ -21,43 +20,42 @@ const priorityConfig = {
     badge: 'bg-green-100 text-green-700',
   },
 } as const;
-
+ 
 type PriorityConfig = typeof priorityConfig;
 type PriorityKey = keyof PriorityConfig; // 'high' | 'medium' | 'low'
-
+ 
 interface MaintenancePrediction {
   assetId: string;
   assetName: string;
   predictedDate: string;
-  priority: Priority;         // ❗ match the keys
+  priority: Priority;         // must match the keys
   confidence: number;
 }
-
+ 
 interface MaintenancePredictorProps {
   predictions: MaintenancePrediction[];
 }
-
+ 
 export default function MaintenancePredictor({ predictions }: MaintenancePredictorProps) {
   const getDaysUntil = (date: string) => {
     const msPerDay = 1000 * 60 * 60 * 24;
     return Math.ceil((new Date(date).getTime() - Date.now()) / msPerDay);
   };
-
+ 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-1">Maintenance Predictions</h2>
         <p className="text-sm text-slate-500">AI-powered maintenance forecasting</p>
       </div>
-
+ 
       <div className="space-y-3">
         {predictions.map((prediction) => {
-          // Narrow the key so TS knows it's valid:
           const key = prediction.priority as PriorityKey;
           const config = priorityConfig[key];
-
+ 
           const daysUntil = getDaysUntil(prediction.predictedDate);
-
+ 
           return (
             <div
               key={prediction.assetId}
@@ -71,11 +69,21 @@ export default function MaintenancePredictor({ predictions }: MaintenancePredict
                     <p className="text-sm text-slate-600 mt-0.5">Due in {daysUntil} days</p>
                   </div>
                 </div>
-                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${config.badge}`}>
+ 
+                {/* Priority pill — fixed size for high/medium/low */}
+                <span
+                  className={[
+                    'inline-flex items-center justify-center',
+                    'w-24 h-8', // 👈 same width & height for all
+                    'px-2.5',   // optional horizontal padding (kept minimal)
+                    'text-xs font-semibold rounded-full',
+                    config.badge,
+                  ].join(' ')}
+                >
                   {prediction.priority}
                 </span>
               </div>
-
+ 
               <div className="flex items-start justify-between text-sm">
                 <div />
                 <div className="flex flex-col items-end space-y-1">
@@ -106,3 +114,4 @@ export default function MaintenancePredictor({ predictions }: MaintenancePredict
     </div>
   );
 }
+ 

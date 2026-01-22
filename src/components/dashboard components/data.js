@@ -60,24 +60,24 @@ export const analyticsData = {
   ],
 
   assets: [
-    { id: 'A001', name: 'CNC Machine Alpha', utilization: 92, status: 'operational' },
-    { id: 'A002', name: 'Assembly Line B', utilization: 85, status: 'operational' },
-    { id: 'A003', name: 'Packaging Unit 3', utilization: 68, status: 'maintenance' },
-    { id: 'A004', name: 'Quality Control Station', utilization: 78, status: 'operational' },
+    // { id: 'A001', name: 'CNC Machine Alpha', utilization: 92, status: 'operational' },
+    // { id: 'A002', name: 'Assembly Line B', utilization: 85, status: 'operational' },
+    { id: 'A003', name: 'Rig Pipeline 3', utilization: 68, status: 'maintenance' },
+    { id: 'A004', name: 'North Sea Rig', utilization: 78, status: 'operational' },
     { id: 'A005', name: 'Robotic Welder', utilization: 45, status: 'idle' },
   ],
 
   maintenancePredictions: [
     {
       assetId: 'A003',
-      assetName: 'Packaging Unit 3',
+      assetName: 'Rig Pipepine 3',
       predictedDate: '2024-12-22',
       priority: 'high',
       confidence: 94,
     },
     {
       assetId: 'A001',
-      assetName: 'CNC Machine Alpha',
+      assetName: 'North Sea Rig ',
       predictedDate: '2025-01-05',
       priority: 'medium',
       confidence: 87,
