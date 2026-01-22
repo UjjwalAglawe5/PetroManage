@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import axios from 'axios'; // 1. Import Axios
 
 export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
-  // Define assets to map IDs to Names
   const assetList = [
     { id: 'RIG-001', name: 'North Sea Rig Alpha' },
     { id: 'RIG-002', name: 'West Texas Rig Beta' },
@@ -15,29 +15,50 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
     plannedVolume: '',
     startDate: '',
     endDate: '',
-    status: 'Planned' // Default status
+    status: 'PLANNED'
   });
 
-  const handleSubmit = () => {
-    // Find the asset name based on selected ID
-    const selectedAsset = assetList.find(a => a.id === form.asset);
-
+  const handleSubmit = async () => {
+    // 2. Prepare the payload
     const payload = {
-      id: `PLAN-${Math.floor(Math.random() * 1000)}`, // Generate a temp ID
-      assetId: form.asset,
-      assetName: selectedAsset ? selectedAsset.name : 'Unknown Asset',
+      asset: {
+        assetId: 1 // Hardcoded as requested
+      },
       plannedVolume: Number(form.plannedVolume),
-      unit: form.unit,
       startDate: form.startDate,
       endDate: form.endDate,
-      status: form.status // Added status to payload
+      status: form.status.toUpperCase()
     };
 
-    // Update the state in the parent (Production.jsx)
-    setProductionPlans([...productionPlans, payload]);
-    
-    console.log('New Plan Payload:', payload);
-    onCancel(); // Close form after submission
+    try {
+      // 3. Send the POST request using Axios
+      // Axios handles headers and JSON conversion automatically
+      const response = await axios.post('http://localhost:8080/api/production-plans', payload);
+
+      // 4. Axios stores the server response in the 'data' property
+      if (response.status === 200 || response.status === 201) {
+        const savedPlan = response.data;
+        
+        // Update local state
+        setProductionPlans([...productionPlans, savedPlan]);
+        
+        console.log('Plan created successfully:', savedPlan);
+        onCancel(); 
+      }
+    } catch (error) {
+      // 5. Axios error handling provides detailed feedback
+      if (error.response) {
+        // The server responded with a status code outside the 2xx range
+        console.error('Backend Error:', error.response.data);
+        alert(`Server Error: ${error.response.data.message || 'Check logs'}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Network Error:', error.request);
+        alert('Could not reach the server. Is it running?');
+      } else {
+        console.error('Error:', error.message);
+      }
+    }
   };
 
   return (
@@ -47,9 +68,8 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Asset Selection */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Asset</label>
+          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Asset Selection</label>
           <select
             value={form.asset}
             onChange={(e) => setForm({ ...form, asset: e.target.value })}
@@ -62,7 +82,6 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           </select>
         </div>
 
-        {/* Status Selection (NEW) */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Status</label>
           <select
@@ -70,12 +89,11 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
             onChange={(e) => setForm({ ...form, status: e.target.value })}
             className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none cursor-pointer"
           >
-            <option value="Active">Active</option>
-            <option value="Planned">Planned</option>
+            <option value="PLANNED">Planned</option>
+            <option value="ACTIVE">Active</option>
           </select>
         </div>
 
-        {/* Planned Volume */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Planned Volume</label>
           <input
@@ -86,7 +104,6 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           />
         </div>
 
-        {/* Unit */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Unit</label>
           <select
@@ -99,7 +116,6 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           </select>
         </div>
 
-        {/* Dates */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Start Date</label>
           <input

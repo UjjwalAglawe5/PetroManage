@@ -7,6 +7,7 @@ import { PlansTable } from '../components/production components/PlansTable';
 import { RecordForm } from '../components/production components/RecordForm';
 import { RecordTable } from '../components/production components/RecordTable';
 import PlannedVsActualChart from '../components/production components/PlannedVsActualChart';
+import axios from 'axios';
 
 // Animation Variants
 const containerVariants = {
@@ -45,6 +46,24 @@ export function Production() {
   const [avtivePlans, setActivePlans] = useState(0);
   const [productionPlans, setProductionPlans] = useState(initialPlans);
   const [RecordPlans, setRecordPlans] = useState(initialRecords);
+
+
+  const refreshData = async () => {
+    try {
+      const [plansRes, recordsRes] = await Promise.all([
+        axios.get('http://localhost:8080/api/production-plans'),
+        axios.get('http://localhost:8080/api/production-records')
+      ]);
+      setProductionPlans(plansRes.data);
+      setRecordPlans(recordsRes.data);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+//   useEffect(() => {
+//   refreshData();
+// }, []); // Empty dependency array means this runs once on page load
 
   useEffect(() => {
     calculateTotals();
