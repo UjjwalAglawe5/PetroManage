@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -55,18 +56,30 @@ const dropdownVariants = {
     transition: { duration: 0.15, ease: "easeIn" } 
   }
 };
-
 export function Layout() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const location = useLocation(); 
 
-  const navItems = [
-    { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },
-    { icon: <Package size={18} />, label: 'Assets', path: '/assets' },
-    { icon: <TrendingUp size={18} />, label: 'Production', path: '/production' },
-    { icon: <Wrench size={18} />, label: 'Maintenance', path: '/maintenance' },
-    { icon: <FileCheck size={18} />, label: 'Compliance', path: '/compliance' },
-  ];
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const location = useLocation();
+  const user = useSelector((state) => state.user.user);
+  // const role = user?.role;
+  // const role= 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
+  const role= 'admin';
+  // Define nav items based on role
+  let navItems = [];
+  if (role === 'operational_manager') {
+    navItems = [
+      { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },
+      { icon: <Package size={18} />, label: 'Assets', path: '/assets' },
+      { icon: <TrendingUp size={18} />, label: 'Production', path: '/production' },
+      { icon: <Wrench size={18} />, label: 'Maintenance', path: '/maintenance' },
+    ];
+  } else if (role === 'admin') {
+    navItems = [
+      { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },
+      { icon: <Package size={18} />, label: 'Assets', path: '/assets' },
+      { icon: <FileCheck size={18} />, label: 'Compliance', path: '/compliance' },
+    ];
+  }
 
   return (
     <div className="flex flex-col h-screen bg-[#F9FAFB] overflow-x-hidden font-sans">
@@ -128,8 +141,6 @@ export function Layout() {
                         {item.icon}
                         {item.label}
                       </span>
-
-                      {/* Sliding Background Pill */}
                       {isActive && (
                         <motion.div
                           layoutId="navpill"
@@ -193,7 +204,7 @@ export function Layout() {
                           User Account
                         </p>
                         <p className="text-sm font-bold text-black truncate">
-                          Operations Manager
+                          {role === 'admin' ? 'Admin' : role === 'operational_manager' ? 'Operational Manager' : 'User'}
                         </p>
                       </div>
 

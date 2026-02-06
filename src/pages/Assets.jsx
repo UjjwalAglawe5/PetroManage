@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Boxes,
@@ -39,15 +40,20 @@ export function Assets() {
   const [tab, setTab] = useState("list");
   const [fromHeader, setFromHeader] = useState(false);
   const [assets, setAssets] = useState([]);
-
   const moduleRef = useRef(null);
-
+  const user = useSelector((state) => state.user.user);
+  // const role = user?.role;
+  // const role = 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
+  const role = 'admin';
   useEffect(() => {
     setAssets(getAssets());
   }, []);
 
-  /* ---------------- CRUD ---------------- */
+  // Only allow CRUD if not admin
+  const isViewOnly = role === "admin";
+
   const addAsset = (asset) => {
+    if (isViewOnly) return;
     const updated = [...assets, asset];
     setAssets(updated);
     saveAssets(updated);
@@ -55,12 +61,14 @@ export function Assets() {
   };
 
   const deleteAsset = (id) => {
+    if (isViewOnly) return;
     const updated = assets.filter(a => a.id !== id);
     setAssets(updated);
     saveAssets(updated);
   };
 
   const updateAsset = (updatedAsset) => {
+    if (isViewOnly) return;
     const updated = assets.map(a =>
       a.id === updatedAsset.id ? updatedAsset : a
     );
@@ -68,7 +76,6 @@ export function Assets() {
     saveAssets(updated);
   };
 
-  /* -------- SMART SCROLL -------- */
   useEffect(() => {
     if (tab === "register" && fromHeader) {
       moduleRef.current?.scrollIntoView({
@@ -114,23 +121,26 @@ export function Assets() {
               End-to-end lifecycle management for oil & gas assets.
             </p>
 
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => {
-                setFromHeader(true);
-                setTab("register");
-              }}
-              className="flex items-center gap-2 px-4 py-2
-                bg-gradient-to-r from-emerald-500 to-emerald-600
-                hover:from-emerald-600 hover:to-emerald-700
-                text-white text-sm font-semibold
-                rounded-lg shadow-lg transition-all
-                border border-emerald-400/30 shrink-0"
-            >
-              <PlusCircle className="w-5 h-5" />
-              {tab === "register" ? "View Assets" : "Register Asset"}
-            </motion.button>
+            {/* Register button only for Operational Manager */}
+            {!isViewOnly && (
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => {
+                  setFromHeader(true);
+                  setTab("register");
+                }}
+                className="flex items-center gap-2 px-4 py-2
+                  bg-gradient-to-r from-emerald-500 to-emerald-600
+                  hover:from-emerald-600 hover:to-emerald-700
+                  text-white text-sm font-semibold
+                  rounded-lg shadow-lg transition-all
+                  border border-emerald-400/30 shrink-0"
+              >
+                <PlusCircle className="w-5 h-5" />
+                {tab === "register" ? "View Assets" : "Register Asset"}
+              </motion.button>
+            )}
           </div>
         </div>
       </motion.div>
@@ -163,15 +173,18 @@ export function Assets() {
                 setTab("list");
               }}
             />
-            <SwitchButton
-              icon={PlusCircle}
-              label="Register"
-              active={tab === "register"}
-              onClick={() => {
-                setFromHeader(false);
-                setTab("register");
-              }}
-            />
+            {/* Register tab only for Operational Manager */}
+            {!isViewOnly && (
+              <SwitchButton
+                icon={PlusCircle}
+                label="Register"
+                active={tab === "register"}
+                onClick={() => {
+                  setFromHeader(false);
+                  setTab("register");
+                }}
+              />
+            )}
             <SwitchButton
               icon={RefreshCcw}
               label="Lifecycle"
@@ -197,12 +210,13 @@ export function Assets() {
               {tab === "list" && (
                 <AssetList
                   assets={assets}
-                  onDelete={deleteAsset}
-                  onUpdate={updateAsset}
+                  onDelete={isViewOnly ? undefined : deleteAsset}
+                  onUpdate={isViewOnly ? undefined : updateAsset}
                 />
               )}
 
-              {tab === "register" && (
+              {/* Register tab only for Operational Manager */}
+              {tab === "register" && !isViewOnly && (
                 <AssetRegistration
                   assets={assets}
                   onAdd={addAsset}
