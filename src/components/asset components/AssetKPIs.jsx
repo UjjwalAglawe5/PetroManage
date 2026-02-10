@@ -1,4 +1,4 @@
-// components/module1/AssetKPIs.jsx
+// components/asset components/AssetKPIs.jsx
 import {
   Factory,
   Wrench,
@@ -7,10 +7,12 @@ import {
   Ban,
   Drill,
   GitBranch,
-  Warehouse
+  Warehouse,
+  ClipboardCheck
 } from "lucide-react";
 
 export default function AssetKPIs({ assets }) {
+
   const count = (fn) => assets.filter(fn).length;
 
   const kpis = [
@@ -21,26 +23,32 @@ export default function AssetKPIs({ assets }) {
       color: "from-slate-700 to-slate-900"
     },
     {
+      title: "Registered",
+      value: count(a => a.status === "REGISTERED"),
+      icon: ClipboardCheck,
+      color: "from-gray-400 to-gray-600"
+    },
+    {
       title: "Operational",
-      value: count(a => a.status === "Operational"),
+      value: count(a => a.status === "OPERATIONAL"),
       icon: AlertTriangle,
       color: "from-green-500 to-green-700"
     },
     {
       title: "Maintenance",
-      value: count(a => a.status === "Maintenance"),
+      value: count(a => a.status === "MAINTENANCE"),
       icon: Wrench,
       color: "from-amber-500 to-amber-700"
     },
     {
       title: "Under Inspection",
-      value: count(a => a.status === "Under Inspection"),
+      value: count(a => a.status === "UNDER_INSPECTION"),
       icon: ShieldAlert,
       color: "from-blue-500 to-blue-700"
     },
     {
       title: "Decommissioned",
-      value: count(a => a.status === "Decommissioned"),
+      value: count(a => a.status === "DECOMMISSIONED"),
       icon: Ban,
       color: "from-red-500 to-red-700"
     },
