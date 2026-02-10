@@ -20,10 +20,13 @@ import {
 } from "../components/asset components/assetAPI.js";
 
 export function Assets() {
+  
   const [tab, setTab] = useState("list");
   const [fromHeader, setFromHeader] = useState(false);
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const moduleRef = useRef(null);
 
@@ -33,6 +36,21 @@ export function Assets() {
   // const role = user?.role;
   // const isViewOnly = role === "admin"; // example: gate write actions
 
+  /* ================= AUTO-DISMISS MESSAGES ================= */
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   /* ================= LOAD ASSETS ================= */
   useEffect(() => {
     loadAssets();
@@ -41,10 +59,12 @@ export function Assets() {
   const loadAssets = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await getAssets();
       setAssets(data);
     } catch (err) {
       console.error("Failed to load assets", err);
+      setError(err.message || "Failed to load assets. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -52,34 +72,45 @@ export function Assets() {
 
   /* ================= CRUD OPERATIONS ================= */
 
-  // CREATE (unchanged: still uses API)
+  // CREATE
   const addAsset = async (asset) => {
     try {
+      setError(null);
       await createAsset(asset);
+      setSuccessMessage(`Asset "${asset.name}" created successfully!`);
       await loadAssets();
       setTab("list");
     } catch (err) {
       console.error("Failed to create asset", err);
+      setError(err.message || "Failed to create asset. Please try again.");
+      throw err; // Re-throw so the child component can handle it
     }
   };
 
-  // DELETE (unchanged: still uses API)
+  // DELETE
   const deleteAsset = async (id) => {
     try {
+      setError(null);
       await deleteAssetApi(id);
+      setSuccessMessage("Asset deleted successfully!");
       await loadAssets();
     } catch (err) {
       console.error("Failed to delete asset", err);
+      setError(err.message || "Failed to delete asset. Please try again.");
     }
   };
 
-  // UPDATE (unchanged: still uses API)
+  // UPDATE
   const updateAssetHandler = async (updatedAsset) => {
     try {
+      setError(null);
       await updateAsset(updatedAsset);
+      setSuccessMessage(`Asset "${updatedAsset.name}" updated successfully!`);
       await loadAssets();
     } catch (err) {
       console.error("Failed to update asset", err);
+      setError(err.message || "Failed to update asset. Please try again.");
+      throw err; // Re-throw so the child component can handle it
     }
   };
 
@@ -96,6 +127,42 @@ export function Assets() {
 
   return (
     <div className="space-y-8 py-4">
+
+      {/* ================= SUCCESS MESSAGE ================= */}
+      {successMessage && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in">
+          <div className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="font-medium">{successMessage}</span>
+            <button 
+              onClick={() => setSuccessMessage(null)}
+              className="ml-2 hover:bg-green-600 rounded p-1"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ================= ERROR MESSAGE ================= */}
+      {error && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in">
+          <div className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 max-w-md">
+            <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium text-sm">{error}</span>
+            <button 
+              onClick={() => setError(null)}
+              className="ml-2 hover:bg-red-600 rounded p-1 shrink-0"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ================= HEADER ================= */}
       <div className="relative overflow-hidden rounded-xl">

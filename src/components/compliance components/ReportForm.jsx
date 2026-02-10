@@ -12,7 +12,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
   const [dynamicAssets, setDynamicAssets] = useState([]);
 
   useEffect(() => {
-    const URL = "http://localhost:8080/assets-service/api/assets";
+    const URL = "http://localhost:8080/api/assets";
     const fetchAssets = async () => {
       try {
         const response = await axios.get(URL);
@@ -90,7 +90,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/compliance-service/api/compliance/reports", payload);
+      const response = await axios.post("http://localhost:8080/api/compliance/reports", payload);
       if (response.status === 200 || response.status === 201) {
         onClose();
         if (fetchReports) await fetchReports();
