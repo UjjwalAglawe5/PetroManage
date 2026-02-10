@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown, XCircle } from 'lucide-react';
 
-const technicians = ["Ravi Singh", "Arjun Singh", "Suresh Raina", "Vikram Seth", "Meera Nair", "Amit Sharma", "Rajesh Verma", "Sita Patel"];
+const technicians = ["Suresh Raina", "Ravi Singh", "Amit Sharma", "Meera Nair", "Vikram Seth"];
 
 export const FilterBar = ({ onFilterChange }) => {
   const initialState = { workId: '', assetType: '', type: '', priority: '', technician: '' };
@@ -24,7 +24,7 @@ export const FilterBar = ({ onFilterChange }) => {
       <div className="flex-1 min-w-[150px]">
         <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Work Order ID</label>
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 cursor-pointer" />
           <input 
             type="text" value={filters.workId}
             onChange={(e) => updateFilter('workId', e.target.value)}
@@ -38,7 +38,7 @@ export const FilterBar = ({ onFilterChange }) => {
       <div className="w-40">
         <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Asset</label>
         <select value={filters.assetType} onChange={(e) => updateFilter('assetType', e.target.value)}
-          className="w-full p-2 border rounded-md text-sm outline-none">
+          className="w-full p-2 border rounded-md text-sm outline-none cursor-pointer">
           <option value="">All Assets</option>
           <option value="Rig">Rig</option>
           <option value="Pipeline">Pipeline</option>
@@ -50,10 +50,10 @@ export const FilterBar = ({ onFilterChange }) => {
       <div className="w-40">
         <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Work Type</label>
         <select value={filters.type} onChange={(e) => updateFilter('type', e.target.value)}
-          className="w-full p-2 border rounded-md text-sm outline-none">
-          <option value="">All Types</option>
-          <option value="Preventive">Preventive</option>
-          <option value="Corrective">Corrective</option>
+          className="w-full p-2 border rounded-md text-sm outline-none cursor-pointer">
+          <option value="">ALL TYPES</option>
+          <option value="PREVENTIVE">PREVENTIVE</option>
+          <option value="CORRECTIVE">CORRECTIVE</option>
         </select>
       </div>
 
@@ -61,7 +61,7 @@ export const FilterBar = ({ onFilterChange }) => {
       <div className="w-32">
         <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Priority</label>
         <select value={filters.priority} onChange={(e) => updateFilter('priority', e.target.value)}
-          className="w-full p-2 border rounded-md text-sm outline-none">
+          className="w-full p-2 border rounded-md text-sm outline-none cursor-pointer">
           <option value="">All</option>
           <option value="High">High</option>
           <option value="Medium">Medium</option>
@@ -72,14 +72,18 @@ export const FilterBar = ({ onFilterChange }) => {
       {/* 5. Technician */}
       <div className="w-44">
         <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Technician</label>
-        <select value={filters.technician} onChange={(e) => updateFilter('technician', e.target.value)}
-          className="w-full p-2 border rounded-md text-sm outline-none">
-          <option value="">All Staff</option>
-          {technicians.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
+        <select 
+               onChange={(e) => onFilterChange({ ...filters, technician: e.target.value })}
+               className="border rounded px-3 py-2 cursor-pointer"
+              >
+              <option value="">All Staff</option>
+              {technicians.map(name => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
       </div>
 
-      <button onClick={clearAll} className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 pb-2 px-2">
+      <button onClick={clearAll} className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 pb-2 px-2 cursor-pointer">
         <XCircle className="w-4 h-4" /> Reset
       </button>
     </div>

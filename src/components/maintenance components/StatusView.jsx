@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calendar, CheckCircle, Clock, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+
+const today = new Date().toISOString().split('T')[0];
 
 export const StatusView = () => {
   const navigate = useNavigate();
@@ -10,10 +13,13 @@ export const StatusView = () => {
   const getInitialDates = () => {
     const status = passedOrder?.status;
     if (status === "Scheduled") return { targetDate: "", actualDate: "" };
-    if (status === "In Progress") return { targetDate: "2025-09-20", actualDate: "" };
-    if (status === "Completed") return { targetDate: "2025-09-15", actualDate: "2025-09-14" };
-    if (status === "Overdue") return { targetDate: "2025-09-01", actualDate: "2025-09-10" };
-    return { targetDate: "", actualDate: "" };
+    if (status === "In progress") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: "" };
+    if (status === "Completed") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: passedOrder.actualCompletionDate || "" };
+    if (status === "Overdue") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: passedOrder.actualCompletionDate || "" };
+    return { 
+      targetDate: passedOrder?.expectedCompletionDate || "",
+      actualDate: passedOrder?.actualCompletionDate || "" 
+      };
   };
 
   const dates = getInitialDates();
@@ -28,7 +34,7 @@ export const StatusView = () => {
   // Updated: Changed themeColor to Slate-700 for better visibility at 0%
   let themeColor = "#334155"; 
 
-  if (workOrder.status === "In Progress") {
+  if (workOrder.status === "In progress") {
     progress = 40;
     statusLabel = "In Progress";
     themeColor = "#f59e0b"; 
@@ -39,16 +45,58 @@ export const StatusView = () => {
     statusLabel = isLate ? "Overdue" : "Completed";
   }
 
-  const handleStartWork = () => {
-    if (!workOrder.targetDate) return alert("Please set an Estimated Completion Date!");
-    setWorkOrder({ ...workOrder, status: "In Progress" });
+  const updateProgressOnBackend = async (updates) => {
+    try {
+      // Extract numeric ID from "WO-7" format to match backend Long ID
+      const numericId = workOrder.id.replace("WO-", "");
+      
+      console.log(updates);
+      
+      const response = await axios.patch(
+        `http://localhost:8080/api/maintenance/work-orders/${numericId}/update-progress`,
+        updates
+      );
+      
+      const updatedOrder = response.data;
+
+      // Map backend response back to frontend state
+      setWorkOrder({
+        ...workOrder,
+        // Convert "IN_PROGRESS" back to "In progress" for the UI
+        status: updatedOrder.status === "OVERDUE" ? "Overdue" : 
+          updatedOrder.status.charAt(0).toUpperCase() + updatedOrder.status.slice(1).toLowerCase().replace('_', ' '),
+  targetDate: updatedOrder.expectedCompletionDate || "",
+  actualDate: updatedOrder.actualCompletionDate || ""
+});
+
+    } catch (err) {
+      console.error("Backend update failed:", err);
+    }
   };
 
-  const handleFinishWork = () => {
-    if (!workOrder.actualDate) return alert("Please enter the Actual Completion Date!");
-    const isLate = new Date(workOrder.actualDate) > new Date(workOrder.targetDate);
-    setWorkOrder({ ...workOrder, status: isLate ? "Overdue" : "Completed" });
+  // 4. Button Handlers
+  const handleStartWork = async () => {
+    if (!workOrder.targetDate) return alert("Please set an Estimated Completion Date!");
+    
+    await updateProgressOnBackend({
+      status: "IN_PROGRESS",
+      expectedCompletionDate: workOrder.targetDate
+    });
   };
+
+  const handleFinishWork = async () => {
+  if (!workOrder.actualDate) return alert("Please enter the Actual Completion Date!");
+  
+  // 1. Calculate the final status on the frontend first
+  const isLate = new Date(workOrder.actualDate) > new Date(workOrder.targetDate);
+  const finalStatus = isLate ? "OVERDUE" : "COMPLETED";
+
+  // 2. Send the CALCULATED status to the database
+  await updateProgressOnBackend({
+    status: finalStatus, // Now it sends "OVERDUE" if it's late
+    actualCompletionDate: workOrder.actualDate
+  });
+};
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6 bg-slate-50 min-h-screen font-bold tracking-tight">
@@ -90,6 +138,7 @@ export const StatusView = () => {
                 <input 
                   type="date" 
                   value={workOrder.targetDate}
+                  min={today}
                   onChange={(e) => setWorkOrder({...workOrder, targetDate: e.target.value})}
                   className="w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-slate-700"
                 />
@@ -101,6 +150,7 @@ export const StatusView = () => {
                 <input 
                   type="date" 
                   value={workOrder.actualDate}
+                  min={today}
                   onChange={(e) => setWorkOrder({...workOrder, actualDate: e.target.value})}
                   className="w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-emerald-500 outline-none transition-all text-slate-700"
                 />
@@ -119,9 +169,9 @@ export const StatusView = () => {
               </button>
               <button 
                 onClick={handleFinishWork}
-                disabled={workOrder.status !== "In Progress"}
+                disabled={workOrder.status !== "In progress"}
                 className={`flex-1 py-4 rounded-2xl text-sm uppercase transition-all shadow-sm ${
-                    workOrder.status === "In Progress" ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
+                    workOrder.status === "In progress" ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
                 }`}
               >
                 Complete
@@ -142,7 +192,7 @@ export const StatusView = () => {
                   cx="18" cy="18" r="16" fill="none" 
                   stroke={themeColor} 
                   strokeWidth="2.5" 
-                  strokeDasharray={`${progress === 0 ? 100 : progress} ${progress === 0 ? 0 : 100 - progress}`} 
+                  strokeDasharray={`${progress}, 100`}
                   strokeLinecap="round"
                   className="transition-all duration-700 ease-in-out" 
                 />
