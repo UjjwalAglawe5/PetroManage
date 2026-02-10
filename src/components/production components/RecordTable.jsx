@@ -6,7 +6,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
-  // 1. Fetch production records on component mount
+  
   useEffect(() => {
     const fetchRecords = async () => {
       try {
@@ -19,19 +19,19 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     fetchRecords();
   }, [setRecordPlans]);
 
-  // 2. Start Editing - Load row data into local state
+  
   const startEdit = (record) => {
     setEditingId(record.recordId || record.id);
     setEditForm({ ...record });
   };
 
-  // 3. Handle Update (PUT Request)
+  
   const handleUpdate = async (id) => {
     try {
-      // Structure the payload to match your Backend Entity requirements
+      
       const payload = {
         ...editForm,
-        // Ensure nested objects are preserved or defaulted
+        
         asset: editForm.asset || { assetId: 1 },
         productionPlan: editForm.productionPlan || { planId: 1 }
       };
@@ -50,7 +50,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     }
   };
 
-  // 4. Handle Delete
+  
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
@@ -93,7 +93,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
                 </div>
               </td>
               
-              {/* ACTUAL VOLUME COLUMN (Editable) */}
+              {/* ACTUAL VOLUME COLUM */}
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {isEditing ? (
                   <input 

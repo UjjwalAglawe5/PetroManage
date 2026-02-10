@@ -37,7 +37,7 @@ const stagger = {
 };
 
 export function Home() {
-  const navigate = useNavigate(); // Hook for redirection
+  const navigate = useNavigate(); 
 
   const modules = [
     {
@@ -85,7 +85,7 @@ export function Home() {
   return (
     <div className="space-y-12 pb-12">
       
-      {/* HERO SECTION */}
+      
       <motion.section
         initial="hidden"
         animate="visible"
@@ -120,7 +120,7 @@ export function Home() {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/login')} // REDIRECTION
+              onClick={() => navigate('/login')} 
               className="bg-white text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-200 transition flex items-center gap-2 shadow-lg shadow-white/5"
             >
               Get Started <ChevronRight size={18} />
@@ -131,13 +131,13 @@ export function Home() {
           </div>
         </motion.div>
 
-        {/* HERO VISUAL SIDE */}
+       
         <motion.div
           variants={fadeRight}
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="flex-1 bg-zinc-900 p-8 flex flex-col justify-center items-center relative"
         >
-          {/* Decorative background element */}
+          
           <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 to-transparent pointer-events-none" />
           
           <motion.div 
@@ -168,7 +168,7 @@ export function Home() {
               </div>
             </div>
 
-            {/* Sub card */}
+          
             <div className="p-4 bg-zinc-900/50 rounded-xl border border-zinc-800 flex items-center gap-4">
               <div className="p-2 bg-amber-500/10 rounded-lg">
                 <BarChart3 size={16} className="text-amber-500" />
@@ -182,7 +182,7 @@ export function Home() {
         </motion.div>
       </motion.section>
 
-      {/* MODULE GRID */}
+      
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -227,7 +227,7 @@ export function Home() {
         </div>
       </motion.section>
 
-      {/* COMPLIANCE / CTA SECTION */}
+      
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -235,7 +235,7 @@ export function Home() {
         variants={fadeUp}
         className="relative bg-slate-900 rounded-[2.5rem] p-10 md:p-16 overflow-hidden"
       >
-        {/* Abstract background glow */}
+        
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 blur-[100px] rounded-full -mr-20 -mt-20" />
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">

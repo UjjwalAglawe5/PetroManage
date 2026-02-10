@@ -14,9 +14,7 @@ import AssetLifecycle from "../components/asset components/AssetLifecycle";
 import AssetKPIs from "../components/asset components/AssetKPIs";
 import { getAssets, saveAssets } from "../components/asset components/assetStorage";
 
-/* =====================
-    Animation Variants
-===================== */
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -43,13 +41,13 @@ export function Assets() {
   const moduleRef = useRef(null);
   const user = useSelector((state) => state.user.user);
   // const role = user?.role;
-  // const role = 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
-  const role = 'admin';
+  const role = 'operational_manager'; 
+  // const role = 'admin';
   useEffect(() => {
     setAssets(getAssets());
   }, []);
 
-  // Only allow CRUD if not admin
+  
   const isViewOnly = role === "admin";
 
   const addAsset = (asset) => {
@@ -94,7 +92,7 @@ export function Assets() {
       className="space-y-8 py-4"
     >
 
-      {/* ================= HEADER ================= */}
+      {/*  HEADER */}
       <motion.div
         variants={itemVariants}
         className="relative overflow-hidden rounded-xl"
@@ -121,7 +119,7 @@ export function Assets() {
               End-to-end lifecycle management for oil & gas assets.
             </p>
 
-            {/* Register button only for Operational Manager */}
+            {/* Regiter button  forOP */}
             {!isViewOnly && (
               <motion.button
                 whileHover={{ scale: 1.04 }}
@@ -145,19 +143,19 @@ export function Assets() {
         </div>
       </motion.div>
 
-      {/* ================= KPI ================= */}
+      
       <motion.div variants={itemVariants}>
         <AssetKPIs assets={assets} />
       </motion.div>
 
-      {/* ================= MODULE ================= */}
+      
       <motion.div
         ref={moduleRef}
         variants={itemVariants}
         className="bg-white rounded-xl border border-gray-200 shadow-sm"
       >
 
-        {/* SWITCH BAR */}
+       
         <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50 rounded-t-xl">
           <h2 className="font-semibold text-gray-800">
             Asset Operations Hub
@@ -173,7 +171,7 @@ export function Assets() {
                 setTab("list");
               }}
             />
-            {/* Register tab only for Operational Manager */}
+            
             {!isViewOnly && (
               <SwitchButton
                 icon={PlusCircle}
@@ -197,7 +195,7 @@ export function Assets() {
           </div>
         </div>
 
-        {/* CONTENT (Animated Tabs) */}
+        
         <div className="p-6">
           <AnimatePresence mode="wait">
             <motion.div
@@ -215,7 +213,7 @@ export function Assets() {
                 />
               )}
 
-              {/* Register tab only for Operational Manager */}
+              
               {tab === "register" && !isViewOnly && (
                 <AssetRegistration
                   assets={assets}
@@ -231,7 +229,7 @@ export function Assets() {
         </div>
       </motion.div>
 
-      {/* ================= FOOTER ================= */}
+      
       <motion.div
         variants={itemVariants}
         className="text-center text-sm text-gray-500 pt-4 border-t"
@@ -243,7 +241,7 @@ export function Assets() {
   );
 }
 
-/* ================= SWITCH BUTTON ================= */
+
 function SwitchButton({ icon: Icon, label, active, onClick }) {
   return (
     <motion.button

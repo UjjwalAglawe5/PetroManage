@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
-  const [plans, setPlans] = useState([]); // To store plans from GET request
+  const [plans, setPlans] = useState([]); 
   const [form, setForm] = useState({
     asset: '',
-    planId: '', // New field for dropdown
+    planId: '', 
     unit: 'barrels',
     actualVolume: '',
     date: ''
   });
 
-  // 1. Fetch Plans from backend on mount for the dropdown
+  
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -25,24 +25,24 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   }, []);
 
   const handleSubmit = async () => {
-    // 2. Prepare Payload matching your specific structure
+    
     const payload = {
       productionPlan: {
         planId: Number(form.planId)
       },
       asset: {
-        assetId: 1 // Static as requested
+        assetId: 1 
       },
       actualVolume: Number(form.actualVolume),
       productionDate: form.date
     };
 
     try {
-      // 3. POST request to create production record
+      
       const response = await axios.post('http://localhost:8080/api/production-records', payload);
       
       if (response.status === 200 || response.status === 201) {
-        // Update local UI state
+        
         setRecordPlans([response.data, ...RecordPlans]);
         console.log('Record created successfully:', response.data);
         onCancel(); 

@@ -6,12 +6,14 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
-  // 1. Fetch data
+  
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        console.log(productionPlans);
         const response = await axios.get('http://localhost:8080/api/production-plans');
         setProductionPlans(response.data);
+        
       } catch (error) {
         console.error("Error fetching plans:", error);
       }
@@ -19,28 +21,36 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
     fetchPlans();
   }, [setProductionPlans]);
 
-  // 2. Start Editing - Load row data into local state
+  
   const startEdit = (plan) => {
     setEditingId(plan.planId);
     setEditForm({ ...plan });
   };
 
-  // 3. Handle Update (PUT Request)
+  
   const handleUpdate = async (id) => {
     try {
-      // Structure the payload to match your Backend Entity
+      
+      // const payload = {
+      //   ...editForm,
+      //   asset: { assetId: 1 } 
+      // };
       const payload = {
-        ...editForm,
-        asset: { assetId: 1 } // Keeping assetId=1 as requested
+        planId: editForm.planId,
+        assetId: editForm.assetId || (editForm.assetDetails && editForm.assetDetails.assetId),
+        plannedVolume: Number(editForm.plannedVolume),
+        startDate: editForm.startDate,
+        endDate: editForm.endDate,
+        status: editForm.status
       };
 
       const response = await axios.put(`http://localhost:8080/api/production-plans/${id}`, payload);
       
       if (response.status === 200 || response.status === 204) {
-        // Update the local list with the returned data from server
+        
         const updatedList = productionPlans.map(p => p.planId === id ? response.data : p);
         setProductionPlans(updatedList);
-        setEditingId(null); // Exit edit mode
+        setEditingId(null); 
         console.log("Plan updated successfully");
       }
     } catch (error) {
@@ -49,7 +59,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
     }
   };
 
-  // 4. Handle Delete
+  
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure?")) {
       try {
@@ -74,14 +84,13 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
         </tr>
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
-        {productionPlans.map((plan) => (
-          <tr key={plan.planId} className="hover:bg-gray-50">
+        {productionPlans.map((plan, index) => (
+  <tr key={plan.planId || index} className="hover:bg-gray-50">
             <td className="px-6 py-4 text-sm font-medium text-gray-900">{plan.planId}</td>
             
-            {/* ASSET COLUMN */}
+            
             <td className="px-6 py-4">
-              <p className="text-sm font-medium">{plan.asset?.name || 'N/A'}</p>
-            </td>
+          <p className="text-sm font-medium">{plan.assetDetails?.name || 'N/A'}</p>            </td>
 
             {/* VOLUME COLUMN (Editable) */}
             <td className="px-6 py-4">

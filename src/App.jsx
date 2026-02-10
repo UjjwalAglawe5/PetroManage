@@ -17,7 +17,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Everything inside this Route will use the Layout component */}
+        {/* Everything inside this Route will use Layout comp */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="assets" element={<Assets />} />

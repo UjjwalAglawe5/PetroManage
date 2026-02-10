@@ -63,11 +63,11 @@ export function Production() {
 
 //   useEffect(() => {
 //   refreshData();
-// }, []); // Empty dependency array means this runs once on page load
+// }, []);
 
   useEffect(() => {
     calculateTotals();
-  }, [productionPlans, RecordPlans]); // Added dependencies to useEffect
+  }, [productionPlans, RecordPlans]); 
 
   const calculateTotals = () => {
     const total = RecordPlans.reduce((accumulator, record) => accumulator + (record.actualVolume || 0), 0);
@@ -88,7 +88,7 @@ export function Production() {
       initial="hidden"
       animate="show"
     >
-      {/* Header Section */}
+      
       <motion.div 
         variants={itemVariants}
         className="bg-gradient-to-tr from-slate-950 via-emerald-600 to-teal-900 rounded-xl p-8 text-white flex items-center justify-between"
@@ -114,7 +114,7 @@ export function Production() {
         </motion.button>
       </motion.div>
 
-      {/* Stats Cards Grid */}
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { icon: BarChart, val: dailyBarrels.toLocaleString(), label: "Daily Production (barrels)" },
@@ -140,7 +140,7 @@ export function Production() {
         ))}
       </div>
 
-      {/* Animated Add Form */}
+      
       <AnimatePresence>
         {showAddForm && (
           <motion.div 
@@ -166,7 +166,7 @@ export function Production() {
         )}
       </AnimatePresence>
 
-      {/* Tabs and Table Section */}
+     
       <motion.div variants={itemVariants} className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="border-b border-gray-200">
           <div className="flex">
@@ -209,7 +209,7 @@ export function Production() {
         </div>
       </motion.div>
 
-      {/* Chart Section */}
+      
       <motion.div variants={itemVariants}>
         <PlannedVsActualChart />
       </motion.div>

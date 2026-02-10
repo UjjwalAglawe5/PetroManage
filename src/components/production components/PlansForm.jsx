@@ -1,13 +1,27 @@
-import { useState } from 'react';
-import axios from 'axios'; // 1. Import Axios
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
-  const assetList = [
-    { id: 'RIG-001', name: 'North Sea Rig Alpha' },
-    { id: 'RIG-002', name: 'West Texas Rig Beta' },
-    { id: 'RIG-008', name: 'Gulf Platform Echo' },
-    { id: 'STG-012', name: 'Storage Facility B' },
-  ];
+  // const assetList = [
+  //   { id: 'RIG-001', name: 'North Sea Rig Alpha' },
+  //   { id: 'RIG-002', name: 'West Texas Rig Beta' },
+  //   { id: 'RIG-008', name: 'Gulf Platform Echo' },
+  //   { id: 'STG-012', name: 'Storage Facility B' },
+  // ];
+  const [assetList, setAssetList] = useState([]);
+
+  const fetchAssets = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/assets');
+        setAssetList(response.data);
+      } catch (error) {
+        console.error('Error fetching assets:', error);
+      }
+    };
+
+  useEffect(() => {
+    fetchAssets();
+  }, []);
 
   const [form, setForm] = useState({
     asset: '',
@@ -19,11 +33,9 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
   });
 
   const handleSubmit = async () => {
-    // 2. Prepare the payload
+    // Send payload as flat object with assetId
     const payload = {
-      asset: {
-        assetId: 1 // Hardcoded as requested
-      },
+      assetId: Number(form.asset),
       plannedVolume: Number(form.plannedVolume),
       startDate: form.startDate,
       endDate: form.endDate,
@@ -31,28 +43,18 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
     };
 
     try {
-      // 3. Send the POST request using Axios
-      // Axios handles headers and JSON conversion automatically
       const response = await axios.post('http://localhost:8080/api/production-plans', payload);
-
-      // 4. Axios stores the server response in the 'data' property
       if (response.status === 200 || response.status === 201) {
         const savedPlan = response.data;
-        
-        // Update local state
         setProductionPlans([...productionPlans, savedPlan]);
-        
         console.log('Plan created successfully:', savedPlan);
         onCancel(); 
       }
     } catch (error) {
-      // 5. Axios error handling provides detailed feedback
       if (error.response) {
-        // The server responded with a status code outside the 2xx range
         console.error('Backend Error:', error.response.data);
         alert(`Server Error: ${error.response.data.message || 'Check logs'}`);
       } else if (error.request) {
-        // The request was made but no response was received
         console.error('Network Error:', error.request);
         alert('Could not reach the server. Is it running?');
       } else {

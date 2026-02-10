@@ -13,9 +13,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 
-/* =====================
-   Animation Variants
-===================== */
+
 const headerVariants = {
   hidden: { opacity: 0, y: -20 },
   visible: { 
@@ -23,7 +21,7 @@ const headerVariants = {
     y: 0,
     transition: { 
       duration: 0.6, 
-      ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for a "premium" feel
+      ease: [0.22, 1, 0.36, 1], 
       staggerChildren: 0.1,
       delayChildren: 0.2
     }
@@ -62,9 +60,9 @@ export function Layout() {
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
   // const role = user?.role;
-  // const role= 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
-  const role= 'admin';
-  // Define nav items based on role
+  const role= 'operational_manager'; 
+  // const role= 'admin';
+  
   let navItems = [];
   if (role === 'operational_manager') {
     navItems = [
@@ -84,7 +82,7 @@ export function Layout() {
   return (
     <div className="flex flex-col h-screen bg-[#F9FAFB] overflow-x-hidden font-sans">
 
-      {/* ================= HEADER ================= */}
+      
       <motion.header
         variants={headerVariants}
         initial="hidden"
@@ -93,7 +91,7 @@ export function Layout() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
 
-          {/* Logo */}
+          
           <motion.div
             variants={navItem}
             whileHover={{ scale: 1.02 }}
@@ -120,10 +118,10 @@ export function Layout() {
             </Link>
           </motion.div>
 
-          {/* Right Side */}
+         
           <div className="flex items-center gap-4">
 
-            {/* Navigation */}
+            
             <nav className="hidden md:flex items-center gap-1 py-1">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
@@ -154,7 +152,7 @@ export function Layout() {
               })}
             </nav>
 
-            {/* User Section */}
+            
             <div className="relative flex items-center border-l pl-4 border-gray-200 ml-2">
               <motion.button
                 variants={navItem}
@@ -180,7 +178,7 @@ export function Layout() {
                 </motion.div>
               </motion.button>
 
-              {/* Dropdown */}
+              
               <AnimatePresence>
                 {isDropdownOpen && (
                   <>
@@ -234,7 +232,7 @@ export function Layout() {
         </div>
       </motion.header>
 
-      {/* ================= MAIN ================= */}
+      
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <Outlet />
