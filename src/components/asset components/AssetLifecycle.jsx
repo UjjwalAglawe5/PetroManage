@@ -1,4 +1,3 @@
-// components/module1/AssetLifecycle.jsx
 import { useState } from "react";
 import {
   CheckCircle,
@@ -8,22 +7,30 @@ import {
   ChevronUp
 } from "lucide-react";
 
+/* Backend lifecycle order (SOURCE OF TRUTH) */
 const STATUS_ORDER = [
-  "Registered",
-  "Operational",
-  "Maintenance",
-  "Under Inspection",
-  "Decommissioned"
+  "REGISTERED",
+  "OPERATIONAL",
+  "MAINTENANCE",
+  "UNDER_INSPECTION",
+  "DECOMMISSIONED"
 ];
 
-export default function AssetLifecycle({ assets }) {
-  if (assets.length === 0) {
+/* Pretty labels for UI */
+const STATUS_LABEL = {
+  REGISTERED: "Registered",
+  OPERATIONAL: "Operational",
+  MAINTENANCE: "Maintenance",
+  UNDER_INSPECTION: "Under Inspection",
+  DECOMMISSIONED: "Decommissioned"
+};
+
+export default function AssetLifecycle({ assets = [] }) {
+  if (!assets.length) {
     return (
       <div className="text-center py-20 text-gray-400">
         <Activity className="mx-auto w-10 h-10 mb-3 opacity-50" />
-        <p className="text-sm">
-          No assets available to display lifecycle
-        </p>
+        <p className="text-sm">No assets available to display lifecycle</p>
       </div>
     );
   }
@@ -31,7 +38,7 @@ export default function AssetLifecycle({ assets }) {
   return (
     <div className="space-y-6">
       {assets.map((asset) => (
-        <LifecycleCard key={asset.id} asset={asset} />
+        <LifecycleCard key={asset.assetId} asset={asset} />
       ))}
     </div>
   );
@@ -48,17 +55,16 @@ function LifecycleCard({ asset }) {
   );
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl
-                    shadow-sm hover:shadow-lg transition">
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition">
 
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <div className="p-6 flex justify-between items-start">
         <div>
           <h3 className="font-semibold text-lg text-gray-900">
             {asset.name}
           </h3>
           <p className="text-sm text-gray-500">
-            {asset.id} · {asset.type} · {asset.location}
+            #{asset.assetId} · {asset.type} · {asset.location}
           </p>
         </div>
 
@@ -66,18 +72,18 @@ function LifecycleCard({ asset }) {
           <span
             className={`text-xs px-3 py-1 rounded-full font-medium
               ${
-                asset.status === "Operational"
+                asset.status === "OPERATIONAL"
                   ? "bg-green-100 text-green-700"
-                  : asset.status === "Maintenance"
+                  : asset.status === "MAINTENANCE"
                   ? "bg-amber-100 text-amber-700"
-                  : asset.status === "Under Inspection"
+                  : asset.status === "UNDER_INSPECTION"
                   ? "bg-blue-100 text-blue-700"
-                  : asset.status === "Decommissioned"
+                  : asset.status === "DECOMMISSIONED"
                   ? "bg-red-100 text-red-700"
                   : "bg-gray-100 text-gray-600"
               }`}
           >
-            {asset.status}
+            {STATUS_LABEL[asset.status]}
           </span>
 
           <button
@@ -93,7 +99,7 @@ function LifecycleCard({ asset }) {
         </div>
       </div>
 
-      {/* ================= PROGRESS BAR ================= */}
+      {/* PROGRESS BAR */}
       <div className="px-6 pb-2">
         <div className="flex justify-between text-xs text-gray-500 mb-1">
           <span>Lifecycle Progress</span>
@@ -107,7 +113,7 @@ function LifecycleCard({ asset }) {
         </div>
       </div>
 
-      {/* ================= TIMELINE ================= */}
+      {/* TIMELINE */}
       {open && (
         <div className="px-6 pb-6 mt-4 overflow-x-auto">
           <div className="flex items-center min-w-max gap-8">
@@ -118,7 +124,6 @@ function LifecycleCard({ asset }) {
 
               return (
                 <div key={status} className="flex items-center gap-4">
-                  {/* STEP */}
                   <div className="flex flex-col items-center">
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center
@@ -130,7 +135,6 @@ function LifecycleCard({ asset }) {
                             ? "bg-blue-500 border-blue-500 text-white animate-pulse"
                             : "bg-gray-100 border-gray-300 text-gray-400"
                         }`}
-                      title={status}
                     >
                       {isCompleted ? (
                         <CheckCircle className="w-6 h-6" />
@@ -151,34 +155,21 @@ function LifecycleCard({ asset }) {
                             : "text-gray-400"
                         }`}
                     >
-                      {status}
+                      {STATUS_LABEL[status]}
                     </span>
                   </div>
 
-                  {/* CONNECTOR */}
                   {i < STATUS_ORDER.length - 1 && (
                     <div
-                      className={`w-16 h-1 rounded-full
-                        ${
-                          isCompleted
-                            ? "bg-green-400"
-                            : "bg-gray-200"
-                        }`}
+                      className={`w-16 h-1 rounded-full ${
+                        isCompleted ? "bg-green-400" : "bg-gray-200"
+                      }`}
                     />
                   )}
                 </div>
               );
             })}
           </div>
-
-          {/* ================= META INFO ================= */}
-          {/* <div className="mt-6 flex items-center gap-2 text-xs text-gray-500">
-            <Clock className="w-4 h-4" />
-            Last updated:
-            <span className="font-medium">
-              {asset.updatedAt || "Not available"}
-            </span>
-          </div> */}
         </div>
       )}
     </div>

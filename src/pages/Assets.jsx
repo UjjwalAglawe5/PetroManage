@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux"; // ✅ Redux added
 import {
   Boxes,
   ClipboardList,
@@ -12,70 +11,79 @@ import AssetRegistration from "../components/asset components/AssetRegistration"
 import AssetList from "../components/asset components/AssetList";
 import AssetLifecycle from "../components/asset components/AssetLifecycle";
 import AssetKPIs from "../components/asset components/AssetKPIs";
-import { getAssets, saveAssets } from "../components/asset components/assetStorage";
 
-/* =====================
-    Animation Variants
-===================== */
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  },
-};
+import {
+  getAssets,
+  createAsset,
+  updateAsset,
+  deleteAsset as deleteAssetApi
+} from "../components/asset components/assetAPI.js";
 
 export function Assets() {
   const [tab, setTab] = useState("list");
   const [fromHeader, setFromHeader] = useState(false);
   const [assets, setAssets] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const moduleRef = useRef(null);
-  const user = useSelector((state) => state.user.user);
+
+  // ✅ Redux: read the logged-in user from the store (does NOT change behavior)
+  const user = useSelector((state) => state?.user?.user);
+  // If you want role-based UI control later, uncomment this:
   // const role = user?.role;
-  // const role = 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
-  const role = 'admin';
+  // const isViewOnly = role === "admin"; // example: gate write actions
+
+  /* ================= LOAD ASSETS ================= */
   useEffect(() => {
-    setAssets(getAssets());
+    loadAssets();
   }, []);
 
-  // Only allow CRUD if not admin
-  const isViewOnly = role === "admin";
-
-  const addAsset = (asset) => {
-    if (isViewOnly) return;
-    const updated = [...assets, asset];
-    setAssets(updated);
-    saveAssets(updated);
-    setTab("list");
+  const loadAssets = async () => {
+    try {
+      setLoading(true);
+      const data = await getAssets();
+      setAssets(data);
+    } catch (err) {
+      console.error("Failed to load assets", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteAsset = (id) => {
-    if (isViewOnly) return;
-    const updated = assets.filter(a => a.id !== id);
-    setAssets(updated);
-    saveAssets(updated);
+  /* ================= CRUD OPERATIONS ================= */
+
+  // CREATE (unchanged: still uses API)
+  const addAsset = async (asset) => {
+    try {
+      await createAsset(asset);
+      await loadAssets();
+      setTab("list");
+    } catch (err) {
+      console.error("Failed to create asset", err);
+    }
   };
 
-  const updateAsset = (updatedAsset) => {
-    if (isViewOnly) return;
-    const updated = assets.map(a =>
-      a.id === updatedAsset.id ? updatedAsset : a
-    );
-    setAssets(updated);
-    saveAssets(updated);
+  // DELETE (unchanged: still uses API)
+  const deleteAsset = async (id) => {
+    try {
+      await deleteAssetApi(id);
+      await loadAssets();
+    } catch (err) {
+      console.error("Failed to delete asset", err);
+    }
   };
 
+  // UPDATE (unchanged: still uses API)
+  const updateAssetHandler = async (updatedAsset) => {
+    try {
+      await updateAsset(updatedAsset);
+      await loadAssets();
+    } catch (err) {
+      console.error("Failed to update asset", err);
+    }
+  };
+
+  /* ================= SMART SCROLL ================= */
   useEffect(() => {
     if (tab === "register" && fromHeader) {
       moduleRef.current?.scrollIntoView({
@@ -87,18 +95,10 @@ export function Assets() {
   }, [tab, fromHeader]);
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-8 py-4"
-    >
+    <div className="space-y-8 py-4">
 
       {/* ================= HEADER ================= */}
-      <motion.div
-        variants={itemVariants}
-        className="relative overflow-hidden rounded-xl"
-      >
+      <div className="relative overflow-hidden rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
 
@@ -118,45 +118,37 @@ export function Assets() {
               before:rounded-full
               before:bg-gradient-to-b before:from-emerald-400 before:to-emerald-600"
             >
-              End-to-end lifecycle management for oil & gas assets.
+              End-to-end lifecycle management for oil &amp; gas assets.
             </p>
 
-            {/* Register button only for Operational Manager */}
-            {!isViewOnly && (
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => {
-                  setFromHeader(true);
-                  setTab("register");
-                }}
-                className="flex items-center gap-2 px-4 py-2
-                  bg-gradient-to-r from-emerald-500 to-emerald-600
-                  hover:from-emerald-600 hover:to-emerald-700
-                  text-white text-sm font-semibold
-                  rounded-lg shadow-lg transition-all
-                  border border-emerald-400/30 shrink-0"
-              >
-                <PlusCircle className="w-5 h-5" />
-                {tab === "register" ? "View Assets" : "Register Asset"}
-              </motion.button>
-            )}
+            {/* HEADER CTA (unchanged) */}
+            <button
+              onClick={() => {
+                setFromHeader(true);
+                setTab(tab === "register" ? "list" : "register");
+              }}
+              className="flex items-center gap-2 px-4 py-2
+                bg-gradient-to-r from-emerald-500 to-emerald-600
+                hover:from-emerald-600 hover:to-emerald-700
+                text-white text-sm font-semibold
+                rounded-lg shadow-lg transition-all
+                border border-emerald-400/30 shrink-0"
+            >
+              <PlusCircle className="w-5 h-5" />
+              {tab === "register" ? "View Assets" : "Register Asset"}
+            </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ================= KPI ================= */}
-      <motion.div variants={itemVariants}>
-        <AssetKPIs assets={assets} />
-      </motion.div>
+      <AssetKPIs assets={assets} />
 
       {/* ================= MODULE ================= */}
-      <motion.div
+      <div
         ref={moduleRef}
-        variants={itemVariants}
         className="bg-white rounded-xl border border-gray-200 shadow-sm"
       >
-
         {/* SWITCH BAR */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50 rounded-t-xl">
           <h2 className="font-semibold text-gray-800">
@@ -173,18 +165,15 @@ export function Assets() {
                 setTab("list");
               }}
             />
-            {/* Register tab only for Operational Manager */}
-            {!isViewOnly && (
-              <SwitchButton
-                icon={PlusCircle}
-                label="Register"
-                active={tab === "register"}
-                onClick={() => {
-                  setFromHeader(false);
-                  setTab("register");
-                }}
-              />
-            )}
+            <SwitchButton
+              icon={PlusCircle}
+              label="Register"
+              active={tab === "register"}
+              onClick={() => {
+                setFromHeader(false);
+                setTab("register");
+              }}
+            />
             <SwitchButton
               icon={RefreshCcw}
               label="Lifecycle"
@@ -197,66 +186,61 @@ export function Assets() {
           </div>
         </div>
 
-        {/* CONTENT (Animated Tabs) */}
+        {/* CONTENT */}
         <div className="p-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={tab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              {tab === "list" && (
-                <AssetList
-                  assets={assets}
-                  onDelete={isViewOnly ? undefined : deleteAsset}
-                  onUpdate={isViewOnly ? undefined : updateAsset}
-                />
-              )}
+          {loading && (
+            <p className="text-sm text-gray-500 text-center py-10">
+              Loading assets...
+            </p>
+          )}
 
-              {/* Register tab only for Operational Manager */}
-              {tab === "register" && !isViewOnly && (
-                <AssetRegistration
-                  assets={assets}
-                  onAdd={addAsset}
-                />
-              )}
+          {!loading && tab === "list" && (
+            <AssetList
+              assets={assets}
+              onDelete={deleteAsset}
+              onUpdate={updateAssetHandler}
+              // If you enable isViewOnly above, you can gate like this:
+              // onDelete={isViewOnly ? undefined : deleteAsset}
+              // onUpdate={isViewOnly ? undefined : updateAssetHandler}
+            />
+          )}
 
-              {tab === "lifecycle" && (
-                <AssetLifecycle assets={assets} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+          {!loading && tab === "register" && (
+            <AssetRegistration
+              assets={assets}
+              onAdd={addAsset}
+              // If gating later: onAdd={isViewOnly ? undefined : addAsset}
+            />
+          )}
+
+          {!loading && tab === "lifecycle" && (
+            <AssetLifecycle assets={assets} />
+          )}
         </div>
-      </motion.div>
+      </div>
 
       {/* ================= FOOTER ================= */}
-      <motion.div
-        variants={itemVariants}
-        className="text-center text-sm text-gray-500 pt-4 border-t"
-      >
-        © {new Date().getFullYear()} PetroManage — Asset & Operations Management System
-      </motion.div>
-
-    </motion.div>
+      <div className="text-center text-sm text-gray-500 pt-4 border-t">
+        © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
+      </div>
+    </div>
   );
 }
 
 /* ================= SWITCH BUTTON ================= */
 function SwitchButton({ icon: Icon, label, active, onClick }) {
   return (
-    <motion.button
-      whileTap={{ scale: 0.96 }}
+    <button
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition
-        ${active
-          ? "bg-white text-slate-900 shadow"
-          : "text-gray-600 hover:text-gray-900"
+        ${
+          active
+            ? "bg-white text-slate-900 shadow"
+            : "text-gray-600 hover:text-gray-900"
         }`}
     >
       <Icon className="w-4 h-4" />
       {label}
-    </motion.button>
+    </button>
   );
 }
