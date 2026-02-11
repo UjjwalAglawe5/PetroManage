@@ -10,8 +10,10 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/production-records');
+        const response = await axios.get('http://localhost:8080/api/production/records');
         setRecordPlans(response.data);
+        console.log(RecordPlans);
+        
       } catch (error) {
         console.error("Error fetching production records:", error);
       }
@@ -36,7 +38,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
         productionPlan: editForm.productionPlan || { planId: 1 }
       };
 
-      const response = await axios.put(`http://localhost:8080/api/production-records/${id}`, payload);
+      const response = await axios.put(`http://localhost:8080/api/production/records/${id}`, payload);
       
       if (response.status === 200 || response.status === 204) {
         const updatedList = RecordPlans.map(r => (r.recordId || r.id) === id ? response.data : r);
@@ -55,7 +57,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
         // await axios.delete(`http://localhost:8080/api/production-records/${id}`);
-        await axios.delete(`http://localhost:8020/backend/api/production-records/${id}`);
+        await axios.delete(`http://localhost:8020/backend/api/production/records/${id}`);
         const updatedRecords = RecordPlans.filter(record => (record.recordId || record.id) !== id);
         setRecordPlans(updatedRecords);
       } catch (error) {
@@ -69,9 +71,9 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
       <thead className="bg-gray-200 border-b border-gray-200">
         <tr>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Record ID</th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset</th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actual</th>
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Planned</th>
+          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asset Name</th>
+          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan ID</th>
+          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actual Volume</th>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
           <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
@@ -80,20 +82,11 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
         {RecordPlans.map((record) => {
           const id = record.recordId || record.id;
           const isEditing = editingId === id;
-
           return (
             <tr key={id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {id}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{record.asset?.name || "Asset ID 1"}</p>
-                  <p className="text-xs text-gray-500">ID: {record.asset?.assetId || 1}</p>
-                </div>
-              </td>
-              
-              {/* ACTUAL VOLUME COLUM */}
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{id}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{record.assetDetails?.name || "N/A"}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{record.planId}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {isEditing ? (
                   <input 
@@ -103,29 +96,21 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
                     onChange={(e) => setEditForm({...editForm, actualVolume: e.target.value})}
                   />
                 ) : (
-                  `${record.actualVolume?.toLocaleString()} ${record.unit || 'barrels'}`
+                  record.actualVolume?.toLocaleString()
                 )}
               </td>
-
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {record.productionPlan?.plannedVolume?.toLocaleString() || "5,000"} 
-              </td>
-
-              {/* DATE COLUMN (Editable) */}
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {isEditing ? (
                   <input 
                     type="date"
                     className="border rounded px-2 py-1 text-sm focus:border-black outline-none"
-                    value={editForm.productionDate}
-                    onChange={(e) => setEditForm({...editForm, productionDate: e.target.value})}
+                    value={editForm.date}
+                    onChange={(e) => setEditForm({...editForm, date: e.target.value})}
                   />
                 ) : (
-                  record.productionDate
+                  record.date
                 )}
               </td>
-
-              {/* ACTIONS COLUMN */}
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                 {isEditing ? (
                   <>

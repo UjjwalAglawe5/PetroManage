@@ -11,7 +11,11 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
     const fetchPlans = async () => {
       try {
         console.log(productionPlans);
-        const response = await axios.get('http://localhost:8080/api/production-plans');
+        
+        const response = await axios.get('http://localhost:8080/api/production/plans');
+        console.log("This");
+        console.log(response.data);
+        
         setProductionPlans(response.data);
         
       } catch (error) {
@@ -44,7 +48,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
         status: editForm.status
       };
 
-      const response = await axios.put(`http://localhost:8080/api/production-plans/${id}`, payload);
+      const response = await axios.put(`http://localhost:8080/api/production/plans/${id}`, payload);
       
       if (response.status === 200 || response.status === 204) {
         
@@ -63,7 +67,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure?")) {
       try {
-        await axios.delete(`http://localhost:8080/api/production-plans/${id}`);
+        await axios.delete(`http://localhost:8080/api/production/plans/${id}`);
         setProductionPlans(productionPlans.filter(p => p.planId !== id));
       } catch (error) {
         console.error("Delete failed:", error);
@@ -85,7 +89,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
         {productionPlans.map((plan, index) => (
-  <tr key={plan.planId || index} className="hover:bg-gray-50">
+            <tr key={plan.planId || index} className="hover:bg-gray-50">
             <td className="px-6 py-4 text-sm font-medium text-gray-900">{plan.planId}</td>
             
             

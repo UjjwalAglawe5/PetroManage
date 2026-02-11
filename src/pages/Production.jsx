@@ -44,15 +44,15 @@ export function Production() {
   const [dailyBarrels, setDailyBarrels] = useState(0);
   const [planAchievement, setplanAchievement] = useState(0);
   const [avtivePlans, setActivePlans] = useState(0);
-  const [productionPlans, setProductionPlans] = useState(initialPlans);
-  const [RecordPlans, setRecordPlans] = useState(initialRecords);
+  const [productionPlans, setProductionPlans] = useState([]);
+  const [RecordPlans, setRecordPlans] = useState([]);
 
 
   const refreshData = async () => {
     try {
       const [plansRes, recordsRes] = await Promise.all([
-        axios.get('http://localhost:8080/api/production-plans'),
-        axios.get('http://localhost:8080/api/production-records')
+        axios.get('http://localhost:8080/api/production/plans'),
+        axios.get('http://localhost:8080/api/production/records')
       ]);
       setProductionPlans(plansRes.data);
       setRecordPlans(recordsRes.data);
@@ -61,20 +61,36 @@ export function Production() {
     }
   };
 
-//   useEffect(() => {
-//   refreshData();
-// }, []);
+  useEffect(() => {
+  refreshData();
+  console.log("Production",productionPlans);
+  
+}, []);
 
   useEffect(() => {
     calculateTotals();
   }, [productionPlans, RecordPlans]); 
 
   const calculateTotals = () => {
-    const total = RecordPlans.reduce((accumulator, record) => accumulator + (record.actualVolume || 0), 0);
-    const totalActual = RecordPlans.reduce((sum, rec) => sum + rec.actualVolume, 0);
-    const totalPlanned = RecordPlans.reduce((sum, rec) => sum + rec.plannedVolume, 0);
+    // Daily barrels: sum of actualVolume from all records
+    const total = RecordPlans.reduce((acc, record) => acc + (record.actualVolume || 0), 0);
+
+    // Plan achievement: sum of actualVolume / sum of plannedVolume (if available)
+    // If plannedVolume is not in records, try to join with productionPlans by planId
+    let totalActual = 0;
+    let totalPlanned = 0;
+    RecordPlans.forEach((rec) => {
+      totalActual += rec.actualVolume || 0;
+      // Try to find matching plan for plannedVolume
+      const plan = productionPlans.find(p => (p.planId || p.id) === rec.planId);
+      if (plan && plan.plannedVolume) {
+        totalPlanned += plan.plannedVolume;
+      }
+    });
     const achievement = totalPlanned > 0 ? (totalActual / totalPlanned) * 100 : 0;
-    const activePlansCount = productionPlans.filter(plan => plan.status === 'Active').length;
+
+    // Active plans: count of plans with status ACTIVE (case-insensitive)
+    const activePlansCount = productionPlans.filter(plan => (plan.status || '').toUpperCase() === 'ACTIVE').length;
 
     setDailyBarrels(total);
     setplanAchievement(achievement);
@@ -211,7 +227,7 @@ export function Production() {
 
       
       <motion.div variants={itemVariants}>
-        <PlannedVsActualChart />
+        <PlannedVsActualChart productionPlans={productionPlans} recordPlans={RecordPlans} />
       </motion.div>
     </motion.div>
   );

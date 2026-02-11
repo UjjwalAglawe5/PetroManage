@@ -43,7 +43,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/api/production-plans', payload);
+      const response = await axios.post('http://localhost:8080/api/production/plans', payload);
       if (response.status === 200 || response.status === 201) {
         const savedPlan = response.data;
         setProductionPlans([...productionPlans, savedPlan]);
@@ -79,7 +79,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           >
             <option value="">Select Asset</option>
             {assetList.map(asset => (
-              <option key={asset.id} value={asset.id}>{asset.id} - {asset.name}</option>
+              <option key={asset.assetId} value={asset.assetId}>{asset.assetId} - {asset.name}</option>
             ))}
           </select>
         </div>
@@ -106,7 +106,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           />
         </div>
 
-        <div>
+        {/* <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Unit</label>
           <select
             value={form.unit}
@@ -116,7 +116,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
             <option value="barrels/day">Barrels per Day</option>
             <option value="barrels">Barrels</option>
           </select>
-        </div>
+        </div> */}
 
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Start Date</label>

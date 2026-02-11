@@ -15,7 +15,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/production-plans');
+        const response = await axios.get('http://localhost:8080/api/production/plans');
         setPlans(response.data);
       } catch (error) {
         console.error("Error fetching plans for dropdown:", error);
@@ -27,19 +27,15 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   const handleSubmit = async () => {
     
     const payload = {
-      productionPlan: {
-        planId: Number(form.planId)
-      },
-      asset: {
-        assetId: 1 
-      },
+      planId: Number(form.planId),
+      assetId: 1, // You may want to make this dynamic
       actualVolume: Number(form.actualVolume),
-      productionDate: form.date
+      date: form.date
     };
 
     try {
       
-      const response = await axios.post('http://localhost:8080/api/production-records', payload);
+      const response = await axios.post('http://localhost:8080/api/production/records', payload);
       
       if (response.status === 200 || response.status === 201) {
         
@@ -108,7 +104,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
         </div>
 
         {/* Unit */}
-        <div>
+        {/* <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
             Unit
           </label>
@@ -120,7 +116,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
             <option value="barrels">Barrels</option>
             <option value="mcf">MCF (Natural Gas)</option>
           </select>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100">
