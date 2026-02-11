@@ -196,7 +196,7 @@ export function Assets() {
                   setFromHeader(true);
                   setTab(tab === "register" ? "list" : "register");
                 }}
-                className="flex items-center gap-2 px-4 py-2
+                className="cursor-pointer flex items-center gap-2 px-4 py-2
                   bg-gradient-to-r from-emerald-500 to-emerald-600
                   hover:from-emerald-600 hover:to-emerald-700
                   text-white text-sm font-semibold
@@ -301,7 +301,7 @@ function SwitchButton({ icon: Icon, label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition
+      className={`cursor-pointer flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition
         ${
           active
             ? "bg-white text-slate-900 shadow"

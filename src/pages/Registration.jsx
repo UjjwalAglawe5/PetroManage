@@ -67,7 +67,7 @@ export function Registration({
     setLoading(true);
     try {
       // Make POST request to backend
-      const response = await axios.post("http://localhost:8084/auth/register", {
+      const response = await axios.post("http://localhost:8080/auth-service/auth/register", {
         name: name,
         email: email,
         password: password,
@@ -205,7 +205,7 @@ export function Registration({
                   <button
                     type="button"
                     onClick={() => setRole("manager")}
-                    className={`flex-1 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest transition-all duration-300 z-10 ${
+                    className={`cursor-pointer flex-1 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest transition-all duration-300 z-10 ${
                       role === "manager" ? "text-white" : "text-slate-500"
                     }`}
                   >
@@ -214,7 +214,7 @@ export function Registration({
                   <button
                     type="button"
                     onClick={() => setRole("admin")}
-                    className={`flex-1 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest transition-all duration-300 z-10 ${
+                    className={`cursor-pointer flex-1 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest transition-all duration-300 z-10 ${
                       role === "admin" ? "text-white" : "text-slate-500"
                     }`}
                   >
@@ -274,7 +274,7 @@ export function Registration({
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-2xl bg-orange-700 px-4 py-5 text-xs font-black text-white shadow-[0_15px_30px_rgba(194,65,12,0.25)] hover:bg-orange-600 transition-all disabled:opacity-50 uppercase tracking-[2px] flex items-center justify-center gap-2"
+                className="cursor-pointer w-full rounded-2xl bg-orange-700 px-4 py-5 text-xs font-black text-white shadow-[0_15px_30px_rgba(194,65,12,0.25)] hover:bg-orange-600 transition-all disabled:opacity-50 uppercase tracking-[2px] flex items-center justify-center gap-2"
               >
                 {loading ? "Initializing..." : "Register Credentials"}
                 <ChevronRight size={18} />
@@ -288,7 +288,7 @@ export function Registration({
             <button
               type="button"
               onClick={()=>navigate("/login")}
-              className="ml-2 font-black text-slate-950 hover:text-orange-600 transition-colors border-b-2 border-slate-950 hover:border-orange-600"
+              className="cursor-pointer ml-2 font-black text-slate-950 hover:text-orange-600 transition-colors border-b-2 border-slate-950 hover:border-orange-600"
             >
               Sign In
             </button>

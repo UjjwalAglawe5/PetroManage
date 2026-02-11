@@ -1,6 +1,6 @@
 import axios from "axios";
  
-const BASE_URL = "http://localhost:8080/api/assets";
+const BASE_URL = "http://localhost:8080/assets-service/api/assets";
  
 /**
  * Parse backend error response and extract user-friendly message

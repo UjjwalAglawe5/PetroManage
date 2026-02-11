@@ -121,11 +121,11 @@ export function Home() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/login')} 
-              className="bg-white text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-200 transition flex items-center gap-2 shadow-lg shadow-white/5"
+              className="cursor-pointer bg-white text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-200 transition flex items-center gap-2 shadow-lg shadow-white/5"
             >
               Get Started <ChevronRight size={18} />
             </motion.button>
-            <button className="text-zinc-400 hover:text-white font-bold text-sm uppercase tracking-widest transition-colors flex items-center gap-2 px-4">
+            <button className="cursor-pointer text-zinc-400 hover:text-white font-bold text-sm uppercase tracking-widest transition-colors flex items-center gap-2 px-4">
               View Specs
             </button>
           </div>
@@ -256,7 +256,7 @@ export function Home() {
           <motion.button
             whileHover={{ scale: 1.05, x: 5 }}
             whileTap={{ scale: 0.95 }}
-            className="group w-full md:w-auto bg-amber-600 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[2px] hover:bg-amber-500 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-amber-900/20"
+            className="cursor-pointer group w-full md:w-auto bg-amber-600 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[2px] hover:bg-amber-500 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-amber-900/20"
           >
             Launch Audit System <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </motion.button>
