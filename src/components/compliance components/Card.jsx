@@ -28,15 +28,15 @@ const Card = ({ data = {} }) => {
           <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500 opacity-0 md:group-hover:opacity-100 transition-opacity" />
 
           {/* Label Section */}
-          <div className="mb-1 sm:mb-2 text-center">
-            <h2 className="text-[10px] sm:text-[12px] md:text-[17px] font-black text-slate-500 uppercase tracking-widest leading-tight">
+          <div className="mb-1 sm:mb-2 text-left">
+            <h2 className="text-[10px] sm:text-[12px] md:text-[15px] font-black text-slate-500 uppercase tracking-widest leading-tight">
               {label}
             </h2>
           </div>
 
           {/* Value Section */}
-          <div className="text-center">
-            <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tighter block truncate">
+          <div className="px-7">
+            <span className="text-xl sm:text-2xl md:text-[28px] font-black text-slate-900 tracking-tighter block truncate">
               {value}
             </span>
           </div>

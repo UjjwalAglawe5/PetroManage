@@ -85,7 +85,7 @@ export const Compliance = () => {
             exit={{ opacity: 0, x: -20 }}
           >
             <div className="w-full pt-4">
-              <div className="relative overflow-hidden text-white rounded-xl px-4 py-6 sm:px-12 bg-slate-900 shadow-2xl">
+              <div className="relative overflow-hidden text-white rounded-xl px-4 py-4 sm:px-12 bg-slate-900 shadow-2xl">
                 <div className="relative z-10 flex items-start gap-3 py-2.5">
                   <FileCheck size={50} className="text-emerald-400 shrink-0" />
                   <div className="flex flex-col">

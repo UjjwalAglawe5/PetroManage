@@ -20,12 +20,12 @@ const ReportCard = ({ label, value }) => {
 
       <div className="flex items-baseline justify-center gap-1 w-full max-w-full overflow-hidden">
         {/* Value: Added break-words to handle long strings on narrow screens */}
-        <span className="text-base sm:text-lg md:text-[20px] font-black text-slate-800 break-words leading-tight tracking-tight px-1 max-w-full">
+        <span className="text-base sm:text-lg md:text-[20px] font-black text-black break-words leading-tight tracking-tight px-1 max-w-full">
           {value ?? "—"}
         </span>
 
         {label.toLowerCase().includes("score") && value && (
-          <span className="text-[15px] font-black text-slate-300 uppercase shrink-0">%</span>
+          <span className="text-[15px] font-black text-black uppercase shrink-0">%</span>
         )}
       </div>
     </div>
