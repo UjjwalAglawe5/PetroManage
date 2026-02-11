@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from "react";
 
 export default function AssetRegistration({ onAdd }) {
@@ -14,6 +12,7 @@ export default function AssetRegistration({ onAdd }) {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingLoc, setLoadingLoc] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [apiError, setApiError] = useState(null);
 
   /* ---------------- LOCATION SEARCH ---------------- */
   useEffect(() => {
@@ -63,15 +62,15 @@ export default function AssetRegistration({ onAdd }) {
 
     try {
       setSubmitting(true);
+      setApiError(null);
       await onAdd(payload); // 🔥 PARENT HANDLES API + REFRESH
-      alert("Asset registered successfully");
 
       setForm({ type: "", name: "", location: "" });
       setLocationQuery("");
       setErrors({});
     } catch (err) {
       console.error(err);
-      alert("Failed to register asset");
+      setApiError(err.message || "Failed to register asset");
     } finally {
       setSubmitting(false);
     }
@@ -151,13 +150,46 @@ export default function AssetRegistration({ onAdd }) {
         </div>
       </div>
 
+      {/* ================= API ERROR MESSAGE ================= */}
+      {apiError && (
+        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-red-800">Failed to register asset</p>
+            <p className="text-sm text-red-600 mt-1">{apiError}</p>
+          </div>
+          <button 
+            onClick={() => setApiError(null)}
+            className="text-red-400 hover:text-red-600"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <div className="mt-10 flex justify-end">
         <button
           onClick={submit}
           disabled={submitting}
-          className="px-8 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700"
+          className={`px-8 py-2 rounded-lg font-medium transition-all
+            ${submitting 
+              ? "bg-gray-400 text-gray-200 cursor-not-allowed" 
+              : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"
+            }`}
         >
-          {submitting ? "Saving..." : "Register Asset"}
+          {submitting ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Registering...
+            </span>
+          ) : (
+            "Register Asset"
+          )}
         </button>
       </div>
     </div>

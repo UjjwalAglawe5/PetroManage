@@ -95,7 +95,7 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
             <option value="">-- Choose an Asset --</option>
             {assets.map(asset => (
               <option key={asset.assetId} value={asset.assetId}>
-                {asset.name} (ID: {asset.assetId})
+                {asset.name} 
               </option>
             ))}
           </select>

@@ -7,7 +7,6 @@ import ReportsTable from "../components/compliance components/ReportsTable.jsx";
 import ReportForm from "../components/compliance components/ReportForm.jsx";
 import AuditView from "../components/compliance components/AuditView.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const containerVar = {
   hidden: { opacity: 0 },
@@ -21,9 +20,12 @@ const itemVar = {
 const API_BASE_URL = "http://localhost:8080/compliance-service/api/compliance/reports";
 
 export const Compliance = () => {
-  const [view, setView] = useState("dashboard"); // Added to manage views
+  const [view, setView] = useState("dashboard");
   const [showPopup, setShowPopup] = useState(false);
   const [reports, setReports] = useState([]);
+
+  // Defined style once for reuse
+  const calibriStyle = { fontFamily: "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif" };
 
   const fetchReports = async () => {
     try {
@@ -71,7 +73,8 @@ export const Compliance = () => {
   }, [reports]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-20 overflow-hidden">
+    /* Applied Calibri to the entire screen container */
+    <div className="min-h-screen bg-[#F8FAFC] pb-20 overflow-hidden" style={calibriStyle}>
       <AnimatePresence mode="wait">
         {view === "dashboard" ? (
           <motion.div
@@ -83,14 +86,16 @@ export const Compliance = () => {
           >
             <div className="w-full pt-4">
               <div className="relative overflow-hidden text-white rounded-xl px-4 py-6 sm:px-12 bg-slate-900 shadow-2xl">
-                <div className="relative z-10">
-                  <h2 className="text-3xl sm:text-4xl font-black mb-3 tracking-tight flex items-center gap-3">
-                    <FileCheck size={50} className="text-emerald-400 shrink-0" />
-                    <span>Compliance <span className="text-emerald-400">&amp;</span> Safety</span>
-                  </h2>
-                  <p className="text-slate-400 font-medium text-xs sm:text-base pl-15.5">
-                    Centralized regulatory tracking and real-time safety audit management.
-                  </p>
+                <div className="relative z-10 flex items-start gap-3 py-2.5">
+                  <FileCheck size={50} className="text-emerald-400 shrink-0" />
+                  <div className="flex flex-col">
+                    <h2 className="text-3xl sm:text-4xl font-black mb-1 tracking-tight">
+                      <span>Compliance <span className="text-emerald-400">&amp;</span> Safety</span>
+                    </h2>
+                    <p className="text-slate-400 font-medium text-xs sm:text-base">
+                      Centralized regulatory tracking and real-time safety audit management.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -100,7 +105,14 @@ export const Compliance = () => {
             </motion.div>
 
             <motion.div variants={itemVar} className="flex justify-center mt-12 px-4">
-              <button onClick={() => setShowPopup(true)} className="w-full sm:w-auto flex items-center justify-center gap-4 bg-emerald-600 text-white font-black px-10 py-5 rounded-2xl shadow-xl hover:bg-emerald-500 cursor-pointer text-xs uppercase tracking-widest transition-all">
+              <button
+                onClick={() => setShowPopup(true)}
+                /* Reduced padding (px-6 py-4) and increased text size (text-base sm:text-lg)
+                   to keep the overall button dimensions identical to the original.
+                */
+                className="w-full sm:w-[320px] h-[64px] flex items-center justify-center gap-4 bg-emerald-600 text-white font-black rounded-2xl shadow-xl hover:bg-emerald-500 cursor-pointer text-base sm:text-lg uppercase tracking-widest transition-all"
+                style={calibriStyle}
+              >
                 <FaPlus size={18} /> Generate New Report
               </button>
             </motion.div>
@@ -110,7 +122,11 @@ export const Compliance = () => {
                 <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-4">
                   <div className="h-10 w-2 bg-emerald-500 rounded-full" /> Active Reports
                 </h2>
-                <button onClick={() => setView("audit")} className="flex items-center gap-3 px-6 py-3 bg-white border border-slate-200 text-slate-600 font-black rounded-xl hover:bg-slate-900 hover:text-white transition-all text-[10px] uppercase tracking-widest cursor-pointer">
+                <button
+                  onClick={() => setView("audit")}
+                  className="flex items-center gap-3 px-6 py-3 bg-white border border-slate-200 text-slate-600 font-black rounded-xl hover:bg-slate-900 hover:text-white transition-all text-[15px] uppercase tracking-widest cursor-pointer"
+                  style={calibriStyle}
+                >
                   <FaHistory /> Audit Logs
                 </button>
               </div>
@@ -122,7 +138,13 @@ export const Compliance = () => {
             <AnimatePresence>
               {showPopup && (
                 <div className="fixed inset-0 z-100 flex items-center justify-center bg-slate-950/40 backdrop-blur-xl p-4">
-                  <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-2xl">
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    className="w-full max-w-2xl"
+                    style={calibriStyle}
+                  >
                     <ReportForm onClose={() => setShowPopup(false)} reports={reports} setReports={setReports} fetchReports={fetchReports} />
                   </motion.div>
                 </div>
@@ -130,7 +152,10 @@ export const Compliance = () => {
             </AnimatePresence>
           </motion.div>
         ) : (
-          <AuditView key="audit-view" setView={setView} />
+          /* Ensure AuditView also inherits Calibri */
+          <div style={calibriStyle}>
+            <AuditView key="audit-view" setView={setView} />
+          </div>
         )}
       </AnimatePresence>
     </div>

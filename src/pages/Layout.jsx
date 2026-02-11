@@ -16,12 +16,12 @@ import {
 
 const headerVariants = {
   hidden: { opacity: 0, y: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
-      duration: 0.6, 
-      ease: [0.22, 1, 0.36, 1], 
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
       staggerChildren: 0.1,
       delayChildren: 0.2
     }
@@ -30,8 +30,8 @@ const headerVariants = {
 
 const navItem = {
   hidden: { opacity: 0, y: -10 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.4 }
   }
@@ -39,19 +39,19 @@ const navItem = {
 
 const dropdownVariants = {
   hidden: { opacity: 0, scale: 0.95, y: -10, filter: "blur(4px)" },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.2, ease: "easeOut" } 
+    transition: { duration: 0.2, ease: "easeOut" }
   },
-  exit: { 
-    opacity: 0, 
-    scale: 0.95, 
-    y: -8, 
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: -8,
     filter: "blur(4px)",
-    transition: { duration: 0.15, ease: "easeIn" } 
+    transition: { duration: 0.15, ease: "easeIn" }
   }
 };
 export function Layout() {
@@ -61,8 +61,8 @@ export function Layout() {
   const user = useSelector((state) => state.user.user);
   // const role = user?.role;
   const role= 'operational_manager'; 
-  // const role= 'admin';
-  
+  // const role = 'admin';
+
   let navItems = [];
   if (role === 'operational_manager') {
     navItems = [
@@ -82,7 +82,7 @@ export function Layout() {
   return (
     <div className="flex flex-col h-screen bg-[#F9FAFB] overflow-x-hidden font-sans">
 
-      
+
       <motion.header
         variants={headerVariants}
         initial="hidden"
@@ -91,7 +91,7 @@ export function Layout() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
 
-          
+
           <motion.div
             variants={navItem}
             whileHover={{ scale: 1.02 }}
@@ -100,10 +100,10 @@ export function Layout() {
             <Link to="/" className="block hover:opacity-80 transition-opacity">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-sm">
-                  <motion.div 
+                  <motion.div
                     initial={{ rotate: 0 }}
                     animate={{ rotate: 45 }}
-                    className="w-4 h-4 bg-white rounded-sm" 
+                    className="w-4 h-4 bg-white rounded-sm"
                   />
                 </div>
                 <div>
@@ -118,10 +118,10 @@ export function Layout() {
             </Link>
           </motion.div>
 
-         
+
           <div className="flex items-center gap-4">
 
-            
+
             <nav className="hidden md:flex items-center gap-1 py-1">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
@@ -152,7 +152,7 @@ export function Layout() {
               })}
             </nav>
 
-            
+
             <div className="relative flex items-center border-l pl-4 border-gray-200 ml-2">
               <motion.button
                 variants={navItem}
@@ -161,9 +161,9 @@ export function Layout() {
                 className="flex items-center gap-2 group cursor-pointer"
               >
                 <motion.div
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
-                    boxShadow: "0 8px 20px rgba(249,115,22,0.4)" 
+                    boxShadow: "0 8px 20px rgba(249,115,22,0.4)"
                   }}
                   className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white font-black shadow-[0_4px_12px_rgba(249,115,22,0.3)]"
                 >
@@ -178,7 +178,7 @@ export function Layout() {
                 </motion.div>
               </motion.button>
 
-              
+
               <AnimatePresence>
                 {isDropdownOpen && (
                   <>
@@ -232,7 +232,7 @@ export function Layout() {
         </div>
       </motion.header>
 
-      
+
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <Outlet />
