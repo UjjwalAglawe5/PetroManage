@@ -33,7 +33,7 @@ export function Assets() {
   // ✅ Redux: read the logged-in user from the store
   const user = useSelector((state) => state?.user?.user);
   // const role = user?.role;
-  const role= 'operational_manager'; // Hardcoded for testing - change to user?.role in production
+  const role= 'admin'; // Hardcoded for testing - change to user?.role in production
   const isViewOnly = role === "admin"; // Admin = View Only, Operational Manager = Full Access
 
   /* ================= AUTO-DISMISS MESSAGES ================= */

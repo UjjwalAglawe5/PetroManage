@@ -220,12 +220,12 @@ const AuditView = ({ setView }) => {
               {currentItems.length > 0 ? (
                 currentItems.map((log, i) => (
                   <tr key={log.id || i} className="hover:bg-slate-50/50 transition-colors h-20">
-                    <td className="px-4 py-4 text-center whitespace-nowrap font-bold text-[13px] tabular-nums text-slate-900">
+                    <td className="px-4 py-4 text-center whitespace-nowrap font-bold text-[15px] tabular-nums text-slate-900">
                       {log.reportIdDisplay || "—"}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex justify-center">
-                        <span className={`inline-flex items-center justify-center w-full max-w-[160px] py-2 rounded-lg text-[9px] sm:text-[13px] font-black uppercase border whitespace-nowrap ${log.action?.includes("DELETE") ? "bg-red-50 text-red-600 border-red-100" :
+                        <span className={`inline-flex items-center justify-center w-full max-w-[160px] py-2 rounded-lg text-[9px] sm:text-[15px] font-black uppercase border whitespace-nowrap ${log.action?.includes("DELETE") ? "bg-red-50 text-red-600 border-red-100" :
                           log.action?.includes("CREATE") ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
                             "bg-amber-50 text-amber-600 border-amber-100"
                           }`}>

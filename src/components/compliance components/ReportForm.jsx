@@ -130,8 +130,8 @@ const ReportForm = ({ onClose, fetchReports }) => {
     })
   };
 
-  const inputClasses = "w-full bg-white border border-slate-200 rounded-xl p-3.5 text-[13px] outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all font-semibold shadow-sm";
-  const labelClasses = "flex items-center gap-2 text-[13px] font-black text-slate-500 uppercase tracking-widest mb-1.5";
+  const inputClasses = "w-full bg-white border border-slate-200 rounded-xl p-3.5 text-[15px] outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all font-semibold shadow-sm";
+  const labelClasses = "flex items-center gap-2 text-[15px] font-black text-slate-500 uppercase tracking-widest mb-1.5";
 
   return (
     <div

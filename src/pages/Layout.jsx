@@ -60,8 +60,8 @@ export function Layout() {
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
   // const role = user?.role;
-  const role= 'operational_manager'; 
-  // const role = 'admin';
+//   const role= 'operational_manager';
+  const role = 'admin';
 
   let navItems = [];
   if (role === 'operational_manager') {

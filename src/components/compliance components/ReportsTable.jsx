@@ -180,7 +180,15 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
                       <span className="inline-flex items-center justify-center w-16 font-black text-slate-700 text-[13px] bg-slate-100 py-1 rounded-lg">{report.safetyScore}%</span>
                     </td>
                     <td className="px-8 py-6 text-center">
-                      <span className={`inline-flex items-center justify-center w-32 py-1.5 rounded-full text-[13px] font-black uppercase border shadow-sm ${report.complianceStatus?.toLowerCase().includes('non') ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>{report.complianceStatus}</span>
+                      <span className={`inline-flex items-center justify-center w-32 py-1.5 rounded-full text-[13px] font-black uppercase border shadow-sm
+                        ${report.complianceStatus?.toLowerCase().includes('non')
+                          ? 'bg-red-50 text-red-600 border-red-100'
+                          : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+
+                        {/* This replaces all underscores with spaces globally */}
+                        {report.complianceStatus?.replace(/_/g, ' ')}
+
+                      </span>
                     </td>
                     <td className="px-8 py-6 text-center">
                       <div className="flex justify-center gap-2">
@@ -291,7 +299,7 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
             </div>
 
             <div className="px-4 py-4 sm:px-8 sm:py-5 bg-white border-t border-slate-100 flex flex-row items-center justify-between gap-2">
-              <span className="text-[10px] xs:text-[12px] sm:text-[15px] font-black text-slate-300 uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate" style={calibriStyle}>
+              <span className="text-[10px] xs:text-[12px] sm:text-[15px] font-black text-black uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate" style={calibriStyle}>
                 ID: {selectedReport.reportId}
               </span>
 
