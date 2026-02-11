@@ -30,11 +30,11 @@ export function Assets() {
 
   const moduleRef = useRef(null);
 
-  // ✅ Redux: read the logged-in user from the store (does NOT change behavior)
+  // ✅ Redux: read the logged-in user from the store
   const user = useSelector((state) => state?.user?.user);
-  // If you want role-based UI control later, uncomment this:
   // const role = user?.role;
-  // const isViewOnly = role === "admin"; // example: gate write actions
+  const role= 'operational_manager'; // Hardcoded for testing - change to user?.role in production
+  const isViewOnly = role === "admin"; // Admin = View Only, Operational Manager = Full Access
 
   /* ================= AUTO-DISMISS MESSAGES ================= */
   useEffect(() => {
@@ -188,22 +188,24 @@ export function Assets() {
               End-to-end lifecycle management for oil &amp; gas assets.
             </p>
 
-            {/* HEADER CTA (unchanged) */}
-            <button
-              onClick={() => {
-                setFromHeader(true);
-                setTab(tab === "register" ? "list" : "register");
-              }}
-              className="flex items-center gap-2 px-4 py-2
-                bg-gradient-to-r from-emerald-500 to-emerald-600
-                hover:from-emerald-600 hover:to-emerald-700
-                text-white text-sm font-semibold
-                rounded-lg shadow-lg transition-all
-                border border-emerald-400/30 shrink-0"
-            >
-              <PlusCircle className="w-5 h-5" />
-              {tab === "register" ? "View Assets" : "Register Asset"}
-            </button>
+            {/* HEADER CTA - Hidden for Admin (View Only) */}
+            {!isViewOnly && (
+              <button
+                onClick={() => {
+                  setFromHeader(true);
+                  setTab(tab === "register" ? "list" : "register");
+                }}
+                className="flex items-center gap-2 px-4 py-2
+                  bg-gradient-to-r from-emerald-500 to-emerald-600
+                  hover:from-emerald-600 hover:to-emerald-700
+                  text-white text-sm font-semibold
+                  rounded-lg shadow-lg transition-all
+                  border border-emerald-400/30 shrink-0"
+              >
+                <PlusCircle className="w-5 h-5" />
+                {tab === "register" ? "View Assets" : "Register Asset"}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -232,15 +234,18 @@ export function Assets() {
                 setTab("list");
               }}
             />
-            <SwitchButton
-              icon={PlusCircle}
-              label="Register"
-              active={tab === "register"}
-              onClick={() => {
-                setFromHeader(false);
-                setTab("register");
-              }}
-            />
+            {/* Register tab only for Operational Manager */}
+            {!isViewOnly && (
+              <SwitchButton
+                icon={PlusCircle}
+                label="Register"
+                active={tab === "register"}
+                onClick={() => {
+                  setFromHeader(false);
+                  setTab("register");
+                }}
+              />
+            )}
             <SwitchButton
               icon={RefreshCcw}
               label="Lifecycle"
@@ -264,19 +269,15 @@ export function Assets() {
           {!loading && tab === "list" && (
             <AssetList
               assets={assets}
-              onDelete={deleteAsset}
-              onUpdate={updateAssetHandler}
-              // If you enable isViewOnly above, you can gate like this:
-              // onDelete={isViewOnly ? undefined : deleteAsset}
-              // onUpdate={isViewOnly ? undefined : updateAssetHandler}
+              onDelete={isViewOnly ? undefined : deleteAsset}
+              onUpdate={isViewOnly ? undefined : updateAssetHandler}
             />
           )}
 
-          {!loading && tab === "register" && (
+          {!loading && tab === "register" && !isViewOnly && (
             <AssetRegistration
               assets={assets}
               onAdd={addAsset}
-              // If gating later: onAdd={isViewOnly ? undefined : addAsset}
             />
           )}
 
