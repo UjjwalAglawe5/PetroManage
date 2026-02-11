@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Lock, ShieldCheck, ChevronRight, HardHat } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -65,17 +66,28 @@ export function Registration({
 
     setLoading(true);
     try {
-      if (typeof onSubmit === "function") {
-        await onSubmit({ name, email, password, role, acceptTerms });
-      } else {
-        await new Promise((r) => setTimeout(r, 1200));
-      }
-      setMessage({ type: "success", text: "Account created! Redirecting to dashboard..." });
-      navigate("/")
+      // Make POST request to backend
+      const response = await axios.post("http://localhost:8084/auth/register", {
+        name: name,
+        email: email,
+        password: password,
+        role: role
+      });
+
+      // Show success message
+      setMessage({ type: "success", text: "Account created successfully! Redirecting to login..." });
+      
+      // Redirect to login page after 1.5 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
     } catch (err) {
+      // Handle error response from backend
+      const errorMsg = err.response?.data || "Registration failed. Please try again.";
       setMessage({
         type: "error",
-        text: err?.message || "Something went wrong. Please try again.",
+        text: typeof errorMsg === 'string' ? errorMsg : "Something went wrong. Please try again.",
       });
     } finally {
       setLoading(false);
