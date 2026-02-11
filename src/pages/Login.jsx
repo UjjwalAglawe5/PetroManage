@@ -71,7 +71,7 @@ export function Login({
       // ===============================================
       // ACTUAL BACKEND CONNECTION START
       // ===============================================
-      const response = await axios.post("http://localhost:8084/auth/login", {
+      const response = await axios.post("http://localhost:8080/auth/login", {
         email: email,
         password: password,
         role: role

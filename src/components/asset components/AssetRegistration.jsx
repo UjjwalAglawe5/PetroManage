@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
-
+ 
 export default function AssetRegistration({ onAdd }) {
   const [form, setForm] = useState({
     type: "",
     name: "",
     location: ""
   });
-
+ 
   const [errors, setErrors] = useState({});
   const [locationQuery, setLocationQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loadingLoc, setLoadingLoc] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState(null);
-
+ 
   /* ---------------- LOCATION SEARCH ---------------- */
   useEffect(() => {
     if (!locationQuery || locationQuery.length < 3) {
       setSuggestions([]);
       return;
     }
-
+ 
     const timer = setTimeout(async () => {
       try {
         setLoadingLoc(true);
@@ -35,36 +35,37 @@ export default function AssetRegistration({ onAdd }) {
         setLoadingLoc(false);
       }
     }, 300);
-
+ 
     return () => clearTimeout(timer);
   }, [locationQuery]);
-
+ 
   /* ---------------- VALIDATION ---------------- */
   const validate = () => {
     const e = {};
     if (!form.type) e.type = "Asset type is required";
     if (!form.name.trim()) e.name = "Asset name is required";
     if (!form.location.trim()) e.location = "Location is required";
-
+ 
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-
+ 
   /* ---------------- SUBMIT ---------------- */
   const submit = async () => {
     if (!validate()) return;
-
+ 
     const payload = {
       name: form.name.trim(),
       type: form.type,       // RIG / PIPELINE / STORAGE
       location: form.location.trim()
     };
-
+ 
     try {
       setSubmitting(true);
       setApiError(null);
+     
       await onAdd(payload); // 🔥 PARENT HANDLES API + REFRESH
-
+ 
       setForm({ type: "", name: "", location: "" });
       setLocationQuery("");
       setErrors({});
@@ -75,18 +76,18 @@ export default function AssetRegistration({ onAdd }) {
       setSubmitting(false);
     }
   };
-
+ 
   const inputClass = (field) =>
     `w-full px-4 py-2 rounded-lg border text-sm
      focus:ring-2 focus:ring-slate-500 focus:outline-none
      ${errors[field] ? "border-red-400" : "border-gray-300"}`;
-
+ 
   return (
     <div className="p-8">
       <h3 className="text-xl font-semibold mb-6">Register New Asset</h3>
-
+ 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+ 
         {/* Asset Type */}
         <div>
           <label className="text-sm font-medium">Asset Type *</label>
@@ -102,7 +103,7 @@ export default function AssetRegistration({ onAdd }) {
           </select>
           {errors.type && <p className="text-xs text-red-500">{errors.type}</p>}
         </div>
-
+ 
         {/* Asset Name */}
         <div>
           <label className="text-sm font-medium">Asset Name *</label>
@@ -113,7 +114,7 @@ export default function AssetRegistration({ onAdd }) {
           />
           {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
         </div>
-
+ 
         {/* Location */}
         <div className="relative">
           <label className="text-sm font-medium">Location *</label>
@@ -125,7 +126,7 @@ export default function AssetRegistration({ onAdd }) {
             }}
             className={inputClass("location")}
           />
-
+ 
           {suggestions.length > 0 && (
             <div className="absolute z-20 bg-white border rounded-lg mt-1 max-h-48 overflow-y-auto">
               {suggestions.map((loc) => (
@@ -143,13 +144,13 @@ export default function AssetRegistration({ onAdd }) {
               ))}
             </div>
           )}
-
+ 
           {errors.location && (
             <p className="text-xs text-red-500">{errors.location}</p>
           )}
         </div>
       </div>
-
+ 
       {/* ================= API ERROR MESSAGE ================= */}
       {apiError && (
         <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
@@ -160,7 +161,7 @@ export default function AssetRegistration({ onAdd }) {
             <p className="text-sm font-medium text-red-800">Failed to register asset</p>
             <p className="text-sm text-red-600 mt-1">{apiError}</p>
           </div>
-          <button 
+          <button
             onClick={() => setApiError(null)}
             className="text-red-400 hover:text-red-600"
           >
@@ -168,14 +169,14 @@ export default function AssetRegistration({ onAdd }) {
           </button>
         </div>
       )}
-
+ 
       <div className="mt-10 flex justify-end">
         <button
           onClick={submit}
           disabled={submitting}
           className={`px-8 py-2 rounded-lg font-medium transition-all
-            ${submitting 
-              ? "bg-gray-400 text-gray-200 cursor-not-allowed" 
+            ${submitting
+              ? "bg-gray-400 text-gray-200 cursor-not-allowed"
               : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"
             }`}
         >
@@ -195,3 +196,5 @@ export default function AssetRegistration({ onAdd }) {
     </div>
   );
 }
+ 
+ 

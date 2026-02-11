@@ -1,41 +1,41 @@
 import { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux"; // ✅ Redux added
+import { useSelector } from "react-redux";
 import {
   Boxes,
   ClipboardList,
   PlusCircle,
   RefreshCcw
 } from "lucide-react";
-
+ 
 import AssetRegistration from "../components/asset components/AssetRegistration";
 import AssetList from "../components/asset components/AssetList";
 import AssetLifecycle from "../components/asset components/AssetLifecycle";
 import AssetKPIs from "../components/asset components/AssetKPIs";
-
+ 
 import {
   getAssets,
   createAsset,
   updateAsset,
   deleteAsset as deleteAssetApi
 } from "../components/asset components/assetAPI.js";
-
+ 
 export function Assets() {
-  
+ 
   const [tab, setTab] = useState("list");
   const [fromHeader, setFromHeader] = useState(false);
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-
+ 
   const moduleRef = useRef(null);
-
+ 
   // ✅ Redux: read the logged-in user from the store
   const user = useSelector((state) => state?.user?.user);
-  // const role = user?.role;
-  const role= 'operational_manager'; // Hardcoded for testing - change to user?.role in production
+  const role = user?.role;
+  // const role= 'operational_manager'; // Hardcoded for testing - change to user?.role in production
   const isViewOnly = role === "admin"; // Admin = View Only, Operational Manager = Full Access
-
+ 
   /* ================= AUTO-DISMISS MESSAGES ================= */
   useEffect(() => {
     if (successMessage) {
@@ -43,19 +43,19 @@ export function Assets() {
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
-
+ 
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(null), 8000);
       return () => clearTimeout(timer);
     }
   }, [error]);
-
+ 
   /* ================= LOAD ASSETS ================= */
   useEffect(() => {
     loadAssets();
   }, []);
-
+ 
   const loadAssets = async () => {
     try {
       setLoading(true);
@@ -69,9 +69,9 @@ export function Assets() {
       setLoading(false);
     }
   };
-
+ 
   /* ================= CRUD OPERATIONS ================= */
-
+ 
   // CREATE
   const addAsset = async (asset) => {
     try {
@@ -86,7 +86,7 @@ export function Assets() {
       throw err; // Re-throw so the child component can handle it
     }
   };
-
+ 
   // DELETE
   const deleteAsset = async (id) => {
     try {
@@ -99,7 +99,7 @@ export function Assets() {
       setError(err.message || "Failed to delete asset. Please try again.");
     }
   };
-
+ 
   // UPDATE
   const updateAssetHandler = async (updatedAsset) => {
     try {
@@ -113,10 +113,11 @@ export function Assets() {
       throw err; // Re-throw so the child component can handle it
     }
   };
-
+ 
   /* ================= SMART SCROLL ================= */
   useEffect(() => {
-    if (tab === "register" && fromHeader) {
+    if (fromHeader) {
+      // Scroll to module section for both register and list views
       moduleRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "center"
@@ -124,10 +125,10 @@ export function Assets() {
       setFromHeader(false);
     }
   }, [tab, fromHeader]);
-
+ 
   return (
     <div className="space-y-8 py-4">
-
+ 
       {/* ================= SUCCESS MESSAGE ================= */}
       {successMessage && (
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
@@ -136,7 +137,7 @@ export function Assets() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
             <span className="font-medium">{successMessage}</span>
-            <button 
+            <button
               onClick={() => setSuccessMessage(null)}
               className="ml-2 hover:bg-green-600 rounded p-1"
             >
@@ -145,7 +146,7 @@ export function Assets() {
           </div>
         </div>
       )}
-
+ 
       {/* ================= ERROR MESSAGE ================= */}
       {error && (
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
@@ -154,7 +155,7 @@ export function Assets() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-medium text-sm">{error}</span>
-            <button 
+            <button
               onClick={() => setError(null)}
               className="ml-2 hover:bg-red-600 rounded p-1 shrink-0"
             >
@@ -163,12 +164,12 @@ export function Assets() {
           </div>
         </div>
       )}
-
+ 
       {/* ================= HEADER ================= */}
       <div className="relative overflow-hidden rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
-
+ 
         <div className="relative p-6 text-white">
           <div className="flex items-center gap-3">
             <Boxes className="w-9 h-9 text-slate-300" />
@@ -176,7 +177,7 @@ export function Assets() {
               Asset Management
             </h1>
           </div>
-
+ 
           <div className="mt-4 flex items-start justify-between gap-6">
             <p
               className="relative text-slate-300 max-w-xl text-sm pl-4
@@ -187,7 +188,7 @@ export function Assets() {
             >
               End-to-end lifecycle management for oil &amp; gas assets.
             </p>
-
+ 
             {/* HEADER CTA - Hidden for Admin (View Only) */}
             {!isViewOnly && (
               <button
@@ -209,10 +210,10 @@ export function Assets() {
           </div>
         </div>
       </div>
-
+ 
       {/* ================= KPI ================= */}
       <AssetKPIs assets={assets} />
-
+ 
       {/* ================= MODULE ================= */}
       <div
         ref={moduleRef}
@@ -223,7 +224,7 @@ export function Assets() {
           <h2 className="font-semibold text-gray-800">
             Asset Operations Hub
           </h2>
-
+ 
           <div className="flex bg-gray-200 rounded-lg p-1">
             <SwitchButton
               icon={ClipboardList}
@@ -257,7 +258,7 @@ export function Assets() {
             />
           </div>
         </div>
-
+ 
         {/* CONTENT */}
         <div className="p-6">
           {loading && (
@@ -265,7 +266,7 @@ export function Assets() {
               Loading assets...
             </p>
           )}
-
+ 
           {!loading && tab === "list" && (
             <AssetList
               assets={assets}
@@ -273,20 +274,20 @@ export function Assets() {
               onUpdate={isViewOnly ? undefined : updateAssetHandler}
             />
           )}
-
+ 
           {!loading && tab === "register" && !isViewOnly && (
             <AssetRegistration
               assets={assets}
               onAdd={addAsset}
             />
           )}
-
+ 
           {!loading && tab === "lifecycle" && (
             <AssetLifecycle assets={assets} />
           )}
         </div>
       </div>
-
+ 
       {/* ================= FOOTER ================= */}
       <div className="text-center text-sm text-gray-500 pt-4 border-t">
         © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
@@ -294,8 +295,8 @@ export function Assets() {
     </div>
   );
 }
-
-
+ 
+ 
 function SwitchButton({ icon: Icon, label, active, onClick }) {
   return (
     <button
@@ -312,3 +313,4 @@ function SwitchButton({ icon: Icon, label, active, onClick }) {
     </button>
   );
 }
+ 

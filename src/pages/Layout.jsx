@@ -59,12 +59,14 @@ export function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
-  // const role = user?.role;
-  const role= 'operational_manager'; 
+  const role = user?.role;
+  console.log("This is user",role);
+  
+  // const role= 'operational_manager'; 
   // const role = 'admin';
 
   let navItems = [];
-  if (role === 'operational_manager') {
+  if (role === 'manager') {
     navItems = [
       { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },
       { icon: <Package size={18} />, label: 'Assets', path: '/assets' },

@@ -10,11 +10,11 @@ import {
   Warehouse,
   ClipboardCheck
 } from "lucide-react";
-
+ 
 export default function AssetKPIs({ assets }) {
-
+ 
   const count = (fn) => assets.filter(fn).length;
-
+ 
   const kpis = [
     {
       title: "Total Assets",
@@ -23,34 +23,16 @@ export default function AssetKPIs({ assets }) {
       color: "from-slate-700 to-slate-900"
     },
     {
-      title: "Registered",
-      value: count(a => a.status === "REGISTERED"),
-      icon: ClipboardCheck,
-      color: "from-gray-400 to-gray-600"
-    },
-    {
-      title: "Operational",
-      value: count(a => a.status === "OPERATIONAL"),
+      title: "Active Assets",
+      value: count(a => a.status === "ACTIVE"),
       icon: AlertTriangle,
       color: "from-green-500 to-green-700"
     },
     {
-      title: "Maintenance",
-      value: count(a => a.status === "MAINTENANCE"),
-      icon: Wrench,
-      color: "from-amber-500 to-amber-700"
-    },
-    {
-      title: "Under Inspection",
-      value: count(a => a.status === "UNDER_INSPECTION"),
+      title: "Inactive Assets",
+      value: count(a => a.status === "INACTIVE"),
       icon: ShieldAlert,
-      color: "from-blue-500 to-blue-700"
-    },
-    {
-      title: "Decommissioned",
-      value: count(a => a.status === "DECOMMISSIONED"),
-      icon: Ban,
-      color: "from-red-500 to-red-700"
+      color: "from-gray-400 to-gray-600"
     },
     {
       title: "Rigs",
@@ -71,7 +53,7 @@ export default function AssetKPIs({ assets }) {
       color: "from-violet-500 to-violet-700"
     }
   ];
-
+ 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {kpis.map((kpi) => (
@@ -80,7 +62,7 @@ export default function AssetKPIs({ assets }) {
     </div>
   );
 }
-
+ 
 /* ---------------- KPI CARD ---------------- */
 function KpiCard({ title, value, icon: Icon, color }) {
   return (
@@ -94,7 +76,7 @@ function KpiCard({ title, value, icon: Icon, color }) {
       >
         <Icon className="w-7 h-7" />
       </div>
-
+ 
       <div>
         <p className="text-xs uppercase tracking-wide text-gray-500">
           {title}
@@ -106,3 +88,5 @@ function KpiCard({ title, value, icon: Icon, color }) {
     </div>
   );
 }
+ 
+ 
