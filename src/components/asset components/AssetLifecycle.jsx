@@ -81,7 +81,7 @@ function AssetCard({ asset, status }) {
       <div className="flex items-start justify-between mb-2">
         <div>
           <h4 className="font-semibold text-gray-900">{asset.name}</h4>
-          <p className="text-xs text-gray-500">#{asset.assetId}</p>
+          <p className="text-xs text-gray-500">{asset.assetId}</p>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full font-medium ${
           status === "ACTIVE"

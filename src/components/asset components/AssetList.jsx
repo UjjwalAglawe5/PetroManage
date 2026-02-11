@@ -68,14 +68,14 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               Showing <b>{filteredAssets.length}</b> assets
             </span>
  
-            <select value={type} onChange={(e) => setType(e.target.value)}>
+            <select className="cursor-pointer" value={type} onChange={(e) => setType(e.target.value)}>
               <option value="">All Types</option>
               <option value="RIG">RIG</option>
               <option value="PIPELINE">PIPELINE</option>
               <option value="STORAGE">STORAGE</option>
             </select>
  
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <select className="cursor-pointer" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="">All Status</option>
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
@@ -87,7 +87,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 setStatus("");
                 setType("");
               }}
-              className="text-sm text-slate-600 hover:underline"
+              className="cursor-pointer text-sm text-slate-600 hover:underline"
             >
               Reset
             </button>
@@ -199,7 +199,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               onChange={(e) =>
                 setSelectedAsset({ ...selectedAsset, status: e.target.value })
               }
-              className="mb-3 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
+              className="cursor-pointer mb-3 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
             >
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
@@ -221,7 +221,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <button
                 onClick={saveUpdate}
                 disabled={updating}
-                className={`w-full px-6 py-2 rounded-lg font-medium transition-all
+                className={`cursor-pointer w-full px-6 py-2 rounded-lg font-medium transition-all
                   ${updating
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                     : "bg-slate-800 text-white hover:bg-slate-700"
