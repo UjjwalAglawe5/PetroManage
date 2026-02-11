@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Added for redirection
-import { motion, AnimatePresence } from "framer-motion"; // Added for animations
+import { useNavigate } from "react-router-dom"; 
+import { useDispatch } from "react-redux";
+import { login } from "../store/userSlice";
+import { motion, AnimatePresence } from "framer-motion"; 
+import axios from "axios"; 
 import oilimg from "../img/image.png";
 
 function validateEmail(email) {
@@ -24,7 +27,6 @@ const itemVariants = {
 };
 
 export function Login({
-  onSubmit,
   onGoToRegister,
   title = "Welcome back",
   subtitle = "Sign in to your account",
@@ -32,6 +34,7 @@ export function Login({
   signupHref = "/register",
 }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [role, setRole] = useState("manager");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,21 +68,46 @@ export function Login({
 
     setLoading(true);
     try {
-      if (typeof onSubmit === "function") {
-        await onSubmit(email, password, rememberMe, role);
-      } else {
-        // Mock delay for UI feedback
-        await new Promise((r) => setTimeout(r, 1000));
+      // ===============================================
+      // ACTUAL BACKEND CONNECTION START
+      // ===============================================
+      const response = await axios.post("http://localhost:8084/auth/login", {
+        email: email,
+        password: password,
+        role: role
+      });
+
+      // Extract user data from response
+      const userData = {
+        name: response.data.name,
+        email: response.data.email,
+        role: response.data.role
+      };
+
+      // Save to Redux store
+      dispatch(login(userData));
+
+      // Save to localStorage for persistence across sessions
+      if (rememberMe) {
+        localStorage.setItem("user", JSON.stringify(userData));
       }
+
+      // This triggers the useEffect above to redirect
       setMessage({ type: "success", text: `Signed in successfully! Redirecting...` });
+      
     } catch (err) {
+      // Captures error message from Spring Boot (e.g. "Invalid credentials")
+      const errorMsg = err.response?.data || "Login failed. Server not reachable.";
       setMessage({
         type: "error",
-        text: err?.message || "Something went wrong. Please try again.",
+        text: typeof errorMsg === 'string' ? errorMsg : "An error occurred",
       });
     } finally {
       setLoading(false);
     }
+    // ===============================================
+    // ACTUAL BACKEND CONNECTION END
+    // ===============================================
   };
 
   return (
