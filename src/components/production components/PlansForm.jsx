@@ -132,6 +132,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
           <input
             type="date"
             value={form.endDate}
+            min={form.startDate || undefined}
             onChange={(e) => setForm({ ...form, endDate: e.target.value })}
             className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
           />

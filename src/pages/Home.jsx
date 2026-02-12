@@ -262,6 +262,9 @@ export function Home() {
           </motion.button>
         </div>
       </motion.section>
+      <div className="text-center text-sm text-gray-500 pt-4 border-t">
+        © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
+      </div>
     </div>
   );
 }

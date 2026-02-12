@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSelector } from 'react-redux';
 import {
   User,
   Briefcase,
@@ -16,43 +17,9 @@ import {
   ChevronRight,
   Award,
   Settings,
-  Wrench
+  Wrench,
+  Shield
 } from 'lucide-react';
-
-const profileData = {
-  name: 'Singh, Manohar',
-  company: 'Cognizant',
-  title: 'Programmer Analyst Trainee',
-  department: 'Engineering',
-  officeLocation: 'Pune, MH',
-  manager: 'Vinayak, Patangankar Mantramurty',
-  email: 'manohar.singh@cognizant.com',
-  phone: '+91-XXXXXXXXXX',
-  skills: [
-    { label: 'React', level: 90 },
-    { label: 'TypeScript', level: 75 },
-    { label: 'Node.js', level: 70 },
-    { label: 'Tailwind CSS', level: 95 },
-  ],
-  stats: [
-    { label: 'Projects', value: 12 },
-    { label: 'Tasks', value: 7 },
-    // { label: 'Resolved', value: 134 },
-    { label: 'Reliability', value: '96%' }
-  ],
-  recentActivity: [
-    {
-      title: 'Deployed upstream monitoring',
-      date: 'Dec 22, 2025',
-      icon: <BarChart3 size={16} className="text-blue-500" />
-    },
-    {
-      title: 'Compliance update ref 2.1',
-      date: 'Dec 19, 2025',
-      icon: <ClipboardList size={16} className="text-emerald-500" />
-    }
-  ]
-};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -68,7 +35,55 @@ const itemVariants = {
 };
 
 export const Profile = () => {
+  // Get user data from Redux
+  const user = useSelector((state) => state.user.user);
+  
+  // Fallback values if user is not logged in
+  const profileData = {
+    name: user?.name || 'Guest User',
+    email: user?.email || 'guest@petromanage.com',
+    role: user?.role || 'guest',
+    phone: user?.phone || 'N/A',
+    department: 'Engineering',
+    officeLocation: 'Pune, MH',
+  };
+
   const p = profileData;
+
+  // Role display config
+  const getRoleConfig = (role) => {
+    if (role === 'admin') {
+      return {
+        label: 'Admin',
+        bgColor: 'bg-purple-500/20',
+        textColor: 'text-purple-300',
+        borderColor: 'border-purple-500/30',
+        icon: <Shield size={14} className="text-purple-300" />
+      };
+    } else if (role === 'manager') {
+      return {
+        label: 'Manager',
+        bgColor: 'bg-emerald-500/20',
+        textColor: 'text-emerald-300',
+        borderColor: 'border-emerald-500/30',
+        icon: <Briefcase size={14} className="text-emerald-300" />
+      };
+    }
+    return {
+      label: 'User',
+      bgColor: 'bg-blue-500/20',
+      textColor: 'text-blue-300',
+      borderColor: 'border-blue-500/30',
+      icon: <User size={14} className="text-blue-300" />
+    };
+  };
+
+  const roleConfig = getRoleConfig(p.role);
+
+  const stats = [
+    { label: 'Projects', value: 12 },
+    { label: 'Tasks', value: 7 },
+  ];
 
   return (
     <motion.div
@@ -96,10 +111,13 @@ export const Profile = () => {
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <h1 className="text-3xl md:text-4xl font-black tracking-tight">{p.name}</h1>
-                <span className="bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border border-blue-500/30">Admin</span>
+                <span className={`${roleConfig.bgColor} ${roleConfig.textColor} text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${roleConfig.borderColor} flex items-center gap-1.5`}>
+                  {roleConfig.icon}
+                  {roleConfig.label}
+                </span>
               </div>
               <p className="text-blue-200/70 font-medium flex items-center gap-2">
-                <Briefcase size={16} /> {p.title} • {p.department}
+                <Briefcase size={16} /> {p.department}
               </p>
             </div>
           </div>
@@ -118,8 +136,8 @@ export const Profile = () => {
         {/* ================= LEFT COLUMN: DETAILS ================= */}
         <div className="lg:col-span-2 space-y-8">
           {/* Stats Grid */}
-          <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {p.stats.map((stat, i) => (
+          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
+            {stats.map((stat, i) => (
               <div key={i} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
                 <p className="text-2xl font-black text-slate-800 tracking-tight">{stat.value}</p>
@@ -157,8 +175,8 @@ export const Profile = () => {
         {/* ================= RIGHT COLUMN: FIELD EXPERTISE & OPS LOGS ================= */}
         <div className="space-y-8">
 
-          {/* Field Expertise / Certifications */}
-          <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          {/* Field Expertise / Certifications - Commented for future use */}
+          {/* <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-black text-slate-800 uppercase tracking-tighter text-sm flex items-center gap-2">
                 <Award size={18} className="text-blue-500" /> Technical Expertise
@@ -191,7 +209,7 @@ export const Profile = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </motion.div> */}
 
           {/* Operational Logs / Recent Activity */}
           <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">

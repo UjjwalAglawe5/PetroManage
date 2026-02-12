@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   const [plans, setPlans] = useState([]); 
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const [form, setForm] = useState({
     asset: '',
     planId: '', 
@@ -23,6 +24,24 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
     };
     fetchPlans();
   }, []);
+
+  // Fetch selected plan details when planId changes
+  useEffect(() => {
+    const fetchPlanDetails = async () => {
+      if (form.planId) {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/production/plans/${form.planId}`);
+          setSelectedPlan(response.data);
+        } catch (error) {
+          console.error("Error fetching plan details:", error);
+          setSelectedPlan(null);
+        }
+      } else {
+        setSelectedPlan(null);
+      }
+    };
+    fetchPlanDetails();
+  }, [form.planId]);
 
   const handleSubmit = async () => {
     
@@ -84,9 +103,17 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
           <input
             type="date"
             value={form.date}
+            min={selectedPlan?.startDate || undefined}
+            max={selectedPlan?.endDate || undefined}
+            disabled={!form.planId}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 transition-all"
+            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           />
+          {selectedPlan && (
+            <p className="text-xs text-gray-500 mt-1">
+              Valid range: {new Date(selectedPlan.startDate).toLocaleDateString()} - {new Date(selectedPlan.endDate).toLocaleDateString()}
+            </p>
+          )}
         </div>
 
         {/* Actual Volume */}

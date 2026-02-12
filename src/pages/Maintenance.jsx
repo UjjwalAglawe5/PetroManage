@@ -236,6 +236,9 @@ const stats = [
           />
         )}
       </AnimatePresence>
+      <div className="text-center text-sm text-gray-500 pt-4 border-t">
+        © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
+      </div>
     </motion.div>
   );
 };

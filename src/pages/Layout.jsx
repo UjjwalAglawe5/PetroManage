@@ -126,12 +126,12 @@ export function Layout() {
 
             <nav className="hidden md:flex items-center gap-1 py-1">
               {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive = location.pathname.startsWith(item.path);
                 return (
                   <motion.div key={item.path} variants={navItem} className="relative">
                     <NavLink
                       to={item.path}
-                      className={({ isActive }) => `
+                      className={() => `
                         relative flex items-center gap-2 px-4 py-2 rounded-xl
                         font-bold text-sm transition-colors whitespace-nowrap z-10
                         ${isActive ? 'text-white' : 'text-gray-500 hover:text-black'}
@@ -240,6 +240,15 @@ export function Layout() {
           <Outlet />
         </div>
       </main>
+
+      {/* ================= FOOTER ================= */}
+      {/* <footer className="bg-white border-t border-gray-200 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <p className="text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
+          </p>
+        </div>
+      </footer> */}
     </div>
   );
 }
