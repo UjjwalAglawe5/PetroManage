@@ -164,7 +164,7 @@ export function Login({
               <button
                 type="button"
                 onClick={() => setRole("manager")}
-                className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 z-10 ${
+                className={`cursor-pointer flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 z-10 ${
                   role === "manager" ? "text-white" : "text-gray-500"
                 }`}
               >
@@ -173,7 +173,7 @@ export function Login({
               <button
                 type="button"
                 onClick={() => setRole("admin")}
-                className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 z-10 ${
+                className={`cursor-pointer flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 z-10 ${
                   role === "admin" ? "text-white" : "text-gray-500"
                 }`}
               >
@@ -235,7 +235,7 @@ export function Login({
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-400 hover:text-orange-600 uppercase tracking-wider"
+                  className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-400 hover:text-orange-600 uppercase tracking-wider"
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
@@ -263,7 +263,7 @@ export function Login({
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-2xl bg-orange-700 px-4 py-4.5 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 transition-all disabled:opacity-50 uppercase tracking-widest"
+                className="cursor-pointer w-full rounded-2xl bg-orange-700 px-4 py-4.5 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 transition-all disabled:opacity-50 uppercase tracking-widest"
               >
                 {loading ? "Verifying..." : "Sign In Now"}
               </motion.button>
@@ -275,7 +275,7 @@ export function Login({
             <button
               type="button"
               onClick={onGoToRegister || (() => window.location.href = signupHref)}
-              className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600"
+              className="cursor-pointer ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600"
             >
               Sign up free
             </button>

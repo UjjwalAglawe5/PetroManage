@@ -32,7 +32,7 @@ export function ForgotPassword({
     setLoading(true);
     try {
       // ✅ FIXED: Added correct URL
-      await axios.post("http://localhost:8084/auth/forgot-password", { 
+      await axios.post("http://localhost:8080/auth-service/auth/forgot-password", {
         email: email 
       });
 
@@ -58,7 +58,7 @@ export function ForgotPassword({
     setLoading(true);
     try {
       // ✅ FIXED: Added correct URL
-      await axios.put("http://localhost:8084/auth/reset-password", {
+      await axios.put("http://localhost:8080/auth-service/auth/reset-password", {
         email: email,       
         otp: otp,
         newPassword: newPw
@@ -102,7 +102,7 @@ export function ForgotPassword({
               <input type="email" className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-5 py-4 outline-none focus:border-orange-500"
                 value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-            <button type="submit" disabled={loading} className="w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest">
+            <button type="submit" disabled={loading} className="cursor-pointer w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest">
               {loading ? "Sending..." : "Send Reset Instructions"}
             </button>
           </form>
@@ -125,7 +125,7 @@ export function ForgotPassword({
               <input type="password" className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-5 py-3.5 outline-none focus:border-orange-500"
                 value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required />
             </div>
-            <button type="submit" disabled={loading} className="w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest">
+            <button type="submit" disabled={loading} className="cursor-pointer w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest">
               {loading ? "Resetting..." : "Update Password"}
             </button>
           </form>

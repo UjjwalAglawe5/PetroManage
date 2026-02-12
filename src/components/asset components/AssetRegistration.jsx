@@ -78,7 +78,7 @@ export default function AssetRegistration({ onAdd }) {
   };
  
   const inputClass = (field) =>
-    `w-full px-4 py-2 rounded-lg border text-sm
+    `cursor-pointer w-full px-4 py-2 rounded-lg border text-sm
      focus:ring-2 focus:ring-slate-500 focus:outline-none
      ${errors[field] ? "border-red-400" : "border-gray-300"}`;
  
@@ -174,7 +174,7 @@ export default function AssetRegistration({ onAdd }) {
         <button
           onClick={submit}
           disabled={submitting}
-          className={`px-8 py-2 rounded-lg font-medium transition-all
+          className={`cursor-pointer px-8 py-2 rounded-lg font-medium transition-all
             ${submitting
               ? "bg-gray-400 text-gray-200 cursor-not-allowed"
               : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"

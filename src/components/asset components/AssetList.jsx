@@ -63,19 +63,19 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             />
           </div>
  
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="cursor-pointer flex items-center gap-3 flex-wrap">
             <span className="text-sm text-gray-500">
               Showing <b>{filteredAssets.length}</b> assets
             </span>
  
-            <select value={type} onChange={(e) => setType(e.target.value)}>
+            <select className="cursor-pointer" value={type} onChange={(e) => setType(e.target.value)}>
               <option value="">All Types</option>
               <option value="RIG">RIG</option>
               <option value="PIPELINE">PIPELINE</option>
               <option value="STORAGE">STORAGE</option>
             </select>
  
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <select className="cursor-pointer" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="">All Status</option>
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
@@ -87,7 +87,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 setStatus("");
                 setType("");
               }}
-              className="text-sm text-slate-600 hover:underline"
+              className="cursor-pointer text-sm text-slate-600 hover:underline"
             >
               Reset
             </button>
@@ -133,11 +133,11 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
  
                 {/* ACTIONS */}
                 <td className="px-5 py-4 text-right">
-                  <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <div className="cursor-pointer flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
                     <button
                       title="Edit Asset"
                       onClick={() => setSelectedAsset({ ...a })}
-                      className="p-2 rounded-lg hover:bg-blue-50 text-blue-600"
+                      className="cursor-pointer p-2 rounded-lg hover:bg-blue-50 text-blue-600"
                     >
                       <Edit size={16} />
                     </button>
@@ -150,7 +150,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                       }
                       disabled={a.status === "DECOMMISSIONED"}
                       onClick={() => setDeleteTarget(a)}
-                      className={`p-2 rounded-lg ${
+                      className={`cursor-pointer p-2 rounded-lg ${
                         a.status === "DECOMMISSIONED"
                           ? "text-gray-400 cursor-not-allowed"
                           : "hover:bg-red-50 text-red-600"
@@ -199,7 +199,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               onChange={(e) =>
                 setSelectedAsset({ ...selectedAsset, status: e.target.value })
               }
-              className="mb-3 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
+              className="cursor-pointer mb-3 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500"
             >
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
@@ -221,7 +221,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <button
                 onClick={saveUpdate}
                 disabled={updating}
-                className={`w-full px-6 py-2 rounded-lg font-medium transition-all
+                className={`cursor-pointer w-full px-6 py-2 rounded-lg font-medium transition-all
                   ${updating
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                     : "bg-slate-800 text-white hover:bg-slate-700"
