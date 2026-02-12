@@ -1,5 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Added for navigation
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   Package,
   TrendingUp,
@@ -38,6 +39,8 @@ const stagger = {
 
 export function Home() {
   const navigate = useNavigate(); 
+  const user = useSelector((state) => state.user.user);
+  const isLoggedIn = !!user;
 
   const modules = [
     {
@@ -116,19 +119,21 @@ export function Home() {
             Centralize your energy workflows. Monitor large-scale operations with enterprise-grade audit trails.
           </p>
 
-          <div className="flex flex-wrap gap-4">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/login')} 
-              className="cursor-pointer bg-white text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-200 transition flex items-center gap-2 shadow-lg shadow-white/5"
-            >
-              Get Started <ChevronRight size={18} />
-            </motion.button>
-            <button className="cursor-pointer text-zinc-400 hover:text-white font-bold text-sm uppercase tracking-widest transition-colors flex items-center gap-2 px-4">
-              View Specs
-            </button>
-          </div>
+          {!isLoggedIn && (
+            <div className="flex flex-wrap gap-4">
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/login')} 
+                className="cursor-pointer bg-white text-black px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-200 transition flex items-center gap-2 shadow-lg shadow-white/5"
+              >
+                Get Started <ChevronRight size={18} />
+              </motion.button>
+              <button className="cursor-pointer text-zinc-400 hover:text-white font-bold text-sm uppercase tracking-widest transition-colors flex items-center gap-2 px-4">
+                View Specs
+              </button>
+            </div>
+          )}
         </motion.div>
 
        

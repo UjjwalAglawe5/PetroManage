@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { logout } from '../store/userSlice';
 import {
   LayoutDashboard,
   Package,
@@ -58,9 +59,17 @@ export function Layout() {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const role = user?.role;
   console.log("This is user",role);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsDropdownOpen(false);
+    navigate('/login');
+  };
   
   // const role= 'operational_manager'; 
   // const role = 'admin';
@@ -204,7 +213,7 @@ export function Layout() {
                           User Account
                         </p>
                         <p className="text-sm font-bold text-black truncate">
-                          {role === 'admin' ? 'Admin' : role === 'operational_manager' ? 'Operational Manager' : 'User'}
+                          {role === 'admin' ? 'Admin' : role === 'manager' ? 'Operational Manager' : 'User'}
                         </p>
                       </div>
 
@@ -218,7 +227,7 @@ export function Layout() {
                       </Link>
 
                       <button
-                        onClick={() => setIsDropdownOpen(false)}
+                        onClick={handleLogout}
                         className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <LogOut size={18} />

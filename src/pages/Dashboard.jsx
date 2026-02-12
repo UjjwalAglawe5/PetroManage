@@ -1,13 +1,14 @@
 import { Activity, TrendingUp, AlertTriangle, Wrench, BarChart3, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import MetricsCard from '../components/dashboard components/MetricsCard';
 import ProductionChart from '../components/dashboard components/ProductionChart';
 // @ts-ignore: importing a JS module without a declaration file
 import AssetUtilization from '../components/dashboard components/AssetUtilization';
 import MaintenancePredictor from '../components/dashboard components/MaintenancePredictor';
 import RecentReports from '../components/dashboard components/RecentReports';
-import { analyticsData } from '../components/dashboard components/data';
 import { NavLink } from 'react-router-dom';
 
 // Animation Variants
@@ -28,10 +29,53 @@ const itemVariants = {
 
 export function Dashboard() {
   const user = useSelector((state) => state.user.user);
-  // const role = user?.role;
-  // const role = 'operational_manager'; // For testing, hardcode role here. Replace with actual role from user state in production.
-  const role = 'admin';
+  const role = user?.role;
+  
+  const [analyticsData, setAnalyticsData] = useState({
+    currentMetrics: {
+      productionEfficiency: 0,
+      efficiencyChange: 0,
+      assetUtilization: 0,
+      utilizationChange: 0,
+      totalDowntime: 0,
+      downtimeChange: 0,
+      maintenanceDue: 0
+    },
+    productionTrends: [],
+    assets: [],
+    maintenancePredictions: [],
+    recentReports: []
+  });
+  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/dashboard/analytics');
+        setAnalyticsData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching dashboard analytics:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   const latestMetrics = analyticsData.currentMetrics;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-semibold">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -48,7 +92,7 @@ export function Dashboard() {
           <p className="text-emerald-100 mt-1 pl-14">
             {role === 'admin'
               ? 'Admin View: High-level analytics across all sites'
-              : role === 'operational_manager'
+              : role === 'manager'
                 ? 'Operational View: Current site activity & pending tasks'
                 : 'Analytics & Dashboard'}
           </p>
@@ -107,7 +151,7 @@ export function Dashboard() {
               </div>
             </motion.section>
           </>
-        ) : role === 'operational_manager' ? (
+        ) : role === 'manager' ? (
           <>
             {/* Operational Manager: Focused site activity and tasks */}
             <section>
