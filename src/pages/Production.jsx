@@ -123,7 +123,7 @@ export function Production() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition-colors h-fit"
+          className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition-colors h-fit"
         >
           <Plus size={20} />
           {activeTab === 'plans' ? 'New Plan' : 'Add Record'}
@@ -190,7 +190,7 @@ export function Production() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-6 py-3 font-medium text-sm transition-colors ${
+                className={`cursor-pointer relative px-6 py-3 font-medium text-sm transition-colors ${
                   activeTab === tab ? 'text-slate-800' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >

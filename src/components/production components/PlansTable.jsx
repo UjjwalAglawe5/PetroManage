@@ -114,8 +114,8 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
             <td className="px-6 py-4 text-sm text-gray-600">
               {editingId === plan.planId ? (
                 <div className="flex flex-col gap-1">
-                  <input type="date" className="text-xs border rounded" value={editForm.startDate} onChange={(e) => setEditForm({...editForm, startDate: e.target.value})} />
-                  <input type="date" className="text-xs border rounded" value={editForm.endDate} onChange={(e) => setEditForm({...editForm, endDate: e.target.value})} />
+                  <input type="date" className="cursor-pointer text-xs border rounded" value={editForm.startDate} onChange={(e) => setEditForm({...editForm, startDate: e.target.value})} />
+                  <input type="date" className="cursor-pointer text-xs border rounded" value={editForm.endDate} onChange={(e) => setEditForm({...editForm, endDate: e.target.value})} />
                 </div>
               ) : (
                 `${plan.startDate} to ${plan.endDate}`
@@ -126,7 +126,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
             <td className="px-6 py-4">
               {editingId === plan.planId ? (
                 <select 
-                  className="text-xs border rounded p-1"
+                  className="cursor-pointer text-xs border rounded p-1"
                   value={editForm.status}
                   onChange={(e) => setEditForm({...editForm, status: e.target.value})}
                 >
@@ -144,13 +144,13 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
             <td className="px-6 py-4 text-right text-sm font-medium space-x-3">
               {editingId === plan.planId ? (
                 <>
-                  <button onClick={() => handleUpdate(plan.planId)} className="text-green-600 hover:text-green-900"><Check size={18} /></button>
-                  <button onClick={() => setEditingId(null)} className="text-gray-400 hover:text-gray-600"><X size={18} /></button>
+                  <button onClick={() => handleUpdate(plan.planId)} className="cursor-pointer text-green-600 hover:text-green-900"><Check size={18} /></button>
+                  <button onClick={() => setEditingId(null)} className="cursor-pointer text-gray-400 hover:text-gray-600"><X size={18} /></button>
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(plan)} className="text-indigo-600 hover:text-indigo-900"><Edit2 size={16} /></button>
-                  <button onClick={() => handleDelete(plan.planId)} className="text-red-600 hover:text-red-900"><Trash2 size={16} /></button>
+                  <button onClick={() => startEdit(plan)} className="cursor-pointer text-indigo-600 hover:text-indigo-900"><Edit2 size={16} /></button>
+                  <button onClick={() => handleDelete(plan.planId)} className="cursor-pointer text-red-600 hover:text-red-900"><Trash2 size={16} /></button>
                 </>
               )}
             </td>

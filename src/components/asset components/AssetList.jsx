@@ -172,7 +172,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
           <div className="bg-white w-[420px] p-6 flex flex-col">
             <div className="flex justify-between mb-4 border-b pb-3">
               <h3 className="font-semibold text-lg">Update Asset</h3>
-              <button onClick={() => setSelectedAsset(null)}>
+              <button className="cursor-pointer" onClick={() => setSelectedAsset(null)}>
                 <X size={18} />
               </button>
             </div>
@@ -262,7 +262,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-sm rounded hover:bg-gray-100"
+                className="cursor-pointer px-4 py-2 text-sm rounded hover:bg-gray-100"
               >
                 Cancel
               </button>
@@ -271,7 +271,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                   onDelete(deleteTarget.assetId);
                   setDeleteTarget(null);
                 }}
-                className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                className="cursor-pointer px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
               >
                 Delete
               </button>

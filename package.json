@@ -27,6 +27,7 @@
     "react-router-dom": "^7.10.1",
     "react-select": "^5.10.2",
     "recharts": "^3.6.0",
+    "sweetalert2": "^11.26.18",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
     "xlsx": "^0.18.5"

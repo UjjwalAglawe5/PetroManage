@@ -124,7 +124,7 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
             type="date"
             value={form.startDate}
             onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
           />
         </div>
         <div>
@@ -134,16 +134,16 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
             value={form.endDate}
             min={form.startDate || undefined}
             onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
           />
         </div>
       </div>
 
       <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100">
-        <button onClick={handleSubmit} className="px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition-all shadow-lg shadow-gray-200">
+        <button onClick={handleSubmit} className="cursor-pointer px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition-all shadow-lg shadow-gray-200">
           Create Plan
         </button>
-        <button onClick={onCancel} className="px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 transition-all">
+        <button onClick={onCancel} className="cursor-pointer px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 transition-all">
           Cancel
         </button>
       </div>
