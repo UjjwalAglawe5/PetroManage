@@ -30,8 +30,7 @@ const CustomTooltip = ({ active, payload }) => {
         </p>
         {payload.map((entry, index) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
-            {entry.name}: {entry.value}
-            {entry.name === 'Efficiency' ? '%' : 'h'}
+            {entry.name}: {entry.value.toFixed(1)}
           </p>
         ))}
       </div>
@@ -52,19 +51,19 @@ export default function ProductionChart({ data }) {
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-1">Production Trends</h2>
-        <p className="text-sm text-slate-500">Last 30 days performance overview</p>
+        <p className="text-sm text-slate-500">Actual vs Daily Target</p>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           <defs>
-            <linearGradient id="colorEfficiency" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
               <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
             </linearGradient>
-            <linearGradient id="colorDowntime" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f97316" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+            <linearGradient id="colorPlanned" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
             </linearGradient>
           </defs>
 
@@ -75,25 +74,10 @@ export default function ProductionChart({ data }) {
           <YAxis
             stroke="#64748b"
             style={{ fontSize: '12px' }}
-            yAxisId="left"
             label={{
-              value: 'Efficiency (%)',
+              value: 'Volume',
               angle: -90,
               position: 'insideLeft',
-              offset: 10,
-              style: { fontSize: '12px', fill: '#64748b' },
-            }}
-          />
-
-          <YAxis
-            yAxisId="right"
-            orientation="right"
-            stroke="#64748b"
-            style={{ fontSize: '12px' }}
-            label={{
-              value: 'Downtime (h)',
-              angle: 90,
-              position: 'insideRight',
               offset: 10,
               style: { fontSize: '12px', fill: '#64748b' },
             }}
@@ -103,23 +87,21 @@ export default function ProductionChart({ data }) {
           <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="line" />
 
           <Area
-            yAxisId="left"
             type="monotone"
-            dataKey="efficiency"
+            dataKey="actual"
             stroke="#3b82f6"
             strokeWidth={2}
-            fill="url(#colorEfficiency)"
-            name="Efficiency"
+            fill="url(#colorActual)"
+            name="Actual Production"
             isAnimationActive={true}
           />
           <Area
-            yAxisId="right"
             type="monotone"
-            dataKey="downtime"
-            stroke="#f97316"
+            dataKey="planned"
+            stroke="#10b981"
             strokeWidth={2}
-            fill="url(#colorDowntime)"
-            name="Downtime"
+            fill="url(#colorPlanned)"
+            name="Daily Target"
             isAnimationActive={true}
           />
         </AreaChart>

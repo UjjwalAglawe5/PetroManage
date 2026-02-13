@@ -22,7 +22,7 @@ export default function AssetUtilization({ data }) {
  
       <div className="space-y-4">
         {data.map((asset) => (
-          <div key={asset.id} className="group hover:bg-slate-50 p-3 rounded-lg transition-colors">
+          <div key={asset.assetId} className="group hover:bg-slate-50 p-3 rounded-lg transition-colors">
             <div className="flex items-center justify-between mb-2">
               {/* Left column: name and status stacked */}
               <div className="flex-1">

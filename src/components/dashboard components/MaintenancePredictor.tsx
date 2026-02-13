@@ -25,6 +25,7 @@ type PriorityConfig = typeof priorityConfig;
 type PriorityKey = keyof PriorityConfig; // 'high' | 'medium' | 'low'
  
 interface MaintenancePrediction {
+  workOrderId: number;
   assetId: string;
   assetName: string;
   predictedDate: string;
@@ -58,7 +59,7 @@ export default function MaintenancePredictor({ predictions }: MaintenancePredict
  
           return (
             <div
-              key={prediction.assetId}
+              key={prediction.workOrderId}
               className={`border rounded-lg p-4 ${config.color} hover:shadow-md transition-shadow`}
             >
               <div className="flex items-start justify-between mb-3">

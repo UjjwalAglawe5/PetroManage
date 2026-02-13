@@ -10,7 +10,7 @@ import AssetUtilization from '../components/dashboard components/AssetUtilizatio
 import MaintenancePredictor from '../components/dashboard components/MaintenancePredictor';
 import RecentReports from '../components/dashboard components/RecentReports';
 import { NavLink } from 'react-router-dom';
-
+ 
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -21,24 +21,22 @@ const containerVariants = {
     }
   }
 };
-
+ 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 }
 };
-
+ 
 export function Dashboard() {
   const user = useSelector((state) => state.user.user);
   const role = user?.role;
-  
+ 
   const [analyticsData, setAnalyticsData] = useState({
     currentMetrics: {
       productionEfficiency: 0,
       efficiencyChange: 0,
       assetUtilization: 0,
       utilizationChange: 0,
-      totalDowntime: 0,
-      downtimeChange: 0,
       maintenanceDue: 0
     },
     productionTrends: [],
@@ -46,9 +44,9 @@ export function Dashboard() {
     maintenancePredictions: [],
     recentReports: []
   });
-  
+ 
   const [loading, setLoading] = useState(true);
-
+ 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -60,12 +58,12 @@ export function Dashboard() {
         setLoading(false);
       }
     };
-
+ 
     fetchDashboardData();
   }, []);
-
+ 
   const latestMetrics = analyticsData.currentMetrics;
-
+ 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 flex items-center justify-center">
@@ -76,7 +74,7 @@ export function Dashboard() {
       </div>
     );
   }
-
+ 
   return (
     <motion.div
       className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4"
@@ -98,7 +96,7 @@ export function Dashboard() {
           </p>
         </div>
       </motion.header>
-
+ 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-1 py-8 space-y-8">
         {role === 'admin' ? (
           <>
@@ -121,16 +119,6 @@ export function Dashboard() {
                     change={latestMetrics.utilizationChange}
                     icon={<Activity className="w-6 h-6" />}
                     color="green"
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants}>
-                  <MetricsCard
-                    title="Total Downtime"
-                    value={`${latestMetrics.totalDowntime}h`}
-                    change={latestMetrics.downtimeChange}
-                    icon={<AlertTriangle className="w-6 h-6" />}
-                    color="orange"
-                    isNegativeGood
                   />
                 </motion.div>
                 <motion.div variants={itemVariants}>
@@ -176,12 +164,11 @@ export function Dashboard() {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <MetricsCard
-                    title="Total Downtime"
-                    value={`${latestMetrics.totalDowntime}h`}
-                    change={latestMetrics.downtimeChange}
-                    icon={<AlertTriangle className="w-6 h-6" />}
-                    color="orange"
-                    isNegativeGood
+                    title="Asset Utilization"
+                    value={`${latestMetrics.assetUtilization}%`}
+                    change={latestMetrics.utilizationChange}
+                    icon={<Activity className="w-6 h-6" />}
+                    color="green"
                   />
                 </motion.div>
                 <motion.div variants={itemVariants}>
@@ -210,3 +197,4 @@ export function Dashboard() {
     </motion.div>
   );
 }
+ 
