@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
  
 export default function AssetRegistration({ onAdd }) {
   const [form, setForm] = useState({
@@ -12,7 +13,6 @@ export default function AssetRegistration({ onAdd }) {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingLoc, setLoadingLoc] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [apiError, setApiError] = useState(null);
  
   /* ---------------- LOCATION SEARCH ---------------- */
   useEffect(() => {
@@ -62,7 +62,6 @@ export default function AssetRegistration({ onAdd }) {
  
     try {
       setSubmitting(true);
-      setApiError(null);
      
       await onAdd(payload); // 🔥 PARENT HANDLES API + REFRESH
  
@@ -71,14 +70,22 @@ export default function AssetRegistration({ onAdd }) {
       setErrors({});
     } catch (err) {
       console.error(err);
-      setApiError(err.message || "Failed to register asset");
+      const errorMessage = err.message || "Failed to register asset";
+      
+      // Show error notification with SweetAlert2
+      await Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: errorMessage,
+        confirmButtonColor: '#ef4444',
+      });
     } finally {
       setSubmitting(false);
     }
   };
  
   const inputClass = (field) =>
-    `cursor-pointer w-full px-4 py-2 rounded-lg border text-sm
+    `w-full px-4 py-2 rounded-lg border text-sm
      focus:ring-2 focus:ring-slate-500 focus:outline-none
      ${errors[field] ? "border-red-400" : "border-gray-300"}`;
  
@@ -150,25 +157,6 @@ export default function AssetRegistration({ onAdd }) {
           )}
         </div>
       </div>
- 
-      {/* ================= API ERROR MESSAGE ================= */}
-      {apiError && (
-        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-          <svg className="w-5 h-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-red-800">Failed to register asset</p>
-            <p className="text-sm text-red-600 mt-1">{apiError}</p>
-          </div>
-          <button
-            onClick={() => setApiError(null)}
-            className="text-red-400 hover:text-red-600"
-          >
-            ×
-          </button>
-        </div>
-      )}
  
       <div className="mt-10 flex justify-end">
         <button

@@ -99,19 +99,21 @@ const ReportForm = ({ onClose, fetchReports }) => {
     };
 
     try {
-      // Optional: Show a "Submitting..." loader
-      Swal.showLoading();
-
       const response = await axios.post("http://localhost:8080/api/compliance/reports", payload);
 
       if (response.status === 200 || response.status === 201) {
-        // Replaces alert("Success! Report saved.");
-        await Swal.fire({
+        // Show short toast notification
+        const toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        
+        toast.fire({
           icon: 'success',
-          title: 'Report Saved!',
-          text: 'The compliance report has been recorded successfully.',
-          timer: 2000, // Auto-close after 2 seconds
-          showConfirmButton: false
+          title: 'Report generated successfully'
         });
 
         onClose();

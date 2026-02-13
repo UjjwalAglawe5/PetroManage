@@ -61,12 +61,19 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
       try {
         await axios.delete(`${API_BASE_URL}/${reportId}`);
 
-        // Success notification
-        Swal.fire(
-          'Deleted!',
-          'The report has been removed.',
-          'success'
-        );
+        // Show short toast notification
+        const toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        
+        toast.fire({
+          icon: 'success',
+          title: 'Deleted successfully'
+        });
 
         await fetchReports();
       } catch (error) {

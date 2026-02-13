@@ -6,6 +6,7 @@ import {
   X,
   AlertTriangle
 } from "lucide-react";
+import Swal from 'sweetalert2';
 import { getStatusColor, getTypeColor } from "./AssetUtils";
 export default function AssetList({ assets, onDelete, onUpdate }) {
   const [search, setSearch] = useState("");
@@ -42,7 +43,28 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
       setUpdateError(null);
       await onUpdate(selectedAsset);
       setSelectedAsset(null);
+      
+      // Show short toast notification
+      const toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      
+      toast.fire({
+        icon: 'success',
+        title: 'Updated successfully'
+      });
     } catch (err) {
+      // Show error notification with SweetAlert2
+      await Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: err.message || "Failed to update asset",
+        confirmButtonColor: '#ef4444',
+      });
       setUpdateError(err.message || "Failed to update asset");
     } finally {
       setUpdating(false);
@@ -313,9 +335,35 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  onDelete(deleteTarget.assetId);
+                onClick={async () => {
+                  const assetName = deleteTarget.name;
                   setDeleteTarget(null);
+                  
+                  try {
+                    await onDelete(deleteTarget.assetId);
+                    
+                    // Show short toast notification
+                    const toast = Swal.mixin({
+                      toast: true,
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      timerProgressBar: true,
+                    });
+                    
+                    toast.fire({
+                      icon: 'success',
+                      title: 'Deleted successfully'
+                    });
+                  } catch (err) {
+                    // Show error notification if delete fails
+                    await Swal.fire({
+                      icon: 'error',
+                      title: 'Delete Failed',
+                      text: err.message || 'Failed to delete asset',
+                      confirmButtonColor: '#ef4444',
+                    });
+                  }
                 }}
                 className="w-full sm:w-auto px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 active:scale-95 transition"
               >
