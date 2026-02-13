@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { FileCheck } from "lucide-react";
 import { FaHistory, FaPlus } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
@@ -58,7 +58,8 @@ export const Compliance = () => {
         const score = reportData.reduce((a, b) => a + Number(b.safetyScore || 0), 0);
         const pending = reportData.filter(r => r.complianceStatus === "PENDING_REVIEW").length;
         const upcoming = reportData.filter(r => r.nextAuditDate && new Date(r.nextAuditDate) >= new Date().setHours(0, 0, 0, 0)).length;
-
+        // console.log(reportData.length);
+        
         setStats({
           "✅ Overall Compliance": `${Math.round((compliant / reportData.length) * 100)}%`,
           "🛡️ Safety Score": `${Math.round(score / reportData.length)}`,
@@ -71,6 +72,17 @@ export const Compliance = () => {
     };
     updateStats();
   }, [reports]);
+  useEffect(() => {
+    if(reports.length === 0) {
+      setStats({
+        "✅ Overall Compliance": "0%",
+        "🛡️ Safety Score": "0",
+        "📋 Pending Reviews": 0,
+        "📅 Upcoming Audits": 0
+      });
+    }
+  },[reports]);
+
 
   return (
     /* Applied Calibri to the entire screen container */

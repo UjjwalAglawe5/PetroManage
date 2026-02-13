@@ -97,7 +97,6 @@ const ReportForm = ({ onClose, fetchReports }) => {
       if (response.status === 200 || response.status === 201) {
         onClose();
         if (fetchReports) await fetchReports();
-        alert("Success! Report saved.");
       }
     } catch (error) {
       console.error("Submission Error:", error);
