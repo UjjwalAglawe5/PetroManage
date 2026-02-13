@@ -29,6 +29,7 @@ export function Assets() {
   const [error, setError] = useState(null);
  
   const moduleRef = useRef(null);
+  const isShowingError = useRef(false);
  
   // ✅ Redux: read the logged-in user from the store
   const user = useSelector((state) => state?.user?.user);
@@ -38,17 +39,30 @@ export function Assets() {
  
   /* ================= AUTO-DISMISS ERROR MESSAGES ================= */
   useEffect(() => {
-    if (error) {
-      Swal.fire({
+    // Prevent multiple consecutive error popups. If an error is already being shown,
+    // skip new ones until the current Swal is closed.
+    if (!error || isShowingError.current) return;
+
+    isShowingError.current = true;
+
+    // Use a short top-end toast (consistent with other toasts in the app)
+    const toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+
+    toast
+      .fire({
         icon: 'error',
-        title: 'Error',
-        text: error,
-        confirmButtonColor: '#ef4444',
-        timer: 5000,
-        timerProgressBar: true,
-      });
-      setError(null);
-    }
+        title: error || 'An error occurred',
+      })
+      .then(() => {
+        isShowingError.current = false;
+      })
+      .finally(() => setError(null));
   }, [error]);
  
   /* ================= LOAD ASSETS ================= */
