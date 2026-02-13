@@ -169,48 +169,42 @@ export function Assets() {
       <div className="relative overflow-hidden rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
- 
-        <div className="relative p-6 text-white">
-          <div className="flex items-center gap-3">
-            <Boxes className="w-9 h-9 text-slate-300" />
-            <h1 className="text-3xl font-bold tracking-tight">
-              Asset Management
-            </h1>
-          </div>
- 
-          <div className="mt-4 flex items-start justify-between gap-6">
-            <p
-              className="relative text-slate-300 max-w-xl text-sm pl-4
-              before:absolute before:left-0 before:top-1
-              before:h-4 before:w-[3px]
-              before:rounded-full
-              before:bg-gradient-to-b before:from-emerald-400 before:to-emerald-600"
-            >
+
+        <div className="relative p-6 text-white flex items-center justify-between gap-6 h-33">
+          {/* LEFT SIDE: Title and Description grouped together */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-3">
+              <Boxes className="w-9 h-9 text-slate-300" />
+              <h1 className="text-3xl font-bold tracking-tight">
+                Asset Management
+              </h1>
+            </div>
+
+            <p className="ml-7.5 mt-4 relative text-slate-300 max-w-xl text-sm pl-4">
               End-to-end lifecycle management for oil &amp; gas assets.
             </p>
- 
-            {/* HEADER CTA - Hidden for Admin (View Only) */}
-            {!isViewOnly && (
-              <button
-                onClick={() => {
-                  setFromHeader(true);
-                  setTab(tab === "register" ? "list" : "register");
-                }}
-                className="cursor-pointer flex items-center gap-2 px-4 py-2
-                  bg-gradient-to-r from-emerald-500 to-emerald-600
-                  hover:from-emerald-600 hover:to-emerald-700
-                  text-white text-sm font-semibold
-                  rounded-lg shadow-lg transition-all
-                  border border-emerald-400/30 shrink-0"
-              >
-                <PlusCircle className="w-5 h-5" />
-                {tab === "register" ? "View Assets" : "Register Asset"}
-              </button>
-            )}
           </div>
+
+          {/* RIGHT SIDE: Button centered vertically against the text block */}
+          {!isViewOnly && (
+            <button
+              onClick={() => {
+                setFromHeader(true);
+                setTab(tab === "register" ? "list" : "register");
+              }}
+              className="cursor-pointer flex items-center gap-2 px-4 py-2
+                bg-gradient-to-r from-emerald-500 to-emerald-600
+                hover:from-emerald-600 hover:to-emerald-700
+                text-white text-sm font-semibold
+                rounded-lg shadow-lg transition-all
+                border border-emerald-400/30 shrink-0"
+            >
+              <PlusCircle className="w-5 h-5" />
+              {tab === "register" ? "View Assets" : "Register Asset"}
+            </button>
+          )}
         </div>
       </div>
- 
       {/* ================= KPI ================= */}
       <AssetKPIs assets={assets} />
  

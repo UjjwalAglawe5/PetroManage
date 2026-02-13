@@ -7,7 +7,7 @@ import {
   FaClipboardList, FaShieldAlt, FaCheckCircle, FaUserTie,
   FaCalendarAlt, FaIndustry, FaTimes
 } from "react-icons/fa";
-
+import Swal from 'sweetalert2';
 const ReportForm = ({ onClose, fetchReports }) => {
   const [dynamicAssets, setDynamicAssets] = useState([]);
 
@@ -65,7 +65,13 @@ const ReportForm = ({ onClose, fetchReports }) => {
     e.preventDefault();
 
     if (!formData.asset) {
-      alert("Please select an asset");
+      // Replaces alert("Please select an asset");
+      Swal.fire({
+        icon: 'info',
+        title: 'Missing Selection',
+        text: 'Please select an asset before submitting.',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
@@ -93,14 +99,34 @@ const ReportForm = ({ onClose, fetchReports }) => {
     };
 
     try {
+      // Optional: Show a "Submitting..." loader
+      Swal.showLoading();
+
       const response = await axios.post("http://localhost:8080/api/compliance/reports", payload);
+
       if (response.status === 200 || response.status === 201) {
+        // Replaces alert("Success! Report saved.");
+        await Swal.fire({
+          icon: 'success',
+          title: 'Report Saved!',
+          text: 'The compliance report has been recorded successfully.',
+          timer: 2000, // Auto-close after 2 seconds
+          showConfirmButton: false
+        });
+
         onClose();
         if (fetchReports) await fetchReports();
       }
     } catch (error) {
       console.error("Submission Error:", error);
-      alert("Failed to save. Check server.");
+
+      // Replaces alert("Failed to save. Check server.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: 'Check your server connection and try again.',
+        confirmButtonColor: '#d33',
+      });
     }
   };
 

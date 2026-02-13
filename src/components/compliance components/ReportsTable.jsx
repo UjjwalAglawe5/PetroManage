@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReportCard from "./ReportCard";
 import UpdateForm from "./UpdateForm";
+import Swal from 'sweetalert2';
 import {
   FaFileExport,
   FaChevronDown,
@@ -43,12 +44,35 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
   };
 
   const handleDelete = async (reportId) => {
-    if (!window.confirm(`Delete this report: ${reportId}?`)) return;
-    try {
-      await axios.delete(`${API_BASE_URL}/${reportId}`);
-      await fetchReports();
-    } catch (error) {
-      console.error("Error deleting report:", error);
+    // Trigger the popup
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete report: ${reportId}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33', // Red for delete
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+    });
+
+    // If the user clicked "Yes"
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${API_BASE_URL}/${reportId}`);
+
+        // Success notification
+        Swal.fire(
+          'Deleted!',
+          'The report has been removed.',
+          'success'
+        );
+
+        await fetchReports();
+      } catch (error) {
+        console.error("Error deleting report:", error);
+        Swal.fire('Error', 'Could not delete the report.', 'error');
+      }
     }
   };
 
