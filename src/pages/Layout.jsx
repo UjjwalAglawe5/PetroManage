@@ -63,14 +63,14 @@ export function Layout() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const role = user?.role;
-  console.log("This is user",role);
+  console.log("This is user", role);
 
   const handleLogout = () => {
     dispatch(logout());
     setIsDropdownOpen(false);
     navigate('/login');
   };
-  
+
   // const role= 'operational_manager'; 
   // const role = 'admin';
 
@@ -228,7 +228,7 @@ export function Layout() {
 
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
+                        className="cursor-pointer flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
                       >
                         <LogOut size={18} />
                         Sign Out

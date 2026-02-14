@@ -16,11 +16,11 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
-  
+
   // Check if user has edit/delete permissions
   const hasEditPermission = onUpdate !== undefined;
   const hasDeletePermission = onDelete !== undefined;
- 
+
   /* ---------------- FILTER ---------------- */
   const filteredAssets = useMemo(() => {
     return assets.filter((a) => {
@@ -28,14 +28,14 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
         a.name.toLowerCase().includes(search.toLowerCase()) ||
         a.location.toLowerCase().includes(search.toLowerCase()) ||
         a.assetId.toString().includes(search);
- 
+
       const matchStatus = status ? a.status === status : true;
       const matchType = type ? a.type === type : true;
- 
+
       return matchSearch && matchStatus && matchType;
     });
   }, [assets, search, status, type]);
- 
+
   /* ---------------- SAVE UPDATE ---------------- */
   const saveUpdate = async () => {
     try {
@@ -43,7 +43,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
       setUpdateError(null);
       await onUpdate(selectedAsset);
       setSelectedAsset(null);
-      
+
       // Show short toast notification
       const toast = Swal.mixin({
         toast: true,
@@ -52,7 +52,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
         timer: 2000,
         timerProgressBar: true,
       });
-      
+
       toast.fire({
         icon: 'success',
         title: 'Updated successfully'
@@ -70,11 +70,11 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
       setUpdating(false);
     }
   };
- 
+
   return (
     <>
       <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
- 
+
         {/* TOOLBAR */}
         <div className="p-4 md:p-5 border-b flex flex-col sm:flex-row gap-3 md:gap-4 justify-between bg-gray-50">
           <div className="relative w-full sm:w-auto sm:flex-1 lg:w-1/3">
@@ -86,15 +86,15 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               className="w-full pl-9 pr-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none"
             />
           </div>
- 
+
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <span className="text-xs md:text-sm text-gray-500 whitespace-nowrap">
               Showing <b>{filteredAssets.length}</b> asset{filteredAssets.length !== 1 ? 's' : ''}
             </span>
- 
-            <select 
-              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white" 
-              value={type} 
+
+            <select
+              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
+              value={type}
               onChange={(e) => setType(e.target.value)}
             >
               <option value="">All Types</option>
@@ -102,17 +102,17 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <option value="PIPELINE">PIPELINE</option>
               <option value="STORAGE">STORAGE</option>
             </select>
- 
-            <select 
-              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white" 
-              value={status} 
+
+            <select
+              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
+              value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
               <option value="">All Status</option>
               <option value="ACTIVE">ACTIVE</option>
               <option value="INACTIVE">INACTIVE</option>
             </select>
- 
+
             <button
               onClick={() => {
                 setSearch("");
@@ -125,7 +125,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             </button>
           </div>
         </div>
- 
+
         {/* TABLE - Responsive with horizontal scroll on small screens */}
         <div className="overflow-x-auto">
           <table className="w-full text-xs md:text-sm">
@@ -141,7 +141,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 )}
               </tr>
             </thead>
- 
+
             <tbody className="divide-y">
               {filteredAssets.length === 0 ? (
                 <tr>
@@ -161,23 +161,23 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                   >
                     <td className="px-3 md:px-5 py-3 md:py-4">{index + 1}</td>
                     <td className="px-3 md:px-5 py-3 md:py-4 font-medium">{a.name}</td>
- 
+
                     <td className="px-3 md:px-5 py-3 md:py-4">
                       <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${getTypeColor(a.type)}`}>
                         {a.type}
                       </span>
                     </td>
- 
+
                     <td className="px-3 md:px-5 py-3 md:py-4 max-w-[150px] md:max-w-none truncate" title={a.location}>
                       {a.location}
                     </td>
- 
+
                     <td className="px-3 md:px-5 py-3 md:py-4">
                       <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${getStatusColor(a.status)}`}>
                         {a.status}
                       </span>
                     </td>
- 
+
                     {/* ACTIONS - Only show if user has permissions */}
                     {(hasEditPermission || hasDeletePermission) && (
                       <td className="px-3 md:px-5 py-3 md:py-4 text-right">
@@ -191,7 +191,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                               <Edit size={16} />
                             </button>
                           )}
- 
+
                           {hasDeletePermission && (
                             <button
                               title="Delete Asset"
@@ -211,14 +211,14 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
           </table>
         </div>
       </div>
- 
+
       {/* ================= EDIT DRAWER ================= */}
       {selectedAsset && hasEditPermission && (
         <div className="fixed inset-0 bg-black/40 flex justify-end z-50 animate-fadeIn">
           <div className="bg-white w-full sm:w-[90%] md:w-[500px] lg:w-[420px] h-full overflow-y-auto p-4 md:p-6 flex flex-col shadow-2xl animate-slideInRight">
             <div className="flex justify-between items-center mb-4 pb-3 border-b">
               <h3 className="font-semibold text-base md:text-lg">Update Asset</h3>
-              <button 
+              <button
                 onClick={() => setSelectedAsset(null)}
                 className="p-1 hover:bg-gray-100 rounded transition"
                 aria-label="Close"
@@ -226,7 +226,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 <X size={20} />
               </button>
             </div>
- 
+
             <div className="space-y-4 flex-1">
               <div>
                 <label className="text-xs font-medium text-gray-500 block mb-1">Asset ID</label>
@@ -236,7 +236,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                   className="w-full px-3 py-2 text-sm border rounded-lg bg-gray-100 cursor-not-allowed"
                 />
               </div>
- 
+
               <div>
                 <label className="text-xs font-medium text-gray-500 block mb-1">Name *</label>
                 <input
@@ -248,7 +248,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                   placeholder="Enter asset name"
                 />
               </div>
- 
+
               <div>
                 <label className="text-xs font-medium text-gray-500 block mb-1">Status *</label>
                 <select
@@ -266,7 +266,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 </p>
               </div>
             </div>
- 
+
             {/* ================= UPDATE ERROR MESSAGE ================= */}
             {updateError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -274,7 +274,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 <p className="text-xs text-red-600 mt-1">{updateError}</p>
               </div>
             )}
- 
+
             <div className="mt-6 pt-4 border-t space-y-2">
               <button
                 onClick={saveUpdate}
@@ -301,7 +301,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <button
                 onClick={() => setSelectedAsset(null)}
                 disabled={updating}
-                className="w-full px-6 py-2 rounded-lg font-medium text-sm border hover:bg-gray-50 transition disabled:opacity-50"
+                className="cursor-pointer w-full px-6 py-2 rounded-lg font-medium text-sm border hover:bg-gray-50 transition disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -309,7 +309,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
           </div>
         </div>
       )}
- 
+
       {/* ================= DELETE CONFIRM MODAL ================= */}
       {deleteTarget && hasDeletePermission && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fadeIn">
@@ -320,17 +320,17 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               </div>
               <h3 className="font-semibold text-base md:text-lg">Delete Asset</h3>
             </div>
- 
+
             <p className="text-sm text-gray-600 mb-6 leading-relaxed">
               Are you sure you want to delete{" "}
-              <span className="font-semibold text-gray-900">{deleteTarget.name}</span>? 
+              <span className="font-semibold text-gray-900">{deleteTarget.name}</span>?
               This action cannot be undone.
             </p>
- 
+
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border hover:bg-gray-50 transition"
+                className="cursor-pointer w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border hover:bg-gray-50 transition"
               >
                 Cancel
               </button>
@@ -338,10 +338,10 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 onClick={async () => {
                   const assetName = deleteTarget.name;
                   setDeleteTarget(null);
-                  
+
                   try {
                     await onDelete(deleteTarget.assetId);
-                    
+
                     // Show short toast notification
                     const toast = Swal.mixin({
                       toast: true,
@@ -350,7 +350,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                       timer: 2000,
                       timerProgressBar: true,
                     });
-                    
+
                     toast.fire({
                       icon: 'success',
                       title: 'Deleted successfully'
@@ -365,7 +365,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                     });
                   }
                 }}
-                className="w-full sm:w-auto px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 active:scale-95 transition"
+                className="cursor-pointer w-full sm:w-auto px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-lg hover:bg-red-700 active:scale-95 transition"
               >
                 Delete
               </button>
@@ -376,4 +376,3 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
     </>
   );
 }
- 

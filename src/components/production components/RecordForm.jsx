@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
-  const [plans, setPlans] = useState([]); 
+  const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [form, setForm] = useState({
     asset: '',
-    planId: '', 
+    planId: '',
     unit: 'barrels',
     actualVolume: '',
     date: ''
   });
 
-  
+
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -44,7 +44,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   }, [form.planId]);
 
   const handleSubmit = async () => {
-    
+
     const payload = {
       planId: Number(form.planId),
       assetId: 1, // You may want to make this dynamic
@@ -53,14 +53,14 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
     };
 
     try {
-      
+
       const response = await axios.post('http://localhost:8080/api/production/records', payload);
-      
+
       if (response.status === 200 || response.status === 201) {
-        
+
         setRecordPlans([response.data, ...RecordPlans]);
         console.log('Record created successfully:', response.data);
-        onCancel(); 
+        onCancel();
       }
     } catch (error) {
       console.error('Submission error:', error);
@@ -75,7 +75,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+
         {/* Plan Selection Dropdown (NEW) */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">
@@ -89,7 +89,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
             <option value="">Select Associated Plan</option>
             {plans.map(p => (
               <option key={p.planId} value={p.planId}>
-                Plan #{p.planId} - (Vol: {p.plannedVolume})
+                Plan {p.planId} - (Vol: {p.plannedVolume})
               </option>
             ))}
           </select>
@@ -107,7 +107,7 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
             max={selectedPlan?.endDate || undefined}
             disabled={!form.planId}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           />
           {selectedPlan && (
             <p className="text-xs text-gray-500 mt-1">
@@ -149,13 +149,13 @@ export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
       <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100">
         <button
           onClick={handleSubmit}
-          className="flex-1 md:flex-none px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-200"
+          className="cursor-pointer flex-1 md:flex-none px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-200"
         >
           Add Record
         </button>
         <button
           onClick={onCancel}
-          className="flex-1 md:flex-none px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 active:scale-[0.98] transition-all"
+          className="cursor-pointer flex-1 md:flex-none px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 active:scale-[0.98] transition-all"
         >
           Cancel
         </button>

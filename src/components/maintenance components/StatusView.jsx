@@ -16,10 +16,10 @@ export const StatusView = () => {
     if (status === "In progress") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: "" };
     if (status === "Completed") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: passedOrder.actualCompletionDate || "" };
     if (status === "Overdue") return { targetDate: passedOrder.expectedCompletionDate || "", actualDate: passedOrder.actualCompletionDate || "" };
-    return { 
+    return {
       targetDate: passedOrder?.expectedCompletionDate || "",
-      actualDate: passedOrder?.actualCompletionDate || "" 
-      };
+      actualDate: passedOrder?.actualCompletionDate || ""
+    };
   };
 
   const dates = getInitialDates();
@@ -32,16 +32,16 @@ export const StatusView = () => {
   let progress = 0;
   let statusLabel = "Not Started";
   // Updated: Changed themeColor to Slate-700 for better visibility at 0%
-  let themeColor = "#334155"; 
+  let themeColor = "#334155";
 
   if (workOrder.status === "In progress") {
     progress = 40;
     statusLabel = "In Progress";
-    themeColor = "#f59e0b"; 
+    themeColor = "#f59e0b";
   } else if (workOrder.status === "Completed" || workOrder.status === "Overdue") {
     progress = 100;
     const isLate = new Date(workOrder.actualDate) > new Date(workOrder.targetDate);
-    themeColor = isLate ? "#ef4444" : "#10b981"; 
+    themeColor = isLate ? "#ef4444" : "#10b981";
     statusLabel = isLate ? "Overdue" : "Completed";
   }
 
@@ -49,25 +49,25 @@ export const StatusView = () => {
     try {
       // Extract numeric ID from "WO-7" format to match backend Long ID
       const numericId = workOrder.id.replace("WO-", "");
-      
+
       console.log(updates);
-      
+
       const response = await axios.patch(
         `http://localhost:8080/api/maintenance/work-orders/${numericId}/update-progress`,
         updates
       );
-      
+
       const updatedOrder = response.data;
 
       // Map backend response back to frontend state
       setWorkOrder({
         ...workOrder,
         // Convert "IN_PROGRESS" back to "In progress" for the UI
-        status: updatedOrder.status === "OVERDUE" ? "Overdue" : 
+        status: updatedOrder.status === "OVERDUE" ? "Overdue" :
           updatedOrder.status.charAt(0).toUpperCase() + updatedOrder.status.slice(1).toLowerCase().replace('_', ' '),
-  targetDate: updatedOrder.expectedCompletionDate || "",
-  actualDate: updatedOrder.actualCompletionDate || ""
-});
+        targetDate: updatedOrder.expectedCompletionDate || "",
+        actualDate: updatedOrder.actualCompletionDate || ""
+      });
 
     } catch (err) {
       console.error("Backend update failed:", err);
@@ -77,7 +77,7 @@ export const StatusView = () => {
   // 4. Button Handlers
   const handleStartWork = async () => {
     if (!workOrder.targetDate) return alert("Please set an Estimated Completion Date!");
-    
+
     await updateProgressOnBackend({
       status: "IN_PROGRESS",
       expectedCompletionDate: workOrder.targetDate
@@ -85,39 +85,38 @@ export const StatusView = () => {
   };
 
   const handleFinishWork = async () => {
-  if (!workOrder.actualDate) return alert("Please enter the Actual Completion Date!");
-  
-  // 1. Calculate the final status on the frontend first
-  const isLate = new Date(workOrder.actualDate) > new Date(workOrder.targetDate);
-  const finalStatus = isLate ? "OVERDUE" : "COMPLETED";
+    if (!workOrder.actualDate) return alert("Please enter the Actual Completion Date!");
 
-  // 2. Send the CALCULATED status to the database
-  await updateProgressOnBackend({
-    status: finalStatus, // Now it sends "OVERDUE" if it's late
-    actualCompletionDate: workOrder.actualDate
-  });
-};
+    // 1. Calculate the final status on the frontend first
+    const isLate = new Date(workOrder.actualDate) > new Date(workOrder.targetDate);
+    const finalStatus = isLate ? "OVERDUE" : "COMPLETED";
+
+    // 2. Send the CALCULATED status to the database
+    await updateProgressOnBackend({
+      status: finalStatus, // Now it sends "OVERDUE" if it's late
+      actualCompletionDate: workOrder.actualDate
+    });
+  };
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6 bg-slate-50 min-h-screen font-bold tracking-tight">
-      <button onClick={() => navigate(-1)} className="group flex items-center gap-2 text-slate-500 hover:text-orange-600 transition-all text-sm">
+      <button onClick={() => navigate(-1)} className="cursor-pointer group flex items-center gap-2 text-slate-500 hover:text-orange-600 transition-all text-sm">
         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> BACK TO DASHBOARD
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200">
-            
+
             <div className="flex justify-between items-start border-b border-slate-100 pb-6 mb-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   {/* Priority Color Logic: Yellow, Orange, Red boxes */}
-                  <span className={`px-3 py-1 rounded-lg text-xs uppercase ${
-                    workOrder.priority === 'High' ? 'bg-red-500 text-white' : 
-                    workOrder.priority === 'Medium' ? 'bg-orange-500 text-white' : 
-                    'bg-yellow-400 text-white'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-lg text-xs uppercase ${workOrder.priority === 'High' ? 'bg-red-500 text-white' :
+                    workOrder.priority === 'Medium' ? 'bg-orange-500 text-white' :
+                      'bg-yellow-400 text-white'
+                    }`}>
                     {workOrder.priority} PRIORITY
                   </span>
                 </div>
@@ -135,44 +134,42 @@ export const StatusView = () => {
                 <label className="flex items-center gap-2 text-xs text-slate-500 uppercase">
                   <Clock size={14} /> Estimated Completion
                 </label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={workOrder.targetDate}
                   min={today}
-                  onChange={(e) => setWorkOrder({...workOrder, targetDate: e.target.value})}
-                  className="w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-slate-700"
+                  onChange={(e) => setWorkOrder({ ...workOrder, targetDate: e.target.value })}
+                  className="cursor-pointer w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-indigo-500 outline-none transition-all text-slate-700"
                 />
               </div>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs text-slate-500 uppercase">
                   <CheckCircle size={14} /> Actual Completion
                 </label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={workOrder.actualDate}
                   min={today}
-                  onChange={(e) => setWorkOrder({...workOrder, actualDate: e.target.value})}
-                  className="w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-emerald-500 outline-none transition-all text-slate-700"
+                  onChange={(e) => setWorkOrder({ ...workOrder, actualDate: e.target.value })}
+                  className="cursor-pointer w-full p-4 bg-white border-2 border-slate-200 rounded-xl focus:border-emerald-500 outline-none transition-all text-slate-700"
                 />
               </div>
             </div>
 
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={handleStartWork}
                 disabled={workOrder.status !== "Scheduled"}
-                className={`flex-1 py-4 rounded-2xl text-sm uppercase transition-all shadow-sm ${
-                    workOrder.status === "Scheduled" ? "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
-                }`}
+                className={`cursor-pointer flex-1 py-4 rounded-2xl text-sm uppercase transition-all shadow-sm ${workOrder.status === "Scheduled" ? "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
+                  }`}
               >
                 Initialize
               </button>
-              <button 
+              <button
                 onClick={handleFinishWork}
                 disabled={workOrder.status !== "In progress"}
-                className={`flex-1 py-4 rounded-2xl text-sm uppercase transition-all shadow-sm ${
-                    workOrder.status === "In progress" ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
-                }`}
+                className={`cursor-pointer flex-1 py-4 rounded-2xl text-sm uppercase transition-all shadow-sm ${workOrder.status === "In progress" ? "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 shadow-md" : "bg-slate-100 text-slate-300 cursor-not-allowed"
+                  }`}
               >
                 Complete
               </button>
@@ -183,18 +180,18 @@ export const StatusView = () => {
         <div className="lg:col-span-4 space-y-5">
           <div className="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-200 flex flex-col items-center text-center">
             <h3 className="text-slate-400 text-[10px] uppercase mb-10">Progression Metrics</h3>
-            
+
             <div className="relative w-64 h-64">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 {/* Background circle is slightly darker to prevent "faded" look */}
                 <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" strokeWidth="2.5" />
-                <circle 
-                  cx="18" cy="18" r="16" fill="none" 
-                  stroke={themeColor} 
-                  strokeWidth="2.5" 
+                <circle
+                  cx="18" cy="18" r="16" fill="none"
+                  stroke={themeColor}
+                  strokeWidth="2.5"
                   strokeDasharray={`${progress}, 100`}
                   strokeLinecap="round"
-                  className="transition-all duration-700 ease-in-out" 
+                  className="transition-all duration-700 ease-in-out"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -208,10 +205,10 @@ export const StatusView = () => {
                 {statusLabel.toUpperCase()}
               </h2>
             </div>
-            
+
             {/* Sidebar Details Card: Moved Work Type here */}
             <div className="mt-8 w-full p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4 text-left">
-              
+
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-600 uppercase text-[10px]">Technician</span>
                 <span className="text-slate-700">{workOrder.technician}</span>

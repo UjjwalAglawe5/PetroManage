@@ -37,7 +37,7 @@ const itemVariants = {
 export const Profile = () => {
   // Get user data from Redux
   const user = useSelector((state) => state.user.user);
-  
+
   // Fallback values if user is not logged in
   const profileData = {
     name: user?.name || 'Guest User',
@@ -125,7 +125,7 @@ export const Profile = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-slate-950 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg hover:bg-blue-50 transition-colors"
+            className="cursor-pointer bg-white text-slate-950 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg hover:bg-blue-50 transition-colors"
           >
             Edit Profile <PencilLine size={16} />
           </motion.button>

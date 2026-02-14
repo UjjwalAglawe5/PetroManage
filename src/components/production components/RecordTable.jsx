@@ -6,14 +6,14 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
-  
+
   useEffect(() => {
     const fetchRecords = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/production/records');
         setRecordPlans(response.data);
         console.log(RecordPlans);
-        
+
       } catch (error) {
         console.error("Error fetching production records:", error);
       }
@@ -21,25 +21,25 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     fetchRecords();
   }, [setRecordPlans]);
 
-  
+
   const startEdit = (record) => {
     setEditingId(record.recordId || record.id);
     setEditForm({ ...record });
   };
 
-  
+
   const handleUpdate = async (id) => {
     try {
-      
+
       const payload = {
         ...editForm,
-        
+
         asset: editForm.asset || { assetId: 1 },
         productionPlan: editForm.productionPlan || { planId: 1 }
       };
 
       const response = await axios.put(`http://localhost:8080/api/production/records/${id}`, payload);
-      
+
       if (response.status === 200 || response.status === 204) {
         const updatedList = RecordPlans.map(r => (r.recordId || r.id) === id ? response.data : r);
         setRecordPlans(updatedList);
@@ -52,7 +52,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     }
   };
 
-  
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
@@ -89,11 +89,11 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{record.planId}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {isEditing ? (
-                  <input 
+                  <input
                     type="number"
                     className="border rounded px-2 py-1 w-24 text-sm focus:border-black outline-none"
                     value={editForm.actualVolume}
-                    onChange={(e) => setEditForm({...editForm, actualVolume: e.target.value})}
+                    onChange={(e) => setEditForm({ ...editForm, actualVolume: e.target.value })}
                   />
                 ) : (
                   record.actualVolume?.toLocaleString()
@@ -101,11 +101,11 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {isEditing ? (
-                  <input 
+                  <input
                     type="date"
-                    className="border rounded px-2 py-1 text-sm focus:border-black outline-none"
+                    className="cursor-pointer border rounded px-2 py-1 text-sm focus:border-black outline-none"
                     value={editForm.date}
-                    onChange={(e) => setEditForm({...editForm, date: e.target.value})}
+                    onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                   />
                 ) : (
                   record.date
@@ -114,30 +114,30 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                 {isEditing ? (
                   <>
-                    <button 
-                      onClick={() => handleUpdate(id)} 
-                      className="text-green-600 hover:text-green-900 transition-colors"
+                    <button
+                      onClick={() => handleUpdate(id)}
+                      className="cursor-pointer text-green-600 hover:text-green-900 transition-colors"
                     >
                       <Check size={18} />
                     </button>
-                    <button 
-                      onClick={() => setEditingId(null)} 
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       <X size={18} />
                     </button>
                   </>
                 ) : (
                   <>
-                    <button 
-                      onClick={() => startEdit(record)} 
-                      className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                    <button
+                      onClick={() => startEdit(record)}
+                      className="cursor-pointer text-indigo-600 hover:text-indigo-900 transition-colors"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(id)}
-                      className="text-red-500 hover:text-red-700 transition-colors"
+                      className="cursor-pointer text-red-500 hover:text-red-700 transition-colors"
                     >
                       <Trash2 size={18} />
                     </button>
