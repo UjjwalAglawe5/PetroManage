@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from "../../config/axiosConfig";
  
-const BASE_URL = "http://localhost:8080/assets-service/api/assets";
+const BASE_URL = "/api/assets"; // Relative URL - axiosConfig handles baseURL
  
 /**
  * Parse backend error response and extract user-friendly message

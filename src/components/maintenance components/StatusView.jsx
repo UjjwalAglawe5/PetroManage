@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calendar, CheckCircle, Clock, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../config/axiosConfig';
 
 const today = new Date().toISOString().split('T')[0];
 

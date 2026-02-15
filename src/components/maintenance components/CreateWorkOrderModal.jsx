@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../config/axiosConfig';
 
 const today = new Date().toISOString().split('T')[0];
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from '../../config/axiosConfig';
 import { Trash2, Edit2, Check, X } from "lucide-react";
 
 export const RecordTable = ({ RecordPlans, setRecordPlans }) => {

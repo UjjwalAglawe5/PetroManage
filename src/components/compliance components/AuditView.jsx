@@ -4,7 +4,7 @@ import {
   FaHistory, FaArrowLeft, FaSearch, FaChevronDown, FaCode,
   FaFileCsv, FaFileExcel, FaFilePdf, FaTimes, FaFileExport, FaChevronLeft, FaChevronRight
 } from "react-icons/fa";
-import axios from "axios";
+import axios from '../../config/axiosConfig';
 import { handleExport } from "./exportutil";
 
 const AuditView = ({ setView }) => {

@@ -7,7 +7,7 @@ import { PlansTable } from '../components/production components/PlansTable';
 import { RecordForm } from '../components/production components/RecordForm';
 import { RecordTable } from '../components/production components/RecordTable';
 import PlannedVsActualChart from '../components/production components/PlannedVsActualChart';
-import axios from 'axios';
+import axios from '../config/axiosConfig';
 
 // Animation Variants
 const containerVariants = {

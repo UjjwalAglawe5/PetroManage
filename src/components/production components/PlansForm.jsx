@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../config/axiosConfig';
 
 export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
   // const assetList = [

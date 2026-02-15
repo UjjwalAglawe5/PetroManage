@@ -2,7 +2,7 @@ import { Activity, TrendingUp, AlertTriangle, Wrench, BarChart3, Calendar } from
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../config/axiosConfig';
 import MetricsCard from '../components/dashboard components/MetricsCard';
 import ProductionChart from '../components/dashboard components/ProductionChart';
 // @ts-ignore: importing a JS module without a declaration file
@@ -50,7 +50,7 @@ export function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/dashboard/analytics');
+        const response = await axios.get('/api/dashboard/analytics');
         setAnalyticsData(response.data);
         setLoading(false);
       } catch (error) {

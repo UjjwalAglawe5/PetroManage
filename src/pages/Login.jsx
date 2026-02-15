@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/userSlice";
 import { motion, AnimatePresence } from "framer-motion"; 
-import axios from "axios"; 
+import axios from "../config/axiosConfig"; 
 import oilimg from "../img/image.png";
 
 function validateEmail(email) {
@@ -71,7 +71,7 @@ export function Login({
       // ===============================================
       // ACTUAL BACKEND CONNECTION START
       // ===============================================
-      const response = await axios.post("http://localhost:8080/auth/login", {
+      const response = await axios.post("/auth/login", {
         email: email,
         password: password,
         role: role
@@ -79,18 +79,18 @@ export function Login({
 
       // Extract user data from response
       const userData = {
+        userId: response.data.userId,
         name: response.data.name,
         email: response.data.email,
-        role: response.data.role
+        role: response.data.role,
+        token: response.data.token // Store JWT token
       };
 
       // Save to Redux store
       dispatch(login(userData));
 
-      // Save to localStorage for persistence across sessions
-      if (rememberMe) {
-        localStorage.setItem("user", JSON.stringify(userData));
-      }
+      // Note: localStorage is handled by userSlice.js automatically
+      // No need to save here separately - Redux handles it
 
       // This triggers the useEffect above to redirect
       setMessage({ type: "success", text: `Signed in successfully! Redirecting...` });

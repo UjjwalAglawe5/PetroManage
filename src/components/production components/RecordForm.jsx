@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../config/axiosConfig';
 
 export function RecordForm({ onCancel, RecordPlans, setRecordPlans }) {
   const [plans, setPlans] = useState([]);

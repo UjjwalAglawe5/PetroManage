@@ -9,7 +9,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import axios from '../../config/axiosConfig';
 
 export default function PlannedVsActualChart({ productionPlans = [] }) {
   // 1. Local state for selected ID and the records we fetch

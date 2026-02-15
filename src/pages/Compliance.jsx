@@ -6,7 +6,7 @@ import Card from "../components/compliance components/Card.jsx";
 import ReportsTable from "../components/compliance components/ReportsTable.jsx";
 import ReportForm from "../components/compliance components/ReportForm.jsx";
 import AuditView from "../components/compliance components/AuditView.jsx";
-import axios from "axios";
+import axios from '../config/axiosConfig';
 
 const containerVar = {
   hidden: { opacity: 0 },

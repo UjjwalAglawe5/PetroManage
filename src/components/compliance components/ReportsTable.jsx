@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from '../../config/axiosConfig';
 import ReportCard from "./ReportCard";
 import UpdateForm from "./UpdateForm";
 import Swal from 'sweetalert2';
