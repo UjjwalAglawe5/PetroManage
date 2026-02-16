@@ -13,6 +13,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
   const [status, setStatus] = useState("");
   const [type, setType] = useState("");
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [originalAsset, setOriginalAsset] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
@@ -38,11 +39,24 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
 
   /* ---------------- SAVE UPDATE ---------------- */
   const saveUpdate = async () => {
+    if (!selectedAsset || !originalAsset) return;
+
+    const isUnchanged =
+      selectedAsset.name?.trim() === originalAsset.name?.trim() &&
+      selectedAsset.status === originalAsset.status;
+
+    if (isUnchanged) {
+      setSelectedAsset(null);
+      setOriginalAsset(null);
+      return;
+    }
+
     try {
       setUpdating(true);
       setUpdateError(null);
       await onUpdate(selectedAsset);
       setSelectedAsset(null);
+      setOriginalAsset(null);
 
       // Show short toast notification
       const toast = Swal.mixin({
@@ -185,7 +199,10 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                           {hasEditPermission && (
                             <button
                               title="Edit Asset"
-                              onClick={() => setSelectedAsset({ ...a })}
+                              onClick={() => {
+                                setSelectedAsset({ ...a });
+                                setOriginalAsset({ ...a });
+                              }}
                               className="cursor-pointer p-1.5 md:p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition"
                             >
                               <Edit size={16} />
@@ -219,7 +236,10 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             <div className="flex justify-between items-center mb-4 pb-3 border-b">
               <h3 className="font-semibold text-base md:text-lg">Update Asset</h3>
               <button
-                onClick={() => setSelectedAsset(null)}
+                onClick={() => {
+                  setSelectedAsset(null);
+                  setOriginalAsset(null);
+                }}
                 className="p-1 hover:bg-gray-100 rounded transition"
                 aria-label="Close"
               >
@@ -299,7 +319,10 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                 }
               </button>
               <button
-                onClick={() => setSelectedAsset(null)}
+                onClick={() => {
+                  setSelectedAsset(null);
+                  setOriginalAsset(null);
+                }}
                 disabled={updating}
                 className="cursor-pointer w-full px-6 py-2 rounded-lg font-medium text-sm border hover:bg-gray-50 transition disabled:opacity-50"
               >
