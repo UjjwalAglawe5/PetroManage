@@ -55,7 +55,7 @@ export default function AssetKPIs({ assets }) {
   ];
  
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
       {kpis.map((kpi) => (
         <KpiCard key={kpi.title} {...kpi} />
       ))}
@@ -68,7 +68,7 @@ function KpiCard({ title, value, icon: Icon, color }) {
   return (
     <div
       className="bg-white rounded-xl border border-gray-200 shadow-sm
-                 p-5 flex items-center gap-4
+                 p-4 sm:p-5 flex items-center gap-3 sm:gap-4
                  hover:shadow-lg hover:-translate-y-1 transition-all"
     >
       <div
@@ -81,7 +81,7 @@ function KpiCard({ title, value, icon: Icon, color }) {
         <p className="text-xs uppercase tracking-wide text-gray-500">
           {title}
         </p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-xl sm:text-2xl font-bold text-gray-900">
           {value}
         </p>
       </div>
