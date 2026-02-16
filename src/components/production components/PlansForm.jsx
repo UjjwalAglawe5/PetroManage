@@ -2,22 +2,16 @@ import { useEffect, useState } from 'react';
 import axios from '../../config/axiosConfig';
 
 export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
-  // const assetList = [
-  //   { id: 'RIG-001', name: 'North Sea Rig Alpha' },
-  //   { id: 'RIG-002', name: 'West Texas Rig Beta' },
-  //   { id: 'RIG-008', name: 'Gulf Platform Echo' },
-  //   { id: 'STG-012', name: 'Storage Facility B' },
-  // ];
   const [assetList, setAssetList] = useState([]);
 
   const fetchAssets = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/api/assets');
-        setAssetList(response.data);
-      } catch (error) {
-        console.error('Error fetching assets:', error);
-      }
-    };
+    try {
+      const response = await axios.get('http://localhost:8080/api/assets');
+      setAssetList(response.data);
+    } catch (error) {
+      console.error('Error fetching assets:', error);
+    }
+  };
 
   useEffect(() => {
     fetchAssets();
@@ -33,7 +27,6 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
   });
 
   const handleSubmit = async () => {
-    // Send payload as flat object with assetId
     const payload = {
       assetId: Number(form.asset),
       plannedVolume: Number(form.plannedVolume),
@@ -47,35 +40,28 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
       if (response.status === 200 || response.status === 201) {
         const savedPlan = response.data;
         setProductionPlans([...productionPlans, savedPlan]);
-        console.log('Plan created successfully:', savedPlan);
         onCancel(); 
       }
     } catch (error) {
-      if (error.response) {
-        console.error('Backend Error:', error.response.data);
-        alert(`Server Error: ${error.response.data.message || 'Check logs'}`);
-      } else if (error.request) {
-        console.error('Network Error:', error.request);
-        alert('Could not reach the server. Is it running?');
-      } else {
-        console.error('Error:', error.message);
-      }
+      console.error('Error:', error.message);
+      alert('Error creating plan. Please check console.');
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-      <h3 className="text-xl font-bold text-black mb-6 border-b border-gray-100 pb-4">
+    <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
+      <h3 className="text-lg md:text-xl font-bold text-black mb-6 border-b border-gray-100 pb-4">
         Create Production Plan
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Grid: 1 column on mobile, 2 on md (laptop) screens */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Asset Selection</label>
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Asset Selection</label>
           <select
             value={form.asset}
             onChange={(e) => setForm({ ...form, asset: e.target.value })}
-            className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none cursor-pointer"
+            className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none cursor-pointer text-sm md:text-base"
           >
             <option value="">Select Asset</option>
             {assetList.map(asset => (
@@ -85,11 +71,11 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Status</label>
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Status</label>
           <select
             value={form.status}
             onChange={(e) => setForm({ ...form, status: e.target.value })}
-            className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none cursor-pointer"
+            className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none cursor-pointer text-sm md:text-base"
           >
             <option value="PLANNED">Planned</option>
             <option value="ACTIVE">Active</option>
@@ -97,54 +83,50 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Planned Volume</label>
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Planned Volume</label>
           <input
             type="number"
             value={form.plannedVolume}
             onChange={(e) => setForm({ ...form, plannedVolume: e.target.value })}
-            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
+            className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 text-sm md:text-base"
           />
         </div>
 
-        {/* <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Unit</label>
-          <select
-            value={form.unit}
-            onChange={(e) => setForm({ ...form, unit: e.target.value })}
-            className="w-full px-4 py-2.5 bg-white border-2 border-gray-100 rounded-lg focus:border-black focus:ring-0 appearance-none"
-          >
-            <option value="barrels/day">Barrels per Day</option>
-            <option value="barrels">Barrels</option>
-          </select>
-        </div> */}
-
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Start Date</label>
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Start Date</label>
           <input
             type="date"
             value={form.startDate}
             onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 text-sm md:text-base"
           />
         </div>
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">End Date</label>
+
+        <div className="md:col-span-1">
+          <label className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">End Date</label>
           <input
             type="date"
             value={form.endDate}
             min={form.startDate || undefined}
             onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 text-sm md:text-base"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100">
-        <button onClick={handleSubmit} className="cursor-pointer px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition-all shadow-lg shadow-gray-200">
-          Create Plan
-        </button>
-        <button onClick={onCancel} className="cursor-pointer px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 transition-all">
+      {/* Buttons: Column on mobile, Row on laptop */}
+      <div className="flex flex-col-reverse md:flex-row items-center gap-3 md:gap-4 mt-8 pt-6 border-t border-gray-100">
+        <button 
+          onClick={onCancel} 
+          className="w-full md:w-auto cursor-pointer px-8 py-3 bg-white text-black font-bold rounded-lg border-2 border-black hover:bg-gray-50 transition-all text-center"
+        >
           Cancel
+        </button>
+        <button 
+          onClick={handleSubmit} 
+          className="w-full md:w-auto cursor-pointer px-8 py-3 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition-all shadow-lg shadow-gray-200 text-center"
+        >
+          Create Plan
         </button>
       </div>
     </div>

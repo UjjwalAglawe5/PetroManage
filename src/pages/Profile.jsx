@@ -81,8 +81,8 @@ export const Profile = () => {
   const roleConfig = getRoleConfig(p.role);
 
   const stats = [
-    { label: 'Projects', value: 12 },
-    { label: 'Tasks', value: 7 },
+    { label: 'Assets', value: 2 },
+    { label: 'Plans', value: 4 },
   ];
 
   return (
@@ -154,9 +154,9 @@ export const Profile = () => {
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { icon: <Mail />, label: "Corporate Email", val: p.email },
-                { icon: <Phone />, label: "Contact Number", val: p.phone },
+                // { icon: <Phone />, label: "Contact Number", val: p.phone },
                 { icon: <MapPin />, label: "Office Hub", val: p.officeLocation },
-                { icon: <User />, label: "Reporting Manager", val: p.manager },
+                // { icon: <User />, label: "Reporting Manager", val: p.manager },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
                   <div className="p-2 bg-slate-100 rounded-lg text-slate-500 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
@@ -212,7 +212,7 @@ export const Profile = () => {
           </motion.div> */}
 
           {/* Operational Logs / Recent Activity */}
-          <motion.div variants={itemVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          {/*<motion.div variants={itemVariants} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <h2 className="font-black text-slate-800 uppercase tracking-tighter text-sm mb-6 flex items-center gap-2">
               <ClipboardList size={18} className="text-blue-500" /> Operational Logs
             </h2>
@@ -263,6 +263,7 @@ export const Profile = () => {
               View All Field Logs
             </button>
           </motion.div>
+          */}
 
         </div>
       </div>

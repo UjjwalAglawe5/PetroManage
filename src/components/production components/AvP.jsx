@@ -1,7 +1,7 @@
 export const AvP = () => {
-
-    return (<div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
+        return (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 overflow-x-auto">
+                <div className="border-b border-gray-200 pb-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Actual vs Planned Production Comparison</h3>
             <div className="space-y-6">
                 {[
