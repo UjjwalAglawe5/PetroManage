@@ -1,31 +1,36 @@
 import React from "react";
 
 const ReportCard = ({ label, value }) => {
-  // Formats camelCase to Title Case
+  // Formats camelCase to Title Case (e.g., safetyScore -> Safety Score)
   const formattedLabel = label.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase());
 
-  // Calibri font stack for consistency
+  // Calibri font stack for consistency across environments
   const calibriStyle = { fontFamily: "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif" };
 
   return (
     <div
-      className="p-3 sm:p-4 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-300 h-full flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[110px]"
+      className="group p-3 sm:p-5 bg-white rounded-xl sm:rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:border-emerald-200 transition-all duration-300 h-full flex flex-col items-center justify-center text-center min-h-[90px] sm:min-h-[120px] relative overflow-hidden"
       style={calibriStyle}
     >
+      {/* Subtle hover indicator for interactive feel */}
+      <div className="absolute left-0 top-0 h-full w-1 bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" />
 
-      {/* Label: Scaled down slightly for mobile */}
-      <span className="block text-[9px] sm:text-[15px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2">
+      {/* Label Section */}
+      <span className="block text-[9px] xs:text-[10px] sm:text-[11px] md:text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2 px-1">
         {formattedLabel}
       </span>
 
-      <div className="flex items-baseline justify-center gap-1 w-full max-w-full overflow-hidden">
-        {/* Value: Added break-words to handle long strings on narrow screens */}
-        <span className="text-base sm:text-lg md:text-[20px] font-black text-black break-words leading-tight tracking-tight px-1 max-w-full">
+      {/* Value Container */}
+      <div className="flex items-center justify-center gap-0.5 w-full">
+        <span className="text-sm sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900 truncate max-w-full leading-none">
           {value ?? "—"}
         </span>
 
-        {label.toLowerCase().includes("score") && value && (
-          <span className="text-[15px] font-black text-black uppercase shrink-0">%</span>
+        {/* Dynamic Percentage Sign */}
+        {label.toLowerCase().includes("score") && value !== undefined && value !== null && (
+          <span className="text-[10px] sm:text-[14px] font-black text-slate-900 uppercase self-end mb-0.5 sm:mb-1">
+            %
+          </span>
         )}
       </div>
     </div>

@@ -5,10 +5,8 @@ import UpdateForm from "./UpdateForm";
 import Swal from 'sweetalert2';
 import {
   FaFileExport,
-  FaChevronDown,
   FaSearch,
   FaTimes,
-  FaCalendarAlt,
   FaChevronLeft,
   FaChevronRight
 } from "react-icons/fa";
@@ -28,7 +26,6 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Calibri Style Constant
   const calibriStyle = { fontFamily: "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif" };
 
   const clearFilters = () => {
@@ -44,24 +41,20 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
   };
 
   const handleDelete = async (reportId) => {
-    // Trigger the popup
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `You are about to delete report: ${reportId}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33', // Red for delete
+      confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, keep it'
     });
 
-    // If the user clicked "Yes"
     if (result.isConfirmed) {
       try {
         await axios.delete(`${API_BASE_URL}/${reportId}`);
-
-        // Show short toast notification
         const toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -69,7 +62,7 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
           timer: 2000,
           timerProgressBar: true,
         });
-        
+
         toast.fire({
           icon: 'success',
           title: 'Deleted successfully'
@@ -122,11 +115,11 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
   }, [searchTerm, startDate, endDate]);
 
   return (
-    <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-6 max-w-7xl mx-auto text-slate-900 bg-slate-50 min-h-screen" style={calibriStyle}>
+    <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 max-w-7xl mx-auto text-slate-900 bg-slate-50 min-h-screen" style={calibriStyle}>
 
       {/* --- TOOLBAR --- */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-8 bg-white p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm">
-        <div className="flex-1 w-full lg:max-w-sm">
+      <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4 mb-6 sm:mb-8 bg-white p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm">
+        <div className="flex-1 w-full xl:max-w-sm">
           <div className="relative">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -134,44 +127,44 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
               placeholder="Search Report..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 h-12 bg-slate-50 border border-slate-100 rounded-2xl text-[15px] font-bold outline-none focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 transition-all"
+              className="w-full pl-11 pr-4 h-12 bg-slate-50 border border-slate-100 rounded-2xl text-sm sm:text-[15px] font-bold outline-none focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 transition-all"
               style={calibriStyle}
             />
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-          <div className="flex items-center justify-between gap-2 bg-slate-50 border border-slate-100 rounded-2xl px-4 h-12 w-full sm:w-auto">
-            <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
+          <div className="flex items-center justify-between gap-2 bg-slate-50 border border-slate-100 rounded-2xl px-3 sm:px-4 h-12 w-full sm:w-auto">
+            <div className="flex items-center gap-1 sm:gap-2">
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="text-[15px] font-black uppercase outline-none bg-transparent text-slate-600 cursor-pointer"
+                className="text-xs sm:text-[15px] font-black uppercase outline-none bg-transparent text-slate-600 cursor-pointer"
                 style={calibriStyle}
               />
-              <span className="text-slate-300 text-[15px] font-bold">TO</span>
+              <span className="text-slate-300 text-[11px] sm:text-[15px] font-bold">TO</span>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="text-[15px] font-black uppercase outline-none bg-transparent text-slate-600 cursor-pointer"
+                className="text-xs sm:text-[15px] font-black uppercase outline-none bg-transparent text-slate-600 cursor-pointer"
                 style={calibriStyle}
               />
             </div>
             {(searchTerm || startDate || endDate) && (
               <button onClick={clearFilters} className="cursor-pointer p-1.5 hover:bg-white rounded-full text-slate-400 hover:text-red-500 transition-colors">
-                <FaTimes size={15} />
+                <FaTimes size={14} />
               </button>
             )}
           </div>
 
           <div className="relative w-full sm:w-auto" onMouseEnter={() => setShowExportAllDropdown(true)} onMouseLeave={() => setShowExportAllDropdown(false)}>
             <button
-              className="w-full sm:w-auto cursor-pointer px-6 h-12 bg-slate-900 text-white font-bold rounded-2xl transition-all shadow-lg text-[12px] uppercase tracking-widest hover:bg-slate-800 flex items-center justify-center gap-2 whitespace-nowrap"
+              className="w-full sm:w-auto cursor-pointer px-6 h-12 bg-slate-900 text-white font-bold rounded-2xl transition-all shadow-lg text-[11px] sm:text-[12px] uppercase tracking-widest hover:bg-slate-800 flex items-center justify-center gap-2 whitespace-nowrap"
               style={calibriStyle}
             >
-              <FaFileExport className="text-emerald-400" /> Export
+              <FaFileExport className="text-emerald-400" /> Export All
             </button>
             {showExportAllDropdown && (
               <div className="absolute right-0 left-0 sm:left-auto pt-2 w-full sm:w-44 z-[100] animate-in fade-in slide-in-from-top-2">
@@ -189,49 +182,46 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
       </div>
 
       {/* --- DATA TABLE --- */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-6">
         <div className="overflow-x-auto scrollbar-hide">
-          <table className="w-full text-left border-collapse min-w-max whitespace-nowrap">
+          <table className="w-full text-left border-collapse min-w-[700px] whitespace-nowrap">
             <thead>
-              <tr className="bg-slate-50/50 border-b border-slate-200 text-slate-400 text-[15px] font-black uppercase tracking-[0.15em]">
-                <th className="px-8 py-5 text-center">Report ID</th>
-                <th className="px-8 py-5 text-center">Asset Details</th>
-                <th className="px-8 py-5 text-center">Safety Score</th>
-                <th className="px-8 py-5 text-center">Status</th>
-                <th className="px-8 py-5 text-center">Actions</th>
+              <tr className="bg-slate-50/50 border-b border-slate-200 text-slate-400 text-[13px] sm:text-[15px] font-black uppercase tracking-[0.15em]">
+                <th className="px-4 sm:px-8 py-5 text-center">Report ID</th>
+                <th className="px-4 sm:px-8 py-5 text-center">Asset Details</th>
+                <th className="px-4 sm:px-8 py-5 text-center">Safety Score</th>
+                <th className="px-4 sm:px-8 py-5 text-center">Status</th>
+                <th className="px-4 sm:px-8 py-5 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {currentItems.length > 0 ? (
                 currentItems.map((report) => (
                   <tr key={report.reportId} className="group hover:bg-slate-50/30 transition-colors">
-                    <td className="px-6 py-6 font-bold text-black text-[15px] text-center">{report.reportId}</td>
-                    <td className="px-8 py-6 text-center text-[15px] font-bold text-slate-800">{report.assetName}</td>
-                    <td className="px-8 py-6 text-center">
-                      <span className="inline-flex items-center justify-center w-16 font-black text-slate-700 text-[13px] bg-slate-100 py-1 rounded-lg">{report.safetyScore}%</span>
+                    <td className="px-4 sm:px-6 py-4 sm:py-6 font-bold text-black text-sm sm:text-[15px] text-center">{report.reportId}</td>
+                    <td className="px-4 sm:px-8 py-4 sm:py-6 text-center text-sm sm:text-[15px] font-bold text-slate-800">{report.assetName}</td>
+                    <td className="px-4 sm:px-8 py-4 sm:py-6 text-center">
+                      <span className="inline-flex items-center justify-center w-14 sm:w-16 font-black text-slate-700 text-xs sm:text-[13px] bg-slate-100 py-1 rounded-lg">{report.safetyScore}%</span>
                     </td>
-                    <td className="px-8 py-6 text-center">
-                      <span className={`inline-flex items-center justify-center w-32 py-1.5 rounded-full text-[13px] font-black uppercase border shadow-sm
+                    <td className="px-4 sm:px-8 py-4 sm:py-6 text-center">
+                      <span className={`inline-flex items-center justify-center w-28 sm:w-32 py-1.5 rounded-full text-[11px] sm:text-[13px] font-black uppercase border shadow-sm
                         ${report.complianceStatus?.toLowerCase().includes('non')
                           ? 'bg-red-50 text-red-600 border-red-100'
                           : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
-
-                        {/* This replaces all underscores with spaces globally */}
                         {report.complianceStatus?.replace(/_/g, ' ')}
-
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-center">
+                    <td className="px-4 sm:px-8 py-4 sm:py-6 text-center">
                       <div className="flex justify-center gap-2">
-                        <button onClick={() => setSelectedReport(report)} style={calibriStyle} className="px-4 py-2 rounded-xl font-bold uppercase bg-slate-50 border border-slate-200 hover:bg-white cursor-pointer transition-colors text-[13px]">View</button>
-                        <button onClick={() => setEditingReport(report)} style={calibriStyle} className="text-[13px] px-4 py-2 rounded-xl font-bold uppercase text-emerald-700 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 cursor-pointer">Update</button>
-                        <button onClick={() => handleDelete(report.reportId)} style={calibriStyle} className="text-[13px] px-4 py-2 rounded-xl font-bold uppercase text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 cursor-pointer">Delete</button>
+                        <button onClick={() => setSelectedReport(report)} style={calibriStyle} className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold uppercase bg-slate-50 border border-slate-200 hover:bg-white cursor-pointer transition-colors text-[11px] sm:text-[13px]">View</button>
+                        <button onClick={() => setEditingReport(report)} style={calibriStyle} className="text-[11px] sm:text-[13px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold uppercase text-emerald-700 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 cursor-pointer">Update</button>
+                        <button onClick={() => handleDelete(report.reportId)} style={calibriStyle} className="text-[11px] sm:text-[13px] px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold uppercase text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 cursor-pointer">Delete</button>
                       </div>
                     </td>
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="5" className="px-8 py-20 text-center text-slate-400 text-[15px] font-bold uppercase tracking-widest">No reports found matching your filters.</td></tr>
+                <tr><td colSpan="5" className="px-8 py-16 sm:py-20 text-center text-slate-400 text-sm sm:text-[15px] font-bold uppercase tracking-widest">No reports found.</td></tr>
               )}
             </tbody>
           </table>
@@ -240,21 +230,21 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
 
       {/* --- PAGINATION --- */}
       {totalPages > 1 && (
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mt-8 px-2 pb-6">
-          <p className="text-[13px] font-black text-slate-400 uppercase tracking-[0.2em] order-2 md:order-1">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 mt-6 md:mt-8 px-2 pb-6">
+          <p className="text-[11px] sm:text-[13px] font-black text-slate-400 uppercase tracking-[0.2em] text-center md:text-left">
             Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredReports.length)} of {filteredReports.length} Reports
           </p>
 
-          <div className="flex items-center gap-2 order-1 md:order-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => paginate(currentPage - 1)}
               disabled={currentPage === 1}
-              className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all shadow-sm disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shrink-0"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-30 cursor-pointer shrink-0"
             >
-              <FaChevronLeft size={13} />
+              <FaChevronLeft size={12} />
             </button>
 
-            <div className="flex items-center gap-1 py-2 px-1">
+            <div className="flex items-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                 const isFirstPage = page === 1;
                 const isLastPage = page === totalPages;
@@ -266,8 +256,8 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
                       key={page}
                       onClick={() => paginate(page)}
                       style={calibriStyle}
-                      className={`min-w-[40px] h-10 flex items-center justify-center rounded-xl font-black text-[13px] transition-all cursor-pointer shadow-sm shrink-0 ${currentPage === page
-                        ? "bg-slate-900 text-white shadow-lg scale-110 z-10"
+                      className={`min-w-[36px] sm:min-w-[40px] h-9 sm:h-10 flex items-center justify-center rounded-xl font-black text-[12px] sm:text-[13px] transition-all cursor-pointer ${currentPage === page
+                        ? "bg-slate-900 text-white shadow-lg scale-105 z-10"
                         : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
                         }`}
                     >
@@ -275,16 +265,8 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
                     </button>
                   );
                 }
-
-                if (
-                  (page === currentPage - 2 && page > 1) ||
-                  (page === currentPage + 2 && page < totalPages)
-                ) {
-                  return (
-                    <span key={page} className="w-8 text-center text-slate-400 font-black tracking-widest text-[13px]">
-                      ...
-                    </span>
-                  );
+                if (page === currentPage - 2 || page === currentPage + 2) {
+                  return <span key={page} className="px-1 text-slate-400 font-black">...</span>;
                 }
                 return null;
               })}
@@ -293,9 +275,9 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
             <button
               onClick={() => paginate(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all shadow-sm disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shrink-0"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-30 cursor-pointer shrink-0"
             >
-              <FaChevronRight size={13} />
+              <FaChevronRight size={12} />
             </button>
           </div>
         </div>
@@ -303,20 +285,20 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
 
       {/* --- MODALS --- */}
       {selectedReport && (
-        <div className="fixed inset-0 h-screen w-screen flex items-center justify-center z-[200] p-2 sm:p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="relative bg-white/95 rounded-3xl sm:rounded-4xl shadow-2xl w-full max-w-4xl flex flex-col overflow-hidden border border-white/20 max-h-[95vh] sm:max-h-[85vh]">
-            <div className="relative px-6 py-5 sm:px-8 sm:py-6 border-b border-slate-100 flex items-center justify-center bg-white/50 sticky top-0 z-10">
+        <div className="fixed inset-0 h-screen w-screen flex items-center justify-center z-[200] p-2 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="relative bg-white rounded-[2rem] sm:rounded-4xl shadow-2xl w-full max-w-4xl flex flex-col overflow-hidden border border-white/20 max-h-[92vh] sm:max-h-[85vh]">
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-center bg-white sticky top-0 z-10">
               <div className="flex flex-col items-center">
-                <h2 className="text-lg sm:text-[25px] font-black text-slate-900 uppercase tracking-tight" style={calibriStyle}>Inspection Profile</h2>
+                <h2 className="text-lg sm:text-[24px] font-black text-slate-900 uppercase tracking-tight text-center" style={calibriStyle}>Inspection Profile</h2>
                 <div className="h-1 w-12 bg-emerald-500 rounded-full mt-1" />
               </div>
               <button onClick={() => setSelectedReport(null)} className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all cursor-pointer border border-slate-100">
-                <span className="text-xl">&times;</span>
+                <span className="text-xl font-bold">&times;</span>
               </button>
             </div>
 
             <div className="p-4 sm:p-6 overflow-y-auto bg-slate-50/30 flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {Object.entries(selectedReport).map(([key, value]) => {
                   let displayValue = value;
                   if (value && typeof value === 'object') displayValue = value.assetName || value.assetId || value.id || "Linked Data";
@@ -329,32 +311,32 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
               </div>
             </div>
 
-            <div className="px-4 py-4 sm:px-8 sm:py-5 bg-white border-t border-slate-100 flex flex-row items-center justify-between gap-2">
-              <span className="text-[10px] xs:text-[12px] sm:text-[15px] font-black text-black uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate" style={calibriStyle}>
+            <div className="px-6 py-4 bg-white border-t border-slate-100 flex flex-row items-center justify-between gap-2">
+              <span className="text-[10px] sm:text-[14px] font-black text-black uppercase tracking-[0.1em] truncate" style={calibriStyle}>
                 ID: {selectedReport.reportId}
               </span>
 
               <div
-                className="relative shrink-0"
+                className="relative"
                 onMouseEnter={() => setShowSingleExportDropdown(true)}
                 onMouseLeave={() => setShowSingleExportDropdown(false)}
               >
                 <button
-                  className="px-3 sm:px-6 h-9 sm:h-10 bg-slate-900 text-white font-bold rounded-lg sm:rounded-xl shadow-md hover:bg-slate-800 transition-all text-[8px] sm:text-[9px] uppercase tracking-widest flex items-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
+                  onClick={() => setShowSingleExportDropdown(!showSingleExportDropdown)}
+                  className="px-4 h-9 bg-slate-900 text-white font-bold rounded-xl shadow-md text-[9px] sm:text-[11px] uppercase tracking-widest flex items-center gap-2 cursor-pointer"
                   style={calibriStyle}
                 >
-                  <FaFileExport className="text-emerald-400 text-[10px] sm:text-base" />
-                  <span>Export</span>
+                  <FaFileExport className="text-emerald-400" /> Export
                 </button>
 
                 {showSingleExportDropdown && (
                   <div className="absolute bottom-full right-0 pb-2 w-32 sm:w-40 z-30">
-                    <div className="bg-slate-900 rounded-lg sm:rounded-xl shadow-xl py-1 overflow-hidden border-b-2 border-emerald-500 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                    <div className="bg-slate-900 rounded-xl shadow-xl py-1 overflow-hidden border-b-2 border-emerald-500">
                       {['json', 'excel', 'pdf'].map((fmt) => (
                         <button
                           key={fmt}
                           onClick={() => triggerExport([selectedReport], fmt)}
-                          className="w-full text-left px-4 sm:px-5 py-2.5 text-[8px] sm:text-[9px] font-black text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors uppercase cursor-pointer"
+                          className="w-full text-left px-4 py-2.5 text-[10px] font-black text-slate-300 hover:bg-emerald-500 hover:text-white transition-colors uppercase cursor-pointer"
                           style={calibriStyle}
                         >
                           Save as {fmt}
@@ -370,8 +352,8 @@ const ReportsTable = ({ reports, setReports, fetchReports }) => {
       )}
 
       {editingReport && (
-        <div className="fixed inset-0 flex items-center justify-center z-[300] p-2 sm:p-4 bg-slate-950/60 backdrop-blur-md">
-          <div className="relative w-full max-w-4xl max-h-screen overflow-y-auto" style={calibriStyle}>
+        <div className="fixed inset-0 flex items-center justify-center z-[300] p-2 sm:p-4 bg-slate-950/70 backdrop-blur-md">
+          <div className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto" style={calibriStyle}>
             <UpdateForm report={editingReport} onUpdateSuccess={handleUpdateComplete} onClose={() => setEditingReport(null)} />
           </div>
         </div>

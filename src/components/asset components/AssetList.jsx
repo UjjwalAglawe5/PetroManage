@@ -133,11 +133,11 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <tr>
                 <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">#</th>
                 <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">Name</th>
-                <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">Type</th>
+                <th className="px-3 md:px-12.5 py-3 text-left whitespace-nowrap">Type</th>
                 <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">Location</th>
-                <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">Status</th>
+                <th className="px-3 md:px-9 py-3 text-left whitespace-nowrap">Status</th>
                 {(hasEditPermission || hasDeletePermission) && (
-                  <th className="px-3 md:px-5 py-3 text-right whitespace-nowrap">Actions</th>
+                  <th className="px-3 md:px-8.5 py-3 text-right whitespace-nowrap">Actions</th>
                 )}
               </tr>
             </thead>
@@ -163,7 +163,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                     <td className="px-3 md:px-5 py-3 md:py-4 font-medium">{a.name}</td>
 
                     <td className="px-3 md:px-5 py-3 md:py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${getTypeColor(a.type)}`}>
+                      <span className={`inline-block w-24 text-center px-2 py-1 text-xs rounded-full whitespace-nowrap ${getTypeColor(a.type)}`}>
                         {a.type}
                       </span>
                     </td>
@@ -173,7 +173,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                     </td>
 
                     <td className="px-3 md:px-5 py-3 md:py-4">
-                      <span className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${getStatusColor(a.status)}`}>
+                      <span className={`inline-block w-20 text-center px-2 py-1 text-xs rounded-full whitespace-nowrap ${getStatusColor(a.status)}`}>
                         {a.status}
                       </span>
                     </td>
@@ -220,7 +220,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
               <h3 className="font-semibold text-base md:text-lg">Update Asset</h3>
               <button
                 onClick={() => setSelectedAsset(null)}
-                className="p-1 hover:bg-gray-100 rounded transition"
+                className="cursor-pointer p-1 hover:bg-gray-100 rounded transition"
                 aria-label="Close"
               >
                 <X size={20} />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; 
+import axios from "axios";
 
 export function ForgotPassword({
   title = "Forgot password",
@@ -8,9 +8,9 @@ export function ForgotPassword({
   signupHref = "/register",
   onGoToLogin,
 }) {
-  const [role, setRole] = useState("manager"); 
+  const [role, setRole] = useState("manager");
   const [stage, setStage] = useState("REQUEST");
-  
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -32,8 +32,8 @@ export function ForgotPassword({
     setLoading(true);
     try {
       // ✅ FIXED: Added correct URL
-      await axios.post("http://localhost:8080/auth-service/auth/forgot-password", {
-        email: email 
+      await axios.post("http://localhost:8080/auth/forgot-password", {
+        email: email
       });
 
       setStage("VERIFY");
@@ -58,14 +58,14 @@ export function ForgotPassword({
     setLoading(true);
     try {
       // ✅ FIXED: Added correct URL
-      await axios.put("http://localhost:8080/auth-service/auth/reset-password", {
-        email: email,       
+      await axios.put("http://localhost:8080/auth/reset-password", {
+        email: email,
         otp: otp,
         newPassword: newPw
       });
 
       showMsg("success", "Password reset successfully. Redirecting to login...");
-      
+
       setTimeout(() => {
         if (onGoToLogin) onGoToLogin();
         else window.location.href = loginHref;
@@ -88,9 +88,8 @@ export function ForgotPassword({
         </div>
 
         {message.text && (
-          <div className={`mb-6 rounded-xl px-4 py-3 text-sm font-semibold border ${
-            message.type === "error" ? "border-red-200 bg-red-50 text-red-600" : "border-green-200 bg-green-50 text-green-700"
-          }`}>
+          <div className={`mb-6 rounded-xl px-4 py-3 text-sm font-semibold border ${message.type === "error" ? "border-red-200 bg-red-50 text-red-600" : "border-green-200 bg-green-50 text-green-700"
+            }`}>
             {message.text}
           </div>
         )}

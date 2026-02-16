@@ -18,13 +18,13 @@ import {
 
 // Animation for mobile menu tray
 const mobileMenuVariants = {
-  closed: { 
-    height: 0, 
+  closed: {
+    height: 0,
     opacity: 0,
     transition: { duration: 0.3, ease: "easeInOut" }
   },
-  open: { 
-    height: "auto", 
+  open: {
+    height: "auto",
     opacity: 1,
     transition: { duration: 0.3, ease: "easeInOut" }
   }
@@ -116,10 +116,10 @@ export function Layout() {
         className="bg-white border-b border-gray-200 w-full relative z-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          
+
           <div className="flex items-center gap-4">
             {/* Hamburger Toggle (Mobile Only) */}
-            <button 
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
             >
@@ -184,7 +184,11 @@ export function Layout() {
             </nav>
 
             {/* User Dropdown */}
-            <div className="relative flex items-center border-l pl-4 border-gray-200 ml-2">
+            <div
+              className="relative flex items-center border-l pl-4 border-gray-200 ml-2"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
               <motion.button
                 variants={navItem}
                 whileTap={{ scale: 0.95 }}
@@ -192,7 +196,7 @@ export function Layout() {
                 className="flex items-center gap-2 group cursor-pointer"
               >
                 <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white font-black shadow-sm">
-                  {user?.name ? user.name.substring(0,2).toUpperCase() : 'OM'}
+                  {user?.name ? user.name.substring(0, 2).toUpperCase() : 'OM'}
                 </div>
                 <motion.div
                   animate={{ rotate: isDropdownOpen ? 180 : 0 }}
@@ -204,33 +208,38 @@ export function Layout() {
 
               <AnimatePresence>
                 {isDropdownOpen && (
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="fixed inset-0 z-10"
+                  <motion.div
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="absolute right-0 top-full mt-3 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-20"
+                  >
+                    <div className="px-4 py-3 border-b border-gray-50 mb-1 text-center sm:text-left">
+                      <p className="text-xs font-black text-gray-400 uppercase tracking-wider">User Account</p>
+                      <p className="text-sm font-bold text-black truncate capitalize">{role?.replace('_', ' ')}</p>
+                    </div>
+
+                    {/* Added onClick to close dropdown after navigation */}
+                    <Link
+                      to="/profile"
                       onClick={() => setIsDropdownOpen(false)}
-                    />
-                    <motion.div
-                      variants={dropdownVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="absolute right-0 top-full mt-3 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-20"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-colors"
                     >
-                      <div className="px-4 py-3 border-b border-gray-50 mb-1 text-center sm:text-left">
-                        <p className="text-xs font-black text-gray-400 uppercase tracking-wider">User Account</p>
-                        <p className="text-sm font-bold text-black truncate capitalize">{role?.replace('_', ' ')}</p>
-                      </div>
-                      <Link to="/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-colors">
-                        <User size={18} /> Profile Settings
-                      </Link>
-                      <button onClick={handleLogout} className="cursor-pointer flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
-                        <LogOut size={18} /> Sign Out
-                      </button>
-                    </motion.div>
-                  </>
+                      <User size={18} /> Profile Settings
+                    </Link>
+
+                    {/* Modified onClick to handle logout AND close the dropdown */}
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsDropdownOpen(false);
+                      }}
+                      className="cursor-pointer flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut size={18} /> Sign Out
+                    </button>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
@@ -254,11 +263,10 @@ export function Layout() {
                     <NavLink
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
-                        isActive 
-                        ? 'bg-black text-white shadow-lg shadow-black/10' 
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all ${isActive
+                        ? 'bg-black text-white shadow-lg shadow-black/10'
                         : 'text-gray-500 hover:bg-gray-50 hover:text-black'
-                      }`}
+                        }`}
                     >
                       {item.icon}
                       {item.label}

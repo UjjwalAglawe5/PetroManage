@@ -8,6 +8,7 @@ import {
   FaCalendarAlt, FaIndustry, FaTimes
 } from "react-icons/fa";
 import Swal from 'sweetalert2';
+
 const ReportForm = ({ onClose, fetchReports }) => {
   const [dynamicAssets, setDynamicAssets] = useState([]);
 
@@ -31,11 +32,24 @@ const ReportForm = ({ onClose, fetchReports }) => {
     fetchAssets();
   }, []);
 
+  // Options for React Select
+  const reportTypeOptions = [
+    { value: "Safety Compliance", label: "Safety Compliance" },
+    { value: "Environmental Compliance", label: "Environmental Compliance" },
+    { value: "Regulatory", label: "Regulatory" },
+  ];
+
+  const complianceStatusOptions = [
+    { value: "Compliant", label: "Compliant" },
+    { value: "Non-Compliant", label: "Non-Compliant" },
+    { value: "Pending Review", label: "Pending Review" },
+  ];
+
   const initialFormState = {
-    reportType: "",
+    reportType: null, // Changed to null for React Select
     asset: null,
     safetyScore: "",
-    complianceStatus: "",
+    complianceStatus: null, // Changed to null for React Select
     inspector: "",
     nextAuditDate: new Date(),
   };
@@ -45,7 +59,6 @@ const ReportForm = ({ onClose, fetchReports }) => {
   const handleDiscard = (e) => {
     if (e) e.preventDefault();
     setFormData(initialFormState);
-    document.getElementById("report-form").reset();
   };
 
   const handleChange = (e) => {
@@ -53,8 +66,8 @@ const ReportForm = ({ onClose, fetchReports }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAssetChange = (option) => {
-    setFormData((prev) => ({ ...prev, asset: option }));
+  const handleSelectChange = (option, name) => {
+    setFormData((prev) => ({ ...prev, [name]: option }));
   };
 
   const handleDateChange = (date) => {
@@ -64,12 +77,11 @@ const ReportForm = ({ onClose, fetchReports }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.asset) {
-      // Replaces alert("Please select an asset");
+    if (!formData.asset || !formData.reportType || !formData.complianceStatus) {
       Swal.fire({
         icon: 'info',
         title: 'Missing Selection',
-        text: 'Please select an asset before submitting.',
+        text: 'Please fill all dropdown selections before submitting.',
         confirmButtonColor: '#3085d6',
       });
       return;
@@ -90,9 +102,9 @@ const ReportForm = ({ onClose, fetchReports }) => {
     const payload = {
       assetId: Number(formData.asset.value),
       assetName: formData.asset.label,
-      reportType: typeMapping[formData.reportType],
+      reportType: typeMapping[formData.reportType.value],
       safetyScore: Number(formData.safetyScore),
-      complianceStatus: statusMapping[formData.complianceStatus],
+      complianceStatus: statusMapping[formData.complianceStatus.value],
       inspector: formData.inspector,
       nextAuditDate: formData.nextAuditDate.toISOString().split('T')[0],
       generatedDate: new Date().toISOString().split('T')[0]
@@ -102,7 +114,6 @@ const ReportForm = ({ onClose, fetchReports }) => {
       const response = await axios.post("http://localhost:8080/api/compliance/reports", payload);
 
       if (response.status === 200 || response.status === 201) {
-        // Show short toast notification
         const toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -110,7 +121,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
           timer: 2000,
           timerProgressBar: true,
         });
-        
+
         toast.fire({
           icon: 'success',
           title: 'Report generated successfully'
@@ -121,8 +132,6 @@ const ReportForm = ({ onClose, fetchReports }) => {
       }
     } catch (error) {
       console.error("Submission Error:", error);
-
-      // Replaces alert("Failed to save. Check server.");
       Swal.fire({
         icon: 'error',
         title: 'Submission Failed',
@@ -135,7 +144,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
   const selectStyles = {
     control: (base, state) => ({
       ...base,
-      ...calibriStyle, // Apply Calibri to select control
+      ...calibriStyle,
       borderRadius: '0.75rem',
       fontSize: '14px',
       minHeight: '48px',
@@ -143,12 +152,17 @@ const ReportForm = ({ onClose, fetchReports }) => {
       borderColor: state.isFocused ? '#10b981' : '#e2e8f0',
       boxShadow: state.isFocused ? '0 0 0 1px #10b981' : 'none',
       '&:hover': { borderColor: '#10b981' },
-      cursor: 'pointer'
+      cursor: 'pointer',
+      width: '100%'
+    }),
+    container: (base) => ({
+      ...base,
+      width: '100%'
     }),
     menuPortal: base => ({ ...base, zIndex: 9999 }),
     option: (base, state) => ({
       ...base,
-      ...calibriStyle, // Apply Calibri to options
+      ...calibriStyle,
       fontSize: '14px',
       padding: '12px',
       backgroundColor: state.isSelected ? '#10b981' : state.isFocused ? '#ecfdf5' : 'white',
@@ -158,11 +172,11 @@ const ReportForm = ({ onClose, fetchReports }) => {
   };
 
   const inputClasses = "w-full bg-white border border-slate-200 rounded-xl p-3.5 text-[15px] outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all font-semibold shadow-sm";
-  const labelClasses = "flex items-center gap-2 text-[15px] font-black text-slate-500 uppercase tracking-widest mb-1.5";
+  const labelClasses = "flex items-center gap-2 text-[12px] sm:text-[15px] font-black text-slate-500 uppercase tracking-widest mb-1.5";
 
   return (
     <div
-      className="w-full max-w-4xl mx-auto bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-300"
+      className="w-full max-w-4xl mx-auto bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-2xl flex flex-col h-[95vh] sm:h-auto sm:max-h-[90vh] animate-in fade-in zoom-in duration-300"
       style={calibriStyle}
     >
 
@@ -173,8 +187,8 @@ const ReportForm = ({ onClose, fetchReports }) => {
             <FaIndustry className="text-emerald-500 text-lg sm:text-2xl" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-base sm:text-3xl font-black tracking-tighter truncate">Generate Report</h2>
-            <p className="text-slate-400 text-[9px] sm:text-[15px] font-bold uppercase tracking-widest truncate">Asset Operations</p>
+            <h2 className="text-lg sm:text-3xl font-black tracking-tighter truncate">Generate Report</h2>
+            <p className="text-slate-400 text-[10px] sm:text-[15px] font-bold uppercase tracking-widest truncate">Asset Operations</p>
           </div>
         </div>
         <button onClick={onClose} className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-all shrink-0">
@@ -184,47 +198,90 @@ const ReportForm = ({ onClose, fetchReports }) => {
 
       {/* BODY */}
       <div className="flex-1 overflow-y-auto p-5 sm:p-10 bg-slate-50/30">
-        <form id="report-form" onSubmit={handleSubmit} className="space-y-5 sm:space-y-8">
+        <form id="report-form" onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
 
-            <div className="space-y-1">
+            {/* Report Type */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaClipboardList className="text-emerald-600" /> Report Type</label>
-              <select name="reportType" value={formData.reportType} onChange={handleChange} className={`${inputClasses} appearance-none pr-10 cursor-pointer`} style={calibriStyle} required>
-                <option value="">Select Type</option>
-                <option value="Safety Compliance">Safety Compliance</option>
-                <option value="Environmental Compliance">Environmental Compliance</option>
-                <option value="Regulatory">Regulatory</option>
-              </select>
+              <Select
+                options={reportTypeOptions}
+                value={formData.reportType}
+                onChange={(opt) => handleSelectChange(opt, 'reportType')}
+                styles={selectStyles}
+                placeholder="Select type..."
+                required
+                menuPortalTarget={document.body}
+                menuPlacement="auto"
+              />
             </div>
 
-            <div className="space-y-1">
+            {/* Asset Selection */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaShieldAlt className="text-emerald-600" /> Asset Selection</label>
-              <Select options={dynamicAssets} value={formData.asset} onChange={handleAssetChange} styles={selectStyles} placeholder="Find asset..." required menuPortalTarget={document.body} />
+              <Select
+                options={dynamicAssets}
+                value={formData.asset}
+                onChange={(opt) => handleSelectChange(opt, 'asset')}
+                styles={selectStyles}
+                placeholder="Find asset..."
+                required
+                menuPortalTarget={document.body}
+                menuPlacement="auto"
+              />
             </div>
 
-            <div className="space-y-1">
+            {/* Safety Score */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaCheckCircle className="text-emerald-600" /> Safety Score (0-100)</label>
-              <input type="number" name="safetyScore" value={formData.safetyScore} onChange={handleChange} min="0" max="100" placeholder="Enter score" className={inputClasses} style={calibriStyle} required />
+              <input
+                type="number"
+                name="safetyScore"
+                value={formData.safetyScore}
+                onChange={handleChange}
+                min="0"
+                max="100"
+                placeholder="Enter score"
+                className={inputClasses}
+                style={calibriStyle}
+                required
+              />
             </div>
 
-            <div className="space-y-1">
+            {/* Compliance Status */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaCheckCircle className="text-emerald-600" /> Compliance Status</label>
-              <select name="complianceStatus" value={formData.complianceStatus} onChange={handleChange} className={`${inputClasses} appearance-none pr-10 cursor-pointer`} style={calibriStyle} required>
-                <option value="">Set Status</option>
-                <option value="Compliant">Compliant</option>
-                <option value="Non-Compliant">Non-Compliant</option>
-                <option value="Pending Review">Pending Review</option>
-              </select>
+              <Select
+                options={complianceStatusOptions}
+                value={formData.complianceStatus}
+                onChange={(opt) => handleSelectChange(opt, 'complianceStatus')}
+                styles={selectStyles}
+                placeholder="Set status..."
+                required
+                menuPortalTarget={document.body}
+                menuPlacement="auto"
+              />
             </div>
 
-            <div className="space-y-1">
+            {/* Inspector */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaUserTie className="text-emerald-600" /> Inspector / Lead</label>
-              <input type="text" name="inspector" value={formData.inspector} onChange={handleChange} placeholder="Name or Agency" className={inputClasses} style={calibriStyle} required />
+              <input
+                type="text"
+                name="inspector"
+                value={formData.inspector}
+                onChange={handleChange}
+                placeholder="Name or Agency"
+                className={inputClasses}
+                style={calibriStyle}
+                required
+              />
             </div>
 
-            <div className="space-y-1">
+            {/* Next Audit Date */}
+            <div className="space-y-1 w-full">
               <label className={labelClasses}><FaCalendarAlt className="text-emerald-600" /> Next Audit Date</label>
-              <div style={calibriStyle}>
+              <div style={calibriStyle} className="relative w-full">
                 <DatePicker
                   selected={formData.nextAuditDate}
                   onChange={handleDateChange}
@@ -232,6 +289,10 @@ const ReportForm = ({ onClose, fetchReports }) => {
                   minDate={new Date()}
                   className={inputClasses}
                   wrapperClassName="w-full"
+                  popperPlacement="bottom-end"
+                  popperModifiers={[
+                    { name: "preventOverflow", options: { boundary: "viewport" } }
+                  ]}
                 />
               </div>
             </div>
@@ -245,7 +306,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
         <button
           type="button"
           onClick={handleDiscard}
-          className="cursor-pointer w-full sm:w-auto px-6 py-3 text-slate-500 font-bold text-[15px] uppercase tracking-widest hover:bg-slate-100 rounded-xl transition-all"
+          className="cursor-pointer w-full sm:w-auto px-6 py-3 text-slate-500 font-bold text-[13px] sm:text-[15px] uppercase tracking-widest hover:bg-slate-100 rounded-xl transition-all"
           style={calibriStyle}
         >
           Discard
@@ -253,7 +314,7 @@ const ReportForm = ({ onClose, fetchReports }) => {
         <button
           form="report-form"
           type="submit"
-          className="cursor-pointer w-full sm:w-auto px-10 py-4 bg-emerald-600 text-white text-[15px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-100 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full sm:w-auto px-10 py-4 bg-emerald-600 text-white text-[13px] sm:text-[15px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-100 flex items-center justify-center gap-2"
           style={calibriStyle}
         >
           Generate Report
