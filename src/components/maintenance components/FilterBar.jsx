@@ -40,9 +40,9 @@ export const FilterBar = ({ onFilterChange }) => {
         <select value={filters.assetType} onChange={(e) => updateFilter('assetType', e.target.value)}
           className="w-full p-2 border rounded-md text-sm outline-none cursor-pointer">
           <option value="">All Assets</option>
-          <option value="Rig">Rig</option>
-          <option value="Pipeline">Pipeline</option>
-          <option value="Storage">Storage</option>
+          <option value="rig">Rig</option>
+          <option value="pipeline">Pipeline</option>
+          <option value="storage">Storage</option>
         </select>
       </div>
 

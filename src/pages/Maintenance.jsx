@@ -97,7 +97,8 @@ export const Maintenance = () => {
   const filteredOrders = workOrders.filter((order) => {
     const matchesStatus = filterStatus === "All" || order.status === filterStatus;
     const matchesId = order.id.toLowerCase().includes(searchFilters.workId.toLowerCase()); 
-    const matchesAsset = !searchFilters.assetType || order.assetId.includes(searchFilters.assetType);
+    // FIX: Check if asset name/ID contains the filter value (case-insensitive)
+    const matchesAsset = !searchFilters.assetType || order.assetId.toLowerCase().includes(searchFilters.assetType.toLowerCase());
     //using !searchFilters to allow empty filter values so that if any filter crashes it won't affect other filters
     const matchesType = !searchFilters.type || order.type === searchFilters.type;
     const matchesPriority = !searchFilters.priority || order.priority === searchFilters.priority;
@@ -105,7 +106,7 @@ export const Maintenance = () => {
 
     return matchesStatus && matchesId && matchesAsset && matchesType && matchesPriority && matchesTech;
 });
-  // Change INITIAL_DATA to workOrders
+ 
 const stats = [
   { title: "All Work Orders", value: workOrders.length, type: "all", status: "All" },
   { title: "Scheduled", value: workOrders.filter(o => o.status === "Scheduled").length, type: "scheduled", status: "Scheduled" },
@@ -124,14 +125,14 @@ const stats = [
       {/* 1. Header Area */}
       <motion.div 
         variants={itemVariants}
-        className="bg-gradient-to-br from-orange-600 via-orange-700 to-orange-900 p-8 rounded-xl shadow-md flex justify-between items-center mb-8"
+        className="bg-gradient-to-br from-orange-600 via-orange-700 to-orange-900 p-4 sm:p-6 md:p-8 rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8"
       >
-        <div className="space-y-1">
-          <h1 className="text-3xl flex font-extrabold text-white tracking-tight">
-            <Wrench size={40}/>
-            &nbsp; Maintenance Management
+        <div className="space-y-1 flex-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl flex items-center font-extrabold text-white tracking-tight">
+            <Wrench size={24} className="sm:w-8 sm:h-8 md:w-10 md:h-10"/>
+            <span className="ml-2 sm:ml-3">Maintenance Management</span>
           </h1>
-          <p className="text-orange-50 font-medium opacity-90 pl-14">
+          <p className="text-xs sm:text-sm text-orange-50 font-medium opacity-90 pl-7 sm:pl-10 md:pl-14 mt-1">
             Schedule and manage maintenance work orders
           </p>
         </div>
@@ -140,14 +141,16 @@ const stats = [
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowModal(true)}
-          className="bg-gray-800 text-white px-6 py-2.5 rounded-lg shadow-sm hover:bg-gray-900 transition-all font-bold flex items-center gap-2 cursor-pointer"
+          className="bg-gray-800 text-white px-3 sm:px-4 md:px-6 py-2 md:py-2.5 rounded-lg shadow-sm hover:bg-gray-900 transition-all font-bold flex items-center gap-2 cursor-pointer text-xs sm:text-sm md:text-base w-full sm:w-auto justify-center sm:justify-start"
         >
-          <span>+</span> Create Work Order
+          <span className="text-sm">+</span>
+          <span className="hidden sm:inline">Create Work Order</span>
+          <span className="sm:hidden">Create</span>
         </motion.button>
       </motion.div>
 
       {/* 2. Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-6">
         {stats.map((stat) => (
           <motion.div 
             key={stat.type} 
@@ -170,18 +173,19 @@ const stats = [
       </motion.div>
       
       {/* 3. Table Section */}
-      <motion.div variants={itemVariants} className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="w-full border-collapse">
+      <motion.div variants={itemVariants} className="overflow-x-auto bg-white rounded-lg shadow-sm">
+        <table className="w-full border-collapse text-xs sm:text-sm">
           <thead className="bg-gray-50">
             <tr>
-              <TableHead>Work Order ID</TableHead>
-              <TableHead>Asset ID</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Technician</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="hidden sm:table-cell">Work Order ID</TableHead>
+              <TableHead className="sm:hidden">Order ID</TableHead>
+              <TableHead className="hidden md:table-cell">Asset ID</TableHead>
+              <TableHead className="hidden lg:table-cell">Description</TableHead>
+              <TableHead className="hidden sm:table-cell">Type</TableHead>
+              <TableHead className="hidden md:table-cell">Priority</TableHead>
+              <TableHead className="hidden lg:table-cell">Date</TableHead>
+              <TableHead className="hidden 2xl:table-cell">Technician</TableHead>
+              <TableHead className="hidden sm:table-cell">Status</TableHead>
               <TableHead>Action</TableHead>
             </tr>
           </thead>
@@ -196,28 +200,29 @@ const stats = [
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="hover:bg-gray-50"
                 >
-                  <TableCell className="font-medium text-blue-600">{wo.id}</TableCell>
-                  <TableCell>{wo.assetId}</TableCell>
-                  <TableCell>{wo.description}</TableCell>
-                  <TableCell>{wo.type}</TableCell>
-                  <TableCell>
-                    <span className={`inline-block w-20 text-center py-1 rounded text-xs font-bold ${priorityColors[wo.priority]}`}>
+                  <TableCell className="font-medium text-blue-600 hidden sm:table-cell">{wo.id}</TableCell>
+                  <TableCell className="font-medium text-blue-600 sm:hidden truncate">{wo.id}</TableCell>
+                  <TableCell className="hidden md:table-cell text-gray-600 text-xs truncate">{wo.assetId}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-gray-600 text-xs truncate max-w-xs">{wo.description}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-gray-600 text-xs">{wo.type}</TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${priorityColors[wo.priority]}`}>
                       {wo.priority}
                     </span>
                   </TableCell>
-                  <TableCell className="text-gray-600">{wo.date}</TableCell>
-                  <TableCell className="text-gray-600">{wo.technician}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden lg:table-cell text-gray-600 text-xs">{wo.date}</TableCell>
+                  <TableCell className="hidden 2xl:table-cell text-gray-600 text-xs">{wo.technician}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <span className={`px-2 py-1 rounded text-xs font-bold ${statusColors[wo.status]}`}>{wo.status}</span>
                   </TableCell>
-                  <TableCell> 
+                  <TableCell className="text-center">
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => navigate("/maintenance/status", { state: { selectedOrder: wo } }) } 
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer"
+                      className="bg-blue-600 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm hover:bg-blue-700 transition cursor-pointer whitespace-nowrap"
                     > 
-                      View Details 
+                      Details
                     </motion.button> 
                   </TableCell>
                 </motion.tr>
@@ -236,7 +241,7 @@ const stats = [
           />
         )}
       </AnimatePresence>
-      <div className="text-center text-sm text-gray-500 pt-4 border-t">
+      <div className="text-center text-xs sm:text-sm text-gray-500 pt-4 px-2 border-t">
         © {new Date().getFullYear()} PetroManage — Asset &amp; Operations Management System
       </div>
     </motion.div>
@@ -244,14 +249,14 @@ const stats = [
 };
 
 
-const TableHead = ({ children }) => (
-  <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase">
+const TableHead = ({ children, className = "" }) => (
+  <th className={`text-left px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-xs font-bold text-gray-500 uppercase ${className}`}>
     {children}
   </th>
 );
 
 const TableCell = ({ children, className = "" }) => (
-  <td className={`px-4 py-4 text-sm ${className}`}>
+  <td className={`px-2 sm:px-3 md:px-4 py-2 sm:py-3 md:py-4 text-xs sm:text-sm ${className}`}>
     {children}
   </td>
 );

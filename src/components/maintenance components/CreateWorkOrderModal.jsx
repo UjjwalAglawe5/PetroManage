@@ -73,22 +73,22 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <form onSubmit={handleSubmit} className="bg-white w-full max-w-lg rounded-xl shadow-2xl p-6 space-y-5 transform transition-all">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+      <form onSubmit={handleSubmit} className="bg-white w-full max-w-lg rounded-xl shadow-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 transform transition-all max-h-[90vh] overflow-y-auto">
 
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-3">
-          <h2 className="text-xl font-bold text-gray-800">Create Work Order</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800">Create Work Order</h2>
           <button type="button" onClick={onClose} className="cursor-pointer text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
         </div>
 
         {/* Row 1: Asset Dropdown (Dynamic) */}
         <div className="flex flex-col space-y-1">
-          <label className="text-sm font-semibold text-gray-700">Select Asset</label>
+          <label className="text-xs sm:text-sm font-semibold text-gray-700">Select Asset</label>
           <select
             required
-            disabled={loadingAssets} // Disable while loading
-            className="cursor-pointer border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+            disabled={loadingAssets}
+            className="cursor-pointer border border-gray-300 rounded-lg px-2 sm:px-3 py-2 bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 text-xs sm:text-sm"
             onChange={(e) => setFormData({ ...formData, assetId: e.target.value })}
             value={formData.assetId}
           >
@@ -109,7 +109,7 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
         />
 
         {/* Row 3: Maintenance Type and Date */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Select
             label="Maintenance Type"
             options={["Preventive", "Corrective"]}
@@ -120,20 +120,19 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
         </div>
 
         {/* Row 4: Priority */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Select
             label="Priority"
             options={["Low", "Medium", "High"]}
             onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
           />
 
-
           {/* Technician Dropdown */}
           <div className="flex flex-col space-y-1">
-            <label className="text-sm font-semibold text-gray-700">Assign Technician</label>
+            <label className="text-xs sm:text-sm font-semibold text-gray-700">Assign Technician</label>
             <select
               required
-              className="cursor-pointer border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500"
+              className="cursor-pointer border border-gray-300 rounded-lg px-2 sm:px-3 py-2 bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500 text-xs sm:text-sm"
               onChange={(e) => setFormData({ ...formData, technicianName: e.target.value })}
               value={formData.technicianName}
             >
@@ -146,11 +145,11 @@ export const CreateWorkOrderModal = ({ onClose, onSave }) => {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t">
-          <button type="button" onClick={onClose} className="cursor-pointer px-5 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t">
+          <button type="button" onClick={onClose} className="cursor-pointer px-4 sm:px-5 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg text-xs sm:text-sm">
             Cancel
           </button>
-          <button type="submit" className="cursor-pointer px-5 py-2 bg-orange-800 hover:bg-orange-900 text-white rounded-lg shadow-lg font-medium">
+          <button type="submit" className="cursor-pointer px-4 sm:px-5 py-2 bg-orange-800 hover:bg-orange-900 text-white rounded-lg shadow-lg font-medium text-xs sm:text-sm">
             Save to Database
           </button>
         </div>
