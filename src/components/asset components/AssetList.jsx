@@ -93,7 +93,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             </span>
 
             <select
-              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
+              className="cursor-pointer w-full sm:w-auto text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
@@ -104,7 +104,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
             </select>
 
             <select
-              className="cursor-pointer text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
+              className="cursor-pointer w-full sm:w-auto text-xs md:text-sm px-2 md:px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 focus:outline-none bg-white"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -128,7 +128,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
 
         {/* TABLE - Responsive with horizontal scroll on small screens */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs md:text-sm">
+          <table className="w-full min-w-[720px] text-xs md:text-sm">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-3 md:px-5 py-3 text-left whitespace-nowrap">#</th>
@@ -181,7 +181,7 @@ export default function AssetList({ assets, onDelete, onUpdate }) {
                     {/* ACTIONS - Only show if user has permissions */}
                     {(hasEditPermission || hasDeletePermission) && (
                       <td className="px-3 md:px-5 py-3 md:py-4 text-right">
-                        <div className="flex justify-end gap-1 md:gap-2 opacity-0 group-hover:opacity-100 transition">
+                        <div className="flex justify-end gap-1 md:gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition">
                           {hasEditPermission && (
                             <button
                               title="Edit Asset"

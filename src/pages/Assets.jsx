@@ -50,7 +50,7 @@ export function Assets() {
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 2500,
+      timer: 1500,
       timerProgressBar: true,
     });
 
@@ -139,24 +139,24 @@ export function Assets() {
   }, [tab, fromHeader]);
  
   return (
-    <div className="space-y-8 py-4">
+    <div className="space-y-8 py-4 px-2 sm:px-4 lg:px-6">
  
       {/* ================= HEADER ================= */}
       <div className="relative overflow-hidden rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
 
-        <div className="relative p-6 text-white flex items-center justify-between gap-6 h-33">
+  <div className="relative p-5 sm:p-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
           {/* LEFT SIDE: Title and Description grouped together */}
           <div className="flex flex-col">
             <div className="flex items-center gap-3">
               <Boxes className="w-9 h-9 text-slate-300" />
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 Asset Management
               </h1>
             </div>
 
-            <p className="ml-7.5 mt-4 relative text-slate-300 max-w-xl text-sm pl-4">
+            <p className="ml-0 sm:ml-7.5 mt-3 sm:mt-4 relative text-slate-300 max-w-xl text-sm pl-0 sm:pl-4">
               End-to-end lifecycle management for oil &amp; gas assets.
             </p>
           </div>
@@ -168,7 +168,7 @@ export function Assets() {
                 setFromHeader(true);
                 setTab(tab === "register" ? "list" : "register");
               }}
-              className="cursor-pointer flex items-center gap-2 px-4 py-2
+              className="cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2
                 bg-gradient-to-r from-emerald-500 to-emerald-600
                 hover:from-emerald-600 hover:to-emerald-700
                 text-white text-sm font-semibold
@@ -190,12 +190,12 @@ export function Assets() {
         className="bg-white rounded-xl border border-gray-200 shadow-sm"
       >
         {/* SWITCH BAR */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50 rounded-t-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b bg-gray-50 rounded-t-xl">
           <h2 className="font-semibold text-gray-800">
             Asset Operations Hub
           </h2>
  
-          <div className="flex bg-gray-200 rounded-lg p-1">
+          <div className="flex flex-wrap bg-gray-200 rounded-lg p-1">
             <SwitchButton
               icon={ClipboardList}
               label="Assets"

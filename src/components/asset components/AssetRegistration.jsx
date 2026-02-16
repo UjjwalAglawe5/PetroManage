@@ -90,10 +90,10 @@ export default function AssetRegistration({ onAdd }) {
      ${errors[field] ? "border-red-400" : "border-gray-300"}`;
 
   return (
-    <div className="p-8">
-      <h3 className="text-xl font-semibold mb-6">Register New Asset</h3>
+    <div className="p-4 sm:p-6 lg:p-8">
+      <h3 className="text-lg sm:text-xl font-semibold mb-5 sm:mb-6">Register New Asset</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
 
         {/* Asset Type */}
         <div>
@@ -135,7 +135,7 @@ export default function AssetRegistration({ onAdd }) {
           />
 
           {suggestions.length > 0 && (
-            <div className="absolute z-20 bg-white border rounded-lg mt-1 max-h-48 overflow-y-auto">
+            <div className="absolute left-0 right-0 z-20 bg-white border rounded-lg mt-1 max-h-48 overflow-y-auto">
               {suggestions.map((loc) => (
                 <div
                   key={loc.place_id}
@@ -158,11 +158,11 @@ export default function AssetRegistration({ onAdd }) {
         </div>
       </div>
 
-      <div className="mt-10 flex justify-end">
+      <div className="mt-8 sm:mt-10 flex justify-end">
         <button
           onClick={submit}
           disabled={submitting}
-          className={`cursor-pointer px-8 py-2 rounded-lg font-medium transition-all
+          className={`cursor-pointer w-full sm:w-auto px-6 sm:px-8 py-2 rounded-lg font-medium transition-all
             ${submitting
               ? "bg-gray-400 text-gray-200 cursor-not-allowed"
               : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"
