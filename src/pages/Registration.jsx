@@ -67,7 +67,7 @@ export function Registration({
     setLoading(true);
     try {
       // Make POST request to backend
-      const response = await axios.post("http://localhost:8080/auth-service/auth/register", {
+      const response = await axios.post("http://localhost:8080/auth/register", {
         name: name,
         email: email,
         password: password,
