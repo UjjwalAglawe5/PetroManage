@@ -7,7 +7,9 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
   const fetchAssets = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/assets');
-      setAssetList(response.data);
+      
+      const activeAssets = response.data.filter(asset => asset.status === 'ACTIVE');
+      setAssetList(activeAssets);
     } catch (error) {
       console.error('Error fetching assets:', error);
     }
@@ -108,9 +110,13 @@ export function PlansForm({ onCancel, setProductionPlans, productionPlans }) {
             type="date"
             value={form.endDate}
             min={form.startDate || undefined}
+            disabled={!form.startDate}
             onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 text-sm md:text-base"
+            className="cursor-pointer w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-lg focus:bg-white focus:border-black focus:ring-0 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           />
+          {!form.startDate && (
+            <p className="text-xs text-amber-600 mt-1">Please select start date first</p>
+          )}
         </div>
       </div>
 

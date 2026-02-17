@@ -57,7 +57,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
         // await axios.delete(`http://localhost:8080/api/production-records/${id}`);
-        await axios.delete(`http://localhost:8020/api/production/records/${id}`);
+        await axios.delete(`http://localhost:8080/api/production/records/${id}`);
         const updatedRecords = RecordPlans.filter(record => (record.recordId || record.id) !== id);
         setRecordPlans(updatedRecords);
       } catch (error) {
